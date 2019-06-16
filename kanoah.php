@@ -4,6 +4,7 @@ use \Kanoah\Page;
 use \Kanoah\Model\Rotina;
 use \Kanoah\Model\Modulo;
 use \Kanoah\Model\Tabela;
+use \Kanoah\BD\SQLServer;
 
 $app->get("/", function() {
 	$page = new Page();
@@ -26,22 +27,18 @@ $app->get("/rotinas/:modulo", function($modulo) {
 	}
 });
 
-$app->get("/:modulo/:rotina", function($modulo, $rotina) {
-	if (isset($modulo, $rotina)) {
-		// $page = new Page();
+$app->get("/:modulo/:rotina", function($nomeModulo, $nomeRotina) {
+	$page   = new Page();
+	$rotina = new Rotina();
+	$tabela = new Tabela();
+	
+	$rotina->infRotina($nomeModulo, $nomeRotina);
+	
+	$tabelas = $tabela->infTabelas($rotina->gettabelas());
 
-		$tabelasDep = Rotina::retornarDependencias($modulo, $rotina);
-		$opcoesDep = Rotina::dependencia($tabelasDep);
-
-		$tabelas = Tabela::retornarQuerys("SA1");
-		// echo json_encode($opcoesDep);
-		// exit;
-		$page->setTpl("rotina", array(
-			"modulo"=>$modulo,
-			"rotina"=>$rotina,
-			"dependencias"=>$opcoesDep
-		));
-	} else {
-		die("Error: ROTINAMODULO");
-	}
+	$page->setTpl("rotina", array(
+		"modulo"=>$nomeModulo,
+		"rotina"=>$rotina->getrotina(),
+		"tabelas"=>$tabelas
+	));
 });

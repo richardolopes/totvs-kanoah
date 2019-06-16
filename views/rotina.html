@@ -1,36 +1,30 @@
-<!-- Módulo selecionado no index.hmtl -->
-<label for="modulo">Módulo selecionado:
-	<input type="text" value="{$modulo}" readonly>
-</label>
-<br><br>
-<!-- Rotina selecionada no index.hmtl -->
-<label for="rotina">Rotina selecionada:
-	<input type="text" value="{$rotina}" readonly>
-</label>
-<br><br>
-<!-- Cadastros obrigatórios -->
-<label>Dependencias:</label>
-<br><br>
-{loop="$dependencias"}
-	{loop="$value"}
-		{$tabela=$key}
-		<label for="{$key}">{$key}</label><br>
-		<label>
-			<input type="radio" name="{$tabela}" id="query">Query
-			<!-- <br> -->
-			<textarea name="{$tabela}" id="query" cols="30" rows="2"></textarea>
-		</label>
-		<br>
-		{loop="$value"}
-		<label>
-			<input type="radio" name="{$tabela}" id="{$value}">{$value}
-		</label>
-		<br>
+<form action="/gerarkanoah" method="POST">
+	<!-- Módulo selecionado no index.hmtl -->
+	<label for="modulo">Módulo selecionado:
+		<input type="text" value="{$modulo}" readonly>
+	</label>
+	<br><br>
+	<!-- Rotina selecionada no index.hmtl -->
+	<label for="rotina">Rotina selecionada:
+		<input type="text" value="{$rotina}" readonly>
+	</label>
+	<br><br>
+	<!-- Tabelas da rotina -->
+	{loop="$tabelas"}
+	<label>{$value.TABELA}
+		<textarea name="{$value.TABELA}" id="{$value.TABELA}" cols="30" rows="3" readonly>{$value.QUERY}</textarea>
+	</label>
+	{$campos = $value.CAMPOS}
+	<textarea cols="20" rows="3" readonly>
+		{loop="$campos"}
+			{$value}
 		{/loop}
+	</textarea>
+	<label>Resultado Query:
+		<textarea name="{$value.TABELA}" cols="30" rows="3"></textarea>
+	</label>
+	<br>
 	{/loop}
-{/loop}
 
-
-
-
-<!-- Registros gerados -->
+	<input type="submit" value="Enviar">
+</form>

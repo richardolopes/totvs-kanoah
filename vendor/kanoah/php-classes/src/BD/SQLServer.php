@@ -13,7 +13,7 @@ class SQLServer {
 
 	public function __construct() {
 		try {
-			$this->conn = odbc_connect("Driver={" . Sql::DRIVER . "};Server=" . Sql::DNS . ";Database=" . Sql::DBNAME . ";", Sql::USERNAME, Sql::PASSWORD);
+			$this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . SQLServer::DNS . ";Database=" . SQLServer::DBNAME . ";", SQLServer::USERNAME, SQLServer::PASSWORD);
 		} catch (PDOException  $e) {
 			die("Sem conexao com o banco de dados.");
 		}

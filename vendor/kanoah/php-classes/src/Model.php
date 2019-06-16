@@ -33,7 +33,7 @@ class Model {
 	// Metodo para criar o set de cada campo.
 	public function setData($data = array()) {
 		foreach ($data as $key => $value) {
-			$this->{"set" . $key}($value);
+			$this->{"set" . strtolower($key)}($value);
 		}
 	}
 
