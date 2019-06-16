@@ -1,0 +1,19 @@
+{
+    "name": "kanoah/totvs",
+    "authors": [
+        {
+            "name": "Richard de Oliveira Lopes",
+            "email": "richard.lopes@totvs.com.br",
+            "role": "Técnico em desenvolvimento"
+        }
+    ],
+    "require": {
+    	"slim/slim":"2.0",
+    	"rain/raintpl":"3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kanoah\\": "vendor\\kanoah\\php-classes\\src"
+        }
+    }
+}

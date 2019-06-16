@@ -1,0 +1,36 @@
+<!-- Módulo selecionado no index.hmtl -->
+<label for="modulo">Módulo selecionado:
+	<input type="text" value="{$modulo}" readonly>
+</label>
+<br><br>
+<!-- Rotina selecionada no index.hmtl -->
+<label for="rotina">Rotina selecionada:
+	<input type="text" value="{$rotina}" readonly>
+</label>
+<br><br>
+<!-- Cadastros obrigatórios -->
+<label>Dependencias:</label>
+<br><br>
+{loop="$dependencias"}
+	{loop="$value"}
+		{$tabela=$key}
+		<label for="{$key}">{$key}</label><br>
+		<label>
+			<input type="radio" name="{$tabela}" id="query">Query
+			<!-- <br> -->
+			<textarea name="{$tabela}" id="query" cols="30" rows="2"></textarea>
+		</label>
+		<br>
+		{loop="$value"}
+		<label>
+			<input type="radio" name="{$tabela}" id="{$value}">{$value}
+		</label>
+		<br>
+		{/loop}
+	{/loop}
+{/loop}
+
+
+
+
+<!-- Registros gerados -->

@@ -1,0 +1,15 @@
+<form action="/rotina" method="GET">
+	<select id="modulo" name="modulo">
+		<option value="">Selecione um módulo</option>
+		{loop="$modulos"}
+			<option value="{$value}">{$value}</option>
+		{/loop}
+	</select>
+
+	<select id="rotina" name="rotina">
+		<option value="">Selecione uma rotina</option>
+	</select>
+
+	<input type="submit" value="Enviar">
+</form>
+
