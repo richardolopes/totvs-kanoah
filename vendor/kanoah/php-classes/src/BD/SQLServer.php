@@ -24,7 +24,7 @@ class SQLServer {
 	}
 
 	public function select($rawQuery) {
-		$return =  odbc_exec($this->conn, $rawQuery);
+		$return = odbc_exec($this->conn, $rawQuery);
 		return $return;
 	}
 }

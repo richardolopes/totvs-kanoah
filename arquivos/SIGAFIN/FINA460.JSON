@@ -2,8 +2,8 @@
 	"ROTINA": "FINA460",
 	"MENU": "Atualizações > Contas a Receber > Liquidação (FINA460)",
 	"DEPENDENCIAS": [
-		"SA1",
-		"SED"
+		"SED",
+		"SA1"
 	],
 	"TABELAS": [
 		"SE1",

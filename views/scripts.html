@@ -39,3 +39,11 @@
 		});
 	});
 </script>
+
+<script>
+	function copiarQuery(idquery) {
+		var copyText = document.getElementById(idquery);
+		copyText.select();
+		document.execCommand("copy");
+	}
+</script>
