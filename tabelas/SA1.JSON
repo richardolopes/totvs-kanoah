@@ -1,48 +1,4 @@
 {
 	"TABELA": "SA1",
-	"QUERY": "SELECT A1_FILIAL, A1_COD, A1_LOJA, A1_NOME, A1_PESSOA, A1_TIPO, A1_RECCSLL, A1_RECCOFI, A1_RECPIS, A1_RECIRRF, A1_RECISS, A1_ABATIMP FROM SA1T10 SA1",
-	"CAMPOS": [
-		"PRE_CONDICAO",
-		"A1_COD",
-		"A1_LOJA",
-		"A1_NOME",
-		"A1_PESSOA",
-		"A1_TIPO",
-		"A1_RECCSLL",
-		"A1_RECCOFI",
-		"A1_RECPIS",
-		"A1_RECIRRF",
-		"A1_RECISS",
-		"A1_ABATIMP"
-	],
-	"REGISTROS_DEFINIDOS": {
-		"SEM IMPOSTOS": [
-			"D MG    ",
-			"001   ",
-			"01",
-			"1                                       ",
-			"F",
-			"S",
-			"N",
-			"N",
-			"N",
-			" ",
-			" ",
-			"1"
-		],
-		"PCC": [
-			"D MG    ",
-			"005FIN",
-			"01",
-			"CLIENTE PCC                             ",
-			"J",
-			"F",
-			"S",
-			"S",
-			"S",
-			" ",
-			" ",
-			"1"
-		]
-	}
+	"QUERY": "SELECT A1_FILIAL, A1_COD, A1_LOJA, A1_NOME, A1_PESSOA, A1_TIPO, A1_RECCSLL, A1_RECCOFI, A1_RECPIS, A1_RECIRRF, A1_RECISS, A1_ABATIMP FROM SA1T10 SA1"
 }

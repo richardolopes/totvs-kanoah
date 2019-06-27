@@ -1,0 +1,90 @@
+<div class="content-wrapper">
+		<section class="content-header">
+			<h1>
+				Gerar Kanoah
+				<small>{$modulo} &nbsp; {$rotina}</small>
+			</h1>
+		</section>
+		<!-- <select class="form-control" id="modulo" name="modulo">
+			<option value="">Selecione os parâmetros</option>
+			{loop="$parametros"}
+			<option value="{$value}">{$value}</option>
+			{/loop}
+		</select> -->
+	
+		<section class="content">
+			<div class="row">
+				<form action="/admin/gerarkanoah" method="POST">
+					<div class="col-md-6">
+						<div class="box box-primary">
+							<div class="box-header with-border">
+								<h3 class="box-title">Pré-condições</h3>
+							</div>
+							<div class="box-body">
+								{loop="$precondicoes"}
+								{loop="$value"}
+								<label for="{$key}QUERY">{$key}</label><br>
+								<textarea class="form-control" name="{$key}QUERY" id="{$key}QUERY" cols="50"
+									rows="3">{$value}</textarea><br>
+								{/loop}
+								{/loop}
+							</div>
+						</div>
+					</div>
+	
+					<div class="col-md-6">
+						<div class="box box-primary">
+							<div class="box-header with-border">
+								<h3 class="box-title">Where</h3>
+							</div>
+							<div class="box-body">
+								{loop="$precondicoes"}
+								{loop="$value"}
+								<label for="{$key}WHERE">{$key}</label><br>
+								<textarea class="form-control" name="{$key}WHERE" id="{$key}WHERE" cols="50"
+									rows="3"></textarea><br>
+								{/loop}
+								{/loop}
+							</div>
+						</div>
+					</div>
+	
+					<div class="col-md-6">
+						<div class="box box-primary">
+							<div class="box-header with-border">
+								<h3 class="box-title">Resultado esperado</h3>
+							</div>
+							<div class="box-body">
+								{loop="$resultado"}
+								{loop="$value"}
+								<label for="{$key}QUERY">{$key}</label><br>
+								<textarea class="form-control" name="{$key}QUERY" id="{$key}QUERY" cols="50"
+									rows="3">{$value}</textarea><br>
+								{/loop}
+								{/loop}
+							</div>
+						</div>
+					</div>
+	
+					<div class="col-md-6">
+						<div class="box box-primary">
+							<div class="box-header with-border">
+								<h3 class="box-title">Where</h3>
+							</div>
+							<div class="box-body">
+								{loop="$resultado"}
+								{loop="$value"}
+								<label for="{$key}WHERE">{$key}</label><br>
+								<textarea class="form-control" name="{$key}WHERE" id="{$key}WHERE" cols="50"
+									rows="3"></textarea><br>
+								{/loop}
+								{/loop}
+							</div>
+						</div>
+					</div>
+	
+					<button type="submit">Enviar</button>
+				</form>
+			</div>
+		</section>
+	</div>

@@ -1,4 +1,5 @@
 <?php 
 
-define("MODULOS","arquivos");
+define("MODULOS","modulos");
 define("TABELAS","tabelas");
+define("ROTINAS","rotinas");

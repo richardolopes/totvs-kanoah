@@ -19,7 +19,7 @@ $app->get("/", function() {
 // Retorno em JSON das rotinas do módulo
 $app->get("/rotinas/:modulo", function($modulo) {
 	if (isset($modulo)) {
-		$rotinas = json_encode(Rotina::retornarRotinas($modulo));
+		$rotinas = json_encode(Modulo::retornarRotinas($modulo));
 
 		echo $rotinas;
 	} else {

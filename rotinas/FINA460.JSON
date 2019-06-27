@@ -1,0 +1,11 @@
+{
+	"ROTINA": "FINA460",
+	"PRECONDICOES": [
+		"SED",
+		"SA1"
+	],
+	"RESULTADO": [
+		"SE1",
+		"SE5"
+	]
+}

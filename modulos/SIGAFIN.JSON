@@ -1,0 +1,11 @@
+{
+	"MODULO": "SIGAFIN",
+	"ROTINAS": [
+		"FINA460",
+		"FINA070"
+	],
+	"PARAMETROS": [
+		"MV_BR10925",
+		"MV_DJEWOIDM"
+	]
+}

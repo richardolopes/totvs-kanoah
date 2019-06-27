@@ -6,10 +6,10 @@ use \Kanoah\Model;
 use \Kanoah\BD\SQLServer;
 
 class Tabela extends Model {
-	public function Teste() {			
+	public static function Teste() {			
 		$sql = new SQLServer();
 
-		$return = $sql->select("SELECT * FROM SE1T10 WHERE E1_PREFIXO = 'RIC' ");
+		$return = $sql->select("SELECT * FROM SE1T10 WHERE E1_PREFIXO = '001' ");
 
 		while (odbc_fetch_row($return)) {
 			echo "" . odbc_result($return, "E1_NUM")."<BR>";
