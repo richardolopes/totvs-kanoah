@@ -42,8 +42,8 @@
 						<div class="box-body">
 							{loop="$precondicoes"}
 							{loop="$value"}
-							<label for="{$key}QUERY">{$key}</label><br>
-							<textarea class="form-control" name="{$key}QUERY" id="{$key}QUERY" cols="50"
+							<label for="PRE{$key}QUERY">{$key}</label><br>
+							<textarea class="form-control" name="PRE{$key}QUERY" id="PRE{$key}QUERY" cols="50"
 								rows="3">{$value}</textarea><br>
 							{/loop}
 							{/loop}
@@ -60,8 +60,8 @@
 							{loop="$precondicoes"}
 							{$aux=$key+1}
 							{loop="$value"}
-							<label for="{$key}WHERE">{$key}</label><br>
-							<textarea class="form-control" name="{$key}WHERE" id="{$key}WHERE" cols="50" rows="3"
+							<label for="PRE{$key}WHERE">{$key}</label><br>
+							<textarea class="form-control" name="PRE{$key}WHERE" id="PRE{$key}WHERE" cols="50" rows="3"
 								tabindex={$aux}></textarea><br>
 							{/loop}
 							{/loop}
@@ -77,8 +77,8 @@
 						<div class="box-body">
 							{loop="$resultado"}
 							{loop="$value"}
-							<label for="{$key}QUERY">{$key}</label><br>
-							<textarea class="form-control" name="{$key}QUERY" id="{$key}QUERY" cols="50"
+							<label for="RES{$key}QUERY">{$key}</label><br>
+							<textarea class="form-control" name="RES{$key}QUERY" id="RES{$key}QUERY" cols="50"
 								rows="3">{$value}</textarea><br>
 							{/loop}
 							{/loop}
@@ -95,8 +95,8 @@
 							{loop="$resultado"}
 							{$aux+=1}
 							{loop="$value"}
-							<label for="{$key}WHERE">{$key}</label><br>
-							<textarea class="form-control" name="{$key}WHERE" id="{$key}WHERE" cols="50" rows="3"
+							<label for="RES{$key}WHERE">{$key}</label><br>
+							<textarea class="form-control" name="RES{$key}WHERE" id="RES{$key}WHERE" cols="50" rows="3"
 								tabindex="{$aux}"></textarea><br>
 							{/loop}
 							{/loop}

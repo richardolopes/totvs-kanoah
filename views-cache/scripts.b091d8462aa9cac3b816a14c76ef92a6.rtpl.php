@@ -7,7 +7,7 @@
 	$(function () {
 		$('#modulo').change(function () {
 			if ($(this).val()) {
-				$.getJSON("/rotinas/" + $("#modulo").val(), function (j) {
+				$.getJSON("/admin/rotinas/" + $("#modulo").val(), function (j) {
 					var rotinas = $("#rotina").html();;
 
 					$.each(j, function (key, value) {

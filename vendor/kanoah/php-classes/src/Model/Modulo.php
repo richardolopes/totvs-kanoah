@@ -28,13 +28,12 @@ class Modulo {
 		}
 	}
 
-	// Retorna um array com as rotinas do módulo.
-	public static function retornarRotinas($modulo = string):array {
+	public static function infModulo($modulo = string, $inf = string):array {
 		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . MODULOS . DIRECTORY_SEPARATOR;
 
 		$json = json_decode(file_get_contents($diretorio . $modulo . ".JSON"), true);
 
-		return $json["ROTINAS"];
+		return $json[$inf];
 	}
 
 	public function retornarParametros($modulo = string):array {

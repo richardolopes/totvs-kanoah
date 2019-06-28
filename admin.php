@@ -19,9 +19,9 @@ $app->get("/admin", function() {
 });
 
 // Retorno em JSON das rotinas do módulo
-$app->get("/rotinas/:modulo", function($modulo) {
+$app->get("/admin/rotinas/:modulo", function($modulo) {
 	if (isset($modulo)) {
-		$rotinas = json_encode(Modulo::retornarRotinas($modulo));
+		$rotinas = json_encode(Modulo::infModulo($modulo, "ROTINAS"));
 
 		echo $rotinas;
 	} else {
@@ -34,13 +34,11 @@ $app->post("/admin/kanoah", function() {
 	$nomeRotina = $_POST["rotina"];
 
 	$page = new PageAdmin();
-
-	$modulo = new Modulo();
 	$rotina = new Rotina();
 
 	$rotina->infRotina($nomeRotina);
 
-	$parametros = $modulo->retornarParametros($nomeModulo);
+	$parametros = Modulo::infModulo($nomeModulo, "ROTINAS");
 	$precondicoes = $rotina->retornarQuerys($rotina->getrotina(), "PRECONDICOES");
 	$resultado = $rotina->retornarQuerys($rotina->getrotina(), "RESULTADO");
 
@@ -73,41 +71,41 @@ $app->post("/admin/gerarkanoah", function() {
 
 	for ($i = 0; $i < count($precondicoes); $i++) {
 		foreach ($precondicoes[$i] as $tabela => $value) {
-			if (stristr($_POST[$tabela."WHERE"], "WHERE")) {
+			if (stristr($_POST["PRE".$tabela."WHERE"], "WHERE")) {
 				User::setError("user_where");
 				 
 				header("Location: /admin");
 				exit;
 			}
 
-			if (empty($_POST[$tabela."WHERE"])) {
+			if (empty($_POST["PRE".$tabela."WHERE"])) {
 				User::setError("wheres_undefined");
 				
 				header("Location: /admin");
 				exit;
 			}
 
-			$txtPrecondicoes .= utf8_encode(Tabela::infTabelas($_POST[$tabela."QUERY"] . " WHERE " . $_POST[$tabela."WHERE"]));
+			$txtPrecondicoes .= utf8_encode(Tabela::infTabelas($_POST["PRE".$tabela."QUERY"] . " WHERE " . $_POST["PRE".$tabela."WHERE"]));
 		}
 	}
 
 	for ($i = 0; $i < count($resultado); $i++) {
 		foreach ($resultado[$i] as $tabela => $value) {
-			if (stristr($_POST[$tabela."WHERE"], "WHERE")) {
+			if (stristr($_POST["RES".$tabela."WHERE"], "WHERE")) {
 				User::setError("user_where");
 				 
 				header("Location: /admin");
 				exit;
 			}
 			
-			if (empty($_POST[$tabela."WHERE"])) {
+			if (empty($_POST["RES".$tabela."WHERE"])) {
 				User::setError("wheres_undefined");
 				
 				header("Location: /admin");
 				exit;
 			}
 
-			$txtResultado .= utf8_encode(Tabela::infTabelas($_POST[$tabela."QUERY"] . " WHERE " . $_POST[$tabela."WHERE"]));
+			$txtResultado .= utf8_encode(Tabela::infTabelas($_POST["RES".$tabela."QUERY"] . " WHERE " . $_POST["RES".$tabela."WHERE"]));
 		}
 	}
 
@@ -116,5 +114,7 @@ $app->post("/admin/gerarkanoah", function() {
 		"resultado"=>$txtResultado,
 	));
 });
+
+
 
 ?>

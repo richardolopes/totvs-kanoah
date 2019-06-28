@@ -42,8 +42,8 @@
 						<div class="box-body">
 							<?php $counter1=-1;  if( isset($precondicoes) && ( is_array($precondicoes) || $precondicoes instanceof Traversable ) && sizeof($precondicoes) ) foreach( $precondicoes as $key1 => $value1 ){ $counter1++; ?>
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
-							<label for="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
-							<textarea class="form-control" name="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" id="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" cols="50"
+							<label for="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
+							<textarea class="form-control" name="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" id="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" cols="50"
 								rows="3"><?php echo htmlspecialchars( $value2, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea><br>
 							<?php } ?>
 							<?php } ?>
@@ -60,8 +60,8 @@
 							<?php $counter1=-1;  if( isset($precondicoes) && ( is_array($precondicoes) || $precondicoes instanceof Traversable ) && sizeof($precondicoes) ) foreach( $precondicoes as $key1 => $value1 ){ $counter1++; ?>
 							<?php $aux=$key1+1; ?>
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
-							<label for="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
-							<textarea class="form-control" name="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
+							<label for="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
+							<textarea class="form-control" name="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
 								tabindex=<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>></textarea><br>
 							<?php } ?>
 							<?php } ?>
@@ -77,8 +77,8 @@
 						<div class="box-body">
 							<?php $counter1=-1;  if( isset($resultado) && ( is_array($resultado) || $resultado instanceof Traversable ) && sizeof($resultado) ) foreach( $resultado as $key1 => $value1 ){ $counter1++; ?>
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
-							<label for="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
-							<textarea class="form-control" name="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" id="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" cols="50"
+							<label for="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
+							<textarea class="form-control" name="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" id="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>QUERY" cols="50"
 								rows="3"><?php echo htmlspecialchars( $value2, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea><br>
 							<?php } ?>
 							<?php } ?>
@@ -95,8 +95,8 @@
 							<?php $counter1=-1;  if( isset($resultado) && ( is_array($resultado) || $resultado instanceof Traversable ) && sizeof($resultado) ) foreach( $resultado as $key1 => $value1 ){ $counter1++; ?>
 							<?php $aux+=1; ?>
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
-							<label for="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
-							<textarea class="form-control" name="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
+							<label for="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
+							<textarea class="form-control" name="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
 								tabindex="<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>"></textarea><br>
 							<?php } ?>
 							<?php } ?>
