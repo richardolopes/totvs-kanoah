@@ -1,3 +1,4 @@
+{include="errors"}
 <div class="content-wrapper">
 	<section class="content-header">
 		<h1>
@@ -7,32 +8,44 @@
 	</section>
 
 	<section class="content">
-		<form action="/kanoah" method="GET">
-			<div class="col-md-6">
-				<div class="box box-warning">
-					<div class="form-group">
-						<label>&nbsp; Módulos:</label>
-						<select class="form-control" id="modulo" name="modulo">
-							<option value="">Selecione um módulo</option>
-							{loop="$modulos"}
-							<option value="{$value}">{$value}</option>
-							{/loop}
-						</select>
+		<div class="row">
+			<form action="/admin/kanoah" method="POST">
+				<div class="col-md-6">
+					<div class="box box-primary">
+						<div class="box-body">
+							<div class="form-group">
+								<label>&nbsp; Módulos:</label>
+								<select class="form-control" id="modulo" name="modulo">
+									<option value="">Selecione um módulo</option>
+									{loop="$modulos"}
+									<option value="{$value}">{$value}</option>
+									{/loop}
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="box box-warning">
-					<div class="form-group">
-						<label>&nbsp; Rotinas:</label>
-						<select class="form-control" id="rotina" name="rotina">
-							<option value="">Selecione uma rotina</option>
-						</select>
+				<div class="col-md-6">
+					<div class="box box-primary">
+						<div class="box-body">
+							<div class="form-group">
+								<label>&nbsp; Rotinas:</label>
+								<select class="form-control" id="rotina" name="rotina">
+									<option value="">Selecione uma rotina</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<button type="submit">Enviar</button>
-		</form>
+				<div class="col-md-12">
+						<div class="box box-primary">
+							<div class="box-body">
+								<button type="submit">Enviar</button>
+							</div>
+						</div>
+					</div>
+			</form>
+		</div>
 	</section>
 </div>

@@ -6,29 +6,25 @@ use \Kanoah\Model;
 use \Kanoah\BD\SQLServer;
 
 class Tabela extends Model {
-	public static function Teste() {			
+	public static function infTabelas($query = string):string {
 		$sql = new SQLServer();
 
-		$return = $sql->select("SELECT * FROM SE1T10 WHERE E1_PREFIXO = '001' ");
-
-		while (odbc_fetch_row($return)) {
-			echo "" . odbc_result($return, "E1_NUM")."<BR>";
-			echo "<hr>";
-			// echo "" . odbc_result($return, "E1_TIPO")."<BR>";       
-		}
-	}
-
-	public function infTabelas($tabelas = array()):array {
-		$infTabelas = array();
+		$string = "";
 		
-		foreach ($tabelas as $tabela) {
-			$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . TABELAS . DIRECTORY_SEPARATOR . $tabela . ".JSON";
+		$return = $sql->select($query);
 
-			$array = json_decode(file_get_contents($diretorio), true);
-	
-			array_push($infTabelas, $array);
+		while (odbc_fetch_row($return) ) {
+			for ($j = 1; $j <= odbc_num_fields($return); $j++) {        
+				$field_name = odbc_field_name($return, $j);
+
+				$sx3 = $sql->select("SELECT X3_TITULO FROM SX3T10 WHERE X3_CAMPO = '$field_name'");
+				
+				$string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '" . odbc_result($return, $field_name) . "'\n";
+
+			}
+			$string .= "\n\n";
 		}
 
-		return $infTabelas;
+		return $string;
 	}
 }

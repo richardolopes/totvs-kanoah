@@ -2,10 +2,17 @@
 	"ROTINA": "FINA460",
 	"PRECONDICOES": [
 		"SED",
-		"SA1"
+		"SA1",
+		"SE1"
 	],
 	"RESULTADO": [
+		"FO0",
+		"FO1",
+		"FO2",
 		"SE1",
-		"SE5"
+		"SE5",
+		"FK1",
+		"FK5",
+		"FK7"
 	]
 }

@@ -1,8 +1,7 @@
 {
 	"MODULO": "SIGAFIN",
 	"ROTINAS": [
-		"FINA460",
-		"FINA070"
+		"FINA460"
 	],
 	"PARAMETROS": [
 		"MV_BR10925",

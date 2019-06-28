@@ -15,7 +15,6 @@ class Rotina extends Model {
 		$this->setData($array);
 	}
 
-
 	public function retornarQuerys($rotina = string, $tipo = string):array {
 		$diretorioRotina = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR;
 		$diretorioTabela = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . TABELAS . DIRECTORY_SEPARATOR;
@@ -39,7 +38,7 @@ class Rotina extends Model {
 		$sql = new SQLServer();
 
 		$return = $sql->select("
-			SELECT RTRIM(DESCR3.N_DESC) + ' > ' + RTRIM(DESCR2.N_DESC) + ' > ' + RTRIM(DESCR.N_DESC) + ' (' + '$rotina' + ')' AS MENU
+			SELECT (RTRIM(MENU.M_NAME) + ' (' + RTRIM(MENU.M_MODULE) + ')' + ' > ' + RTRIM(DESCR3.N_DESC) + ' > ' + RTRIM(DESCR2.N_DESC) + ' > ' + RTRIM(DESCR.N_DESC) + ' (' + RTRIM(ROTINA.F_FUNCTION) + ')') AS 'MENU' 
 			FROM MPMENU_FUNCTION AS ROTINA
 			JOIN MPMENU_MENU AS MENU ON MENU.M_NAME = '$modulo'
 			JOIN MPMENU_ITEM AS ITEM ON ITEM.I_ID_FUNC = ROTINA.F_ID
@@ -54,14 +53,14 @@ class Rotina extends Model {
 				AND ITEM3.I_ID_MENU = MENU.M_ID
 			JOIN MPMENU_I18N AS DESCR3 ON DESCR3.N_PAREN_ID = ITEM3.I_ID
 				AND DESCR3.N_LANG = '1'
-			WHERE ROTINA.F_FUNCTION = '$rotina'
+			WHERE ROTINA.F_FUNCTION LIKE '$rotina'
 		");
 
 		while (odbc_fetch_row($return)) {
 			$menu = odbc_result($return,"MENU");
 		}
 
-		return substr($menu, 1, strlen($menu));
+		return $menu;
 	}
 
 }

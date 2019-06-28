@@ -1,48 +1,4 @@
 {
 	"TABELA": "SED",
-	"QUERY": "SELECT A1_FILIAL, A1_COD, A1_LOJA, A1_NOME, A1_PESSOA, A1_TIPO, A1_RECCSLL, A1_RECCOFI, A1_RECPIS, A1_RECIRRF, A1_RECISS, A1_ABATIMP FROM SA1T10 SA1",
-	"CAMPOS": [
-		"A1_FILIAL",
-		"A1_COD",
-		"A1_LOJA",
-		"A1_NOME",
-		"A1_PESSOA",
-		"A1_TIPO",
-		"A1_RECCSLL",
-		"A1_RECCOFI",
-		"A1_RECPIS",
-		"A1_RECIRRF",
-		"A1_RECISS",
-		"A1_ABATIMP"
-	],
-	"REGISTROS_DEFINIDOS": {
-		"SEM IMPOSTOS": [
-			"D MG    ",
-			"001   ",
-			"01",
-			"1                                       ",
-			"F",
-			"S",
-			"N",
-			"N",
-			"N",
-			" ",
-			" ",
-			"1"
-		],
-		"PCC" : [
-			"D MG    ",
-			"005FIN",
-			"01",
-			"CLIENTE PCC                             ",
-			"J",
-			"F",
-			"S",
-			"S",
-			"S",
-			" ",
-			" ",
-			"1"
-		]
-	}
+	"QUERY": "SELECT ED_FILIAL, ED_CODIGO, ED_DESCRIC, ED_CALCCSL, ED_PERCCSL, ED_CALCCOF, ED_PERCCOF, ED_CALCPIS, ED_PERCPIS, ED_CALCIRF, ED_PERCIRF, ED_CALCINS, ED_PERCINS, ED_CALCISS, ED_RECIRRF FROM SEDT10 SED "
 }
