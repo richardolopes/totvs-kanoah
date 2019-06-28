@@ -15,7 +15,7 @@ class Modulo {
 			$diretorio->read();
 			$diretorio->read();
 	
-			while($modulo = $diretorio->read()){
+			while($modulo = $diretorio->read()) {
 				$modulo = explode(".", $modulo); // Retira a extensão .JSON
 				array_push($modulos, $modulo[0]);
 			}
@@ -34,13 +34,5 @@ class Modulo {
 		$json = json_decode(file_get_contents($diretorio . $modulo . ".JSON"), true);
 
 		return $json[$inf];
-	}
-
-	public function retornarParametros($modulo = string):array {
-		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . MODULOS . DIRECTORY_SEPARATOR;
-
-		$json = json_decode(file_get_contents($diretorio . $modulo . ".JSON"), true);
-
-		return $json["PARAMETROS"];
 	}
 }

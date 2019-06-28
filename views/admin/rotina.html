@@ -13,7 +13,7 @@
 
 	<section class="content">
 		<div class="row">
-			<form action="/admin/gerarkanoah" method="POST" enctype="multipart/form-data">
+			<form action="/admin/kanoah/gerar" method="POST" enctype="multipart/form-data">
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-body">

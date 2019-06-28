@@ -18,6 +18,32 @@ $app->get("/admin", function() {
 	));
 });
 
+$app->get("/admin/modulos", function() {
+	
+	$modulos = Modulo::retornarModulos();
+	
+	$infModulos = array();
+	
+	foreach ($modulos as $modulo) {
+		$numRotinas    = Modulo::infModulo($modulo, "ROTINAS");
+		$numParametros = Modulo::infModulo($modulo, "PARAMETROS");
+
+		array_push($infModulos, array(
+			"MODULO"=>$modulo,
+			"ROTINAS"=>count($numRotinas),
+			"PARAMETROS"=>count($numParametros)
+		));
+	}
+
+	// echo json_encode($infModulos);
+	// exit;
+	
+	$page = new PageAdmin();
+	$page->setTpl("modulos", array(
+		"modulos"=>$infModulos
+	));
+});
+
 // Retorno em JSON das rotinas do módulo
 $app->get("/admin/rotinas/:modulo", function($modulo) {
 	if (isset($modulo)) {
@@ -52,7 +78,7 @@ $app->post("/admin/kanoah", function() {
 });
 
 
-$app->post("/admin/gerarkanoah", function() {
+$app->post("/admin/kanoah/gerar", function() {
 	$page = new PageAdmin();
 
 	$rotina = new Rotina();

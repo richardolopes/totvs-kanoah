@@ -2,6 +2,10 @@
 	"MODULO": "SIGAFIN",
 	"NMODULO": "06",
 	"ROTINAS": [
+		"FINA460",
+		"FINA460",
+		"FINA460",
+		"FINA460",
 		"FINA460"
 	],
 	"PARAMETROS": [
