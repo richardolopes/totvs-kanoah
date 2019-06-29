@@ -1,5 +1,5 @@
 {if="$error != ''"}
-  
+
   {if="$error == 'user_where'"}
     <script>
       swal("Não digite WHERE.", "", "error");
@@ -17,7 +17,7 @@
       swal({
         title: "Página não encontrada.",
         text: "Você foi redirecionado(a) para página inicial.",
-        icon: "warning"
+        icon: "error"
       })
       .then((value) => {
         window.location.assign("/");

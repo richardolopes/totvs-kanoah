@@ -13,7 +13,7 @@
 
 	<section class="content">
 		<div class="row">
-			<form action="/admin/kanoah/gerar" method="POST" enctype="multipart/form-data">
+			<form action="/kanoah/gerar" method="POST" enctype="multipart/form-data">
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-body">
@@ -108,7 +108,7 @@
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-body">
-							<button type="submit" tabindex="<?php echo htmlspecialchars( $aux+1, ENT_COMPAT, 'UTF-8', FALSE ); ?>">Enviar</button>
+							<button type="submit" tabindex="<?php echo htmlspecialchars( $aux+1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-success">Enviar</button>
 						</div>
 					</div>
 				</div>

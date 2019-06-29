@@ -6,6 +6,31 @@ use \Kanoah\BD\SQLServer;
 use \Kanoah\Model;
 
 class Rotina extends Model {
+	public static function retornarRotinas() {
+		// Diretório dos módulos.
+		$path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR;
+		$diretorio = @dir($path);
+	
+		$modulos = array();
+	
+		if (!empty($diretorio)) {
+			// Pulas os diretórios '.' e '..'
+			$diretorio->read();
+			$diretorio->read();
+	
+			while($modulo = $diretorio->read()) {
+				$modulo = explode(".", $modulo); // Retira a extensão .JSON
+				array_push($modulos, $modulo[0]);
+			}
+	
+			$diretorio->close();
+			
+			return $modulos;
+		} else {
+			return ["??"];
+		}
+	}
+
 	// Define todos os atributos da rotina.
 	public function infRotina($rotina = string) {
 		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR . $rotina . ".JSON";

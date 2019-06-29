@@ -3,10 +3,10 @@
 	"NMODULO": "06",
 	"ROTINAS": [
 		"FINA460",
-		"FINA460",
-		"FINA460",
-		"FINA460",
-		"FINA460"
+		"FINA070",
+		"FINA040",
+		"FINA050",
+		"FINA060"
 	],
 	"PARAMETROS": [
 		"MV_BR10925",

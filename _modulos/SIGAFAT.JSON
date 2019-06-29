@@ -2,7 +2,11 @@
 	"MODULO": "SIGAFIN",
 	"NMODULO": "06",
 	"ROTINAS": [
-		"FINA460"
+		"FINA070",
+		"FINA040",
+		"FINR190",
+		"FINA460",
+		"FINR320"
 	],
 	"PARAMETROS": [
 		"MV_BR10925",
