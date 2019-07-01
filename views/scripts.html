@@ -55,3 +55,25 @@
 		document.execCommand("copy");
 	}
 </script>
+
+<script>
+	function deletar(url) {
+		swal({
+			title: "Você tem certeza?",
+			text:  "Uma vez deletado, você não poderá recuperar este arquivo!",
+			icon:  "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				swal("Excluído!", {
+					icon: "success",
+				});
+			} else {
+				swal("Cancelado!", {
+					icon: "info"
+				});
+			}
+		});
+	}
+</script>

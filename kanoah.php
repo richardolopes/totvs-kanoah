@@ -45,6 +45,7 @@ $app->get("/kanoah/query", function() {
 });
 
 $app->post("/kanoah/query", function() {
+	sleep(3);
 	if (!empty($_POST["query"])) {
 		$txtResultado = utf8_encode(Tabela::infTabelas($_POST["query"]));
 	
