@@ -29,6 +29,7 @@
 				<div class="box box-primary">
 					<div class="box-body">
 						<button class="btn btn-success" onclick="resultado()">Enviar</button>
+						<button class="btn btn-info" onclick="copiar('resultado')">Copiar</button>
 					</div>
 				</div>
 			</div>

@@ -27,16 +27,29 @@
 		if ($("#query").val() == null || $("#query").val() == "") {
 			swal("Digite a query.", "", "error");
 		} else {
+			swal({
+				title: "Carregando...",
+				icon:  "/res/loading.gif",
+				onOpen: () => {
+					swal.showLoading()
+				}
+			});
+
 			$.post("/kanoah/query", {query: $("#query").val()}, function (data) {
 				var resultado = $("#resultado").val() + data; 
-				$("#resultado").html(resultado);
+				$("#resultado").html(resultado + "\n");
+
+				setTimeout(function(){
+					swal.close()
+				}, 1000);
+
 			});
 		}
 	}
 </script>
 
 <script>
-	function copiarQuery(idquery) {
+	function copiar(idquery) {
 		var copyText = document.getElementById(idquery);
 		copyText.select();
 		document.execCommand("copy");
