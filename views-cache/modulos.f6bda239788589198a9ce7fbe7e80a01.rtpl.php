@@ -1,4 +1,9 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?><div class="content-wrapper">
+		<section class="content-header">
+				<h1>
+				  Módulos
+				</h1>
+			  </section>
 	<section class="content">
 		<div class="row">
 			<div class="col-xs-12">
@@ -25,14 +30,14 @@
 								<td><?php echo htmlspecialchars( $value1["ROTINAS"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 								<td><?php echo htmlspecialchars( $value1["PARAMETROS"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 								<td>
-									<a href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/rotina"><i class="fa fa-clone"></i>
-										<span>Adicionar Rotina</span></a>
-									&nbsp; | &nbsp;
-									<a href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-area-chart"></i>
-										<span>Adicionar Parâmetro</span></a>
-									&nbsp; | &nbsp;
-									<a href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><i class="fa fa-search"></i>
-										<span>Visualizar módulo</span></a>
+									<a class="btn btn-success" href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/rotina"><i class="fa fa-clone"></i>
+										<span> Adicionar Rotina</span></a>
+									&nbsp;
+									<a class="btn btn-success" href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-area-chart"></i>
+										<span> Adicionar Parâmetro</span></a>
+									&nbsp;
+									<a class="btn btn-info" href="/modulos/<?php echo htmlspecialchars( $value1["MODULO"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><i class="fa fa-search"></i>
+										<span> Visualizar módulo</span></a>
 								</td>
 							</tr>
 							<?php } ?>

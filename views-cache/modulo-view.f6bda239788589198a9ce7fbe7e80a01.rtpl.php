@@ -27,13 +27,12 @@
                   <td><?php echo htmlspecialchars( $key1+1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                   <td><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                   <td>
-                    <a href="/modulos/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/rotina/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
-                      <i class="fa fa-close"></i><span> Excluir</span>
-                    </a>
-                    &nbsp; | &nbsp;
-                    <a href="/rotinas/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
-                      <i class="fa fa-search"></i><span>Visualizar rotina</span>
-                    </a>
+                    <button class="btn btn-danger" onclick="deletar('/modulos/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/rotina/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i class="fa fa-close"></i><span> Excluir</span></button>
+                    &nbsp;
+                    <button class="btn btn-info" >
+                        <!-- onclick="(/rotinas/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>)" -->
+                      <i class="fa fa-search"></i><span> Visualizar rotina</span>
+                    </button>
                   </td>
                 </tr>
                 <?php } ?>
@@ -64,10 +63,7 @@
                   <td><?php echo htmlspecialchars( $key1+1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                   <td><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                   <td>
-                    <!-- <a href="/modulos/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/parametro/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"> -->
-                    <button onclick="deletar('/modulos/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/parametro/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')">A</button>
-                      <i class="fa fa-close"></i><span> Excluir</span>
-                    </a>
+                    <button class="btn btn-danger" onclick="deletar('/modulos/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/parametro/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i class="fa fa-close"></i><span> Excluir</span></button>
                   </td>
                 </tr>
                 <?php } ?>

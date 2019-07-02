@@ -59,19 +59,22 @@
 <script>
 	function deletar(url) {
 		swal({
-			title: "Você tem certeza?",
-			text:  "Uma vez deletado, você não poderá recuperar este arquivo!",
+			title: "Excluir",
+			text:  "Você tem certeza que deseja excluir este item?",
 			icon:  "warning",
-			buttons: true,
+			buttons: [
+				"Cancelar",
+				"Sim!"
+			],
 			dangerMode: true,
 		}).then((willDelete) => {
 			if (willDelete) {
-				swal("Excluído!", {
-					icon: "success",
-				});
-			} else {
-				swal("Cancelado!", {
-					icon: "info"
+				$.get(url, function() {
+					swal("Excluído!", {
+						icon: "success",
+					}).then(() => {
+						window.location.reload();
+					});
 				});
 			}
 		});

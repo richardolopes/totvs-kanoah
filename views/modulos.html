@@ -1,4 +1,9 @@
 <div class="content-wrapper">
+		<section class="content-header">
+				<h1>
+				  Módulos
+				</h1>
+			  </section>
 	<section class="content">
 		<div class="row">
 			<div class="col-xs-12">
@@ -25,14 +30,14 @@
 								<td>{$value.ROTINAS}</td>
 								<td>{$value.PARAMETROS}</td>
 								<td>
-									<a href="/modulos/{$value.MODULO}/add/rotina"><i class="fa fa-clone"></i>
-										<span>Adicionar Rotina</span></a>
-									&nbsp; | &nbsp;
-									<a href="/modulos/{$value.MODULO}/add/parametro"><i class="fa fa-area-chart"></i>
-										<span>Adicionar Parâmetro</span></a>
-									&nbsp; | &nbsp;
-									<a href="/modulos/{$value.MODULO}"><i class="fa fa-search"></i>
-										<span>Visualizar módulo</span></a>
+									<a class="btn btn-success" href="/modulos/{$value.MODULO}/add/rotina"><i class="fa fa-clone"></i>
+										<span> Adicionar Rotina</span></a>
+									&nbsp;
+									<a class="btn btn-success" href="/modulos/{$value.MODULO}/add/parametro"><i class="fa fa-area-chart"></i>
+										<span> Adicionar Parâmetro</span></a>
+									&nbsp;
+									<a class="btn btn-info" href="/modulos/{$value.MODULO}"><i class="fa fa-search"></i>
+										<span> Visualizar módulo</span></a>
 								</td>
 							</tr>
 							{/loop}
