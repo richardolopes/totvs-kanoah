@@ -7,7 +7,7 @@
 
 	<section class="content">
 		<div class="row">
-			<form action="/kanoah" method="POST">
+			<form action="/kanoah/rotina" method="POST">
 				<div class="col-md-6">
 					<div class="box box-primary">
 						<div class="box-body">
@@ -16,7 +16,7 @@
 								<select class="form-control" id="modulo" name="modulo">
 									<option value="">Selecione um módulo</option>
 									{loop="$modulos"}
-									<option value="{$value}">{$value}</option>
+									<option value="{$value.modulo}">{$value.modulo}</option>
 									{/loop}
 								</select>
 							</div>

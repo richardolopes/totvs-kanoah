@@ -2,65 +2,92 @@
 
 namespace Kanoah\Model;
 
-class Modulo {
-	public static function retornarModulos() {
-		// Diretório dos módulos.
-		$path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . MODULOS . DIRECTORY_SEPARATOR;
-		$diretorio = @dir($path);
+use \Kanoah\BD\SQLServer;
+use \Kanoah\BD\MySQL;
+use \Kanoah\Model;
+
+class Modulo extends Model
+{
+    // Retorna todos os módulos.
+    public static function listModulos(): array
+    {
+		$mysql = new MySQL();
+
+		return $mysql->select("SELECT modulo FROM modulo ORDER BY modulo ASC");
+    }
+
+    public function modulo($modulo = string)
+    {
+        if (!empty($modulo))
+        {
+            $mysql = new MySQL();
+
+            $data = $mysql->select("SELECT id, modulo, numero FROM modulo WHERE modulo = :MODULO", array(
+                ":MODULO" => $modulo,
+            ));
+
+            $this->setData($data[0]);
+        }
+        else
+        {
+            User::setError("EMPTY_MODULO");
+        }
+	}
 	
-		$modulos = array();
-	
-		if (!empty($diretorio)) {
-			// Pulas os diretórios '.' e '..'
-			$diretorio->read();
-			$diretorio->read();
-	
-			while($modulo = $diretorio->read()) {
-				$modulo = explode(".", $modulo); // Retira a extensão .JSON
-				array_push($modulos, $modulo[0]);
+	public static function criarModulo($nomeModulo = string): bool
+	{
+		if (!empty($nomeModulo))
+		{
+			if ($nomeModulo == "SIGACFG") 
+			{
+				throw new \Exception("NO_MODULE");
 			}
-	
-			$diretorio->close();
+
+			$sql = new SQLServer();
+			$infModulo = $sql->select("SELECT M_NAME, M_MODULE FROM MPMENU_MENU WHERE M_NAME = '$nomeModulo'");
+		
+			if (odbc_fetch_row($infModulo) != 1)
+			{
+				throw new \Exception("COUNT_MODULE");
+			}
+			else
+			{
+				$modulo = odbc_result($infModulo, "M_NAME");
+				$numero = odbc_result($infModulo, "M_MODULE");
+			}
 			
-			return $modulos;
-		} else {
-			return ["??"];
+			$mysql = new MySQL();
+
+			$conf = $mysql->select("SELECT modulo FROM modulo WHERE modulo = :MODULO", array(
+				":MODULO"=>$modulo
+			));
+
+			if (!empty($conf))
+			{
+				throw new \Exception("MODULO_JA_CADASTRADO");
+			}
+
+			$mysql->query("INSERT INTO modulo(modulo, numero) VALUES (:MODULO, :NUMERO)", array(
+				":MODULO"=>$modulo,
+				":NUMERO"=>$numero
+			));			
+
+			$conf = $mysql->select("SELECT modulo FROM modulo WHERE modulo = :MODULO", array(
+				":MODULO"=>$modulo
+			));
+
+			if (!empty($conf))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-	}
-
-	public static function infModulo($modulo = string, $inf = string):array {
-		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . MODULOS . DIRECTORY_SEPARATOR;
-
-		$json = json_decode(file_get_contents($diretorio . $modulo . ".JSON"), true);
-
-		return $json[$inf];
-	}
-
-	public function delete($chave, $inf, $arq) {
-		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . $arq;
-
-		$array = file_get_contents($diretorio);
-		$json = json_decode($array, true);
-
-		$num = array_search($inf, $json[$chave]);
-		
-		unset($json[$chave][$num]);
-
-		$aux = array($chave => array_values($json[$chave]));
-
-		unset($json[$chave]);
-		
-		$json = array_merge($json, $aux);
-
-		// echo json_encode($json);
-
-		unlink($diretorio);
-		$fp = fopen($diretorio, 'w');
-		// escreve no ficheiro em json
-		fwrite($fp, json_encode($json));
-		// fecha o ficheiro
-		fclose($fp);
-		// exit;
-
+		else
+		{
+			throw new \Exception("EMPTY_MODULO");
+		}
 	}
 }

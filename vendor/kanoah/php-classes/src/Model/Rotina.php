@@ -2,68 +2,72 @@
 
 namespace Kanoah\Model;
 
+use \Kanoah\BD\MySQL;
 use \Kanoah\BD\SQLServer;
 use \Kanoah\Model;
 
-class Rotina extends Model {
-	public static function retornarRotinas() {
-		// Diretório dos módulos.
-		$path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR;
-		$diretorio = @dir($path);
-	
-		$modulos = array();
-	
-		if (!empty($diretorio)) {
-			// Pulas os diretórios '.' e '..'
-			$diretorio->read();
-			$diretorio->read();
-	
-			while($modulo = $diretorio->read()) {
-				$modulo = explode(".", $modulo); // Retira a extensão .JSON
-				array_push($modulos, $modulo[0]);
-			}
-	
-			$diretorio->close();
-			
-			return $modulos;
-		} else {
-			return ["??"];
-		}
-	}
+/*
+0 - PRE CONDICOES
+1 - RESULTADO ESPERADO
+ */
 
-	// Define todos os atributos da rotina.
-	public function infRotina($rotina = string) {
-		$diretorio = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR . $rotina . ".JSON";
+class Rotina extends Model
+{
+    public static function listRotinas(): array
+    {
+        $mysql = new MySQL();
 
-		$array = json_decode(file_get_contents($diretorio), true);
+        return $mysql->select("SELECT rotina FROM rotina ORDER BY rotina ASC");
+    }
 
-		$this->setData($array);
-	}
+    public static function listRotinasModulo($modulo = string): array
+    {
+        if (!empty($modulo))
+        {
+            $mysql = new MySQL();
 
-	public function retornarQuerys($rotina = string, $tipo = string):array {
-		$diretorioRotina = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . ROTINAS . DIRECTORY_SEPARATOR;
-		$diretorioTabela = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . TABELAS . DIRECTORY_SEPARATOR;
+            $resultado = $mysql->select("SELECT ROT.rotina FROM modulo AS MODU INNER JOIN modulo_rotina as MR on MR.idmodulo = MODU.id INNER JOIN rotina as ROT on ROT.id = MR.idrotina WHERE MODU.modulo = :MODULO", array(
+                ":MODULO" => $modulo,
+            ));
 
-		$rotinaJSON = json_decode(file_get_contents($diretorioRotina . $rotina . ".JSON"), true);
+            $rotinas = array();
 
-		$querys = array();
-		
-		foreach($rotinaJSON["$tipo"] as $tabela) {
-			$tabelaJSON = json_decode(file_get_contents($diretorioTabela . $tabela . ".JSON"), true);
-			array_push($querys, array(
-				$tabela=>$tabelaJSON["QUERY"]
-			));
-		}
-		
-		return $querys;
-	}
+            foreach ($resultado as $value)
+            {
+                array_push($rotinas, $value["rotina"]);
+            }
 
+            return $rotinas;
+        }
+        else
+        {
+            throw new \Exception("EMPTY_MODULO");
+        }
+    }
 
-	public function retornarMenu($modulo = string, $rotina = string):string {
-		$sql = new SQLServer();
+    public function rotina($rotina = string)
+    {
+        if (!empty($rotina))
+        {
+            $mysql = new MySQL();
 
-		$return = $sql->select("
-			SELECT (RTRIM(MENU.M_NAME) + ' (' + RTRIM(MENU.M_MODULE) + ')' + ' > ' + RTRIM(DESCR3.N_DESC) + ' > ' + RTRIM(DESCR2.N_DESC) + ' > ' + RTRIM(DESCR.N_DESC) + ' (' + RTRIM(ROTINA.F_FUNCTION) + ')') AS 'MENU' 
+            $data = $mysql->select("SELECT id, rotina, nome FROM rotina WHERE rotina = :ROTINA", array(
+                ":ROTINA" => $rotina,
+            ));
+
+            $this->setData($data[0]);
+        }
+        else
+        {
+            throw new \Exception("EMPTY_ROTINA");
+        }
+    }
+
+    public function menuRotina($modulo = string): string
+    {
+        $sql    = new SQLServer();
+        $return = $sql->select("
+			SELECT (RTRIM(MENU.M_NAME) + ' (' + RTRIM(MENU.M_MODULE) + ')' + ' > ' + RTRIM(DESCR3.N_DESC) + ' > ' + RTRIM(DESCR2.N_DESC) + ' > ' + RTRIM(DESCR.N_DESC) + ' (' + RTRIM(ROTINA.F_FUNCTION) + ')') AS 'MENU'
 			FROM MPMENU_FUNCTION AS ROTINA
 			JOIN MPMENU_MENU AS MENU ON MENU.M_NAME = '$modulo'
 			JOIN MPMENU_ITEM AS ITEM ON ITEM.I_ID_FUNC = ROTINA.F_ID
@@ -78,14 +82,23 @@ class Rotina extends Model {
 				AND ITEM3.I_ID_MENU = MENU.M_ID
 			JOIN MPMENU_I18N AS DESCR3 ON DESCR3.N_PAREN_ID = ITEM3.I_ID
 				AND DESCR3.N_LANG = '1'
-			WHERE ROTINA.F_FUNCTION LIKE '$rotina'
-		");
+			WHERE ROTINA.F_FUNCTION LIKE '".$this->getrotina()."'
+        ");
 
-		while (odbc_fetch_row($return)) {
-			$menu = odbc_result($return,"MENU");
-		}
+        while (odbc_fetch_row($return))
+        {
+            $menu = odbc_result($return, "MENU");
+        }
 
-		return $menu;
+        return utf8_encode($menu);
 	}
-
+	
+	public function delRotinaModulo($modulo = int, $rotina = int)
+	{
+		$sql = new MySQL();
+		$sql->query("DELETE FROM modulo_rotina WHERE idmodulo = :MODULO AND idrotina = :ROTINA", array(
+			":MODULO"=>$modulo,
+			":ROTINA"=>$rotina
+		));
+	}
 }

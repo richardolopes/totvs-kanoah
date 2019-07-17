@@ -7,15 +7,14 @@
 	$(function () {
 		$('#modulo').change(function () {
 			if ($(this).val()) {
-				$.getJSON("/modulos/rotinas/" + $("#modulo").val(), function (j) {
-					var rotinas = "<option value=''>Selecione uma rotina</option>'";
+				$.getJSON("/modulo/" + $("#modulo").val() + "/rotinas", function (j) {
+					var rotinas = '<option value="">Selecione uma rotina</option>';
 
 					$.each(j, function (key, value) {
 						rotinas += '<option value="' + value + '">' + value + '</option>';
 					});
-					
+
 					$("#rotina").html(rotinas);
-					$('#rotina').click();
 				});
 			}
 		});

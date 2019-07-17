@@ -2,31 +2,35 @@
 
 namespace Kanoah\BD;
 
-class SQLServer {
-	const DRIVER   = "SQL Server";
-	const DNS 	   = "RICHARDOLOPES";
-	const DBNAME   = "P12123MNTDB";
-	const USERNAME = "sa";
-	const PASSWORD = "1234";
+class SQLServer
+{
+    const DRIVER   = "SQL Server";
+    const DNS      = "SPON5143\SQL2014";
+    const DBNAME   = "P12123MNTDB";
+    const USERNAME = "sa";
+    const PASSWORD = "1234";
 
-	private $conn;
+    private $conn;
 
-	public function __construct() {
-		try {
-			$this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . SQLServer::DNS . ";Database=" . SQLServer::DBNAME . ";", SQLServer::USERNAME, SQLServer::PASSWORD);
-		} catch (Exception $e) {
-			die("Sem conexao com o banco de dados.");
-		}
-	}
+    public function __construct()
+    {
+        try {
+            $this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . SQLServer::DNS . ";Database=" . SQLServer::DBNAME . ";", SQLServer::USERNAME, SQLServer::PASSWORD);
+        }
+        catch (Exception $e)
+        {
+            die("Sem conexao com o banco de dados.");
+        }
+    }
 
-	public function __destruct() {
-		odbc_close($this->conn);
-	}
+    public function __destruct()
+    {
+        odbc_close($this->conn);
+    }
 
-	public function select($rawQuery) {
-		$return = odbc_exec($this->conn, $rawQuery);
-		return $return;
-	}
+    public function select($rawQuery)
+    {
+        $return = odbc_exec($this->conn, $rawQuery);
+        return $return;
+    }
 }
-
-?>

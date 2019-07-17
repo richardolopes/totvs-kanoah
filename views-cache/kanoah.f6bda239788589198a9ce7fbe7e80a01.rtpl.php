@@ -7,7 +7,7 @@
 
 	<section class="content">
 		<div class="row">
-			<form action="/kanoah" method="POST">
+			<form action="/kanoah/rotina" method="POST">
 				<div class="col-md-6">
 					<div class="box box-primary">
 						<div class="box-body">
@@ -16,7 +16,7 @@
 								<select class="form-control" id="modulo" name="modulo">
 									<option value="">Selecione um módulo</option>
 									<?php $counter1=-1;  if( isset($modulos) && ( is_array($modulos) || $modulos instanceof Traversable ) && sizeof($modulos) ) foreach( $modulos as $key1 => $value1 ){ $counter1++; ?>
-									<option value="<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></option>
+									<option value="<?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?></option>
 									<?php } ?>
 								</select>
 							</div>

@@ -20,7 +20,7 @@
 					</div>
 					<div class="box-body">
 						<label for="precondicoes"></label><br>
-						<textarea class="form-control" name="precondicoes" id="precondicoes" rows="16"><?php echo htmlspecialchars( $precondicoes, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea><br>
+						<textarea class="form-control" name="precondicoes" id="precondicoes" rows="16"><?php echo htmlspecialchars( $precondicao, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea><br>
 					</div>
 				</div>
 			</div>

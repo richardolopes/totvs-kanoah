@@ -2,29 +2,86 @@
 
 namespace Kanoah\Model;
 
-use \Kanoah\Model;
+use \Kanoah\BD\MySQL;
 use \Kanoah\BD\SQLServer;
+use \Kanoah\Model;
 
-class Tabela extends Model {
-	public static function infTabelas($query = string):string {
-		$sql = new SQLServer();
+/*
+0 - PRE CONDICOES
+1 - RESULTADO ESPERADO
+ */
 
-		$string = "";
-		
-		$return = $sql->select($query);
+class Tabela extends Model
+{
+    public static function listTabelas(): array
+    {
+        $mysql = new MySQL();
 
-		while (odbc_fetch_row($return) ) {
-			for ($j = 1; $j <= odbc_num_fields($return); $j++) {        
-				$field_name = odbc_field_name($return, $j);
+        return $mysql->select("SELECT tabela FROM tabela ORDER BY tabela ASC");
+    }
 
-				$sx3 = $sql->select("SELECT X3_TITULO FROM SX3T10 WHERE X3_CAMPO = '$field_name'");
-				
-				$string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '" . odbc_result($return, $field_name) . "'\n";
+    public function listTabelasRotina($rotina = string): array
+    {
+        if (!empty($rotina))
+        {
+            $mysql = new MySQL();
 
-			}
-			$string .= "\n\n";
-		}
+            $precondicao = $mysql->select("SELECT tabela, query FROM tabela as TAB inner join rotina_tabela as ROTTAB on ROTTAB.idtabela = TAB.id inner join rotina as ROT on ROT.id = ROTTAB.idrotina where ROT.rotina = :ROTINA AND tipo = 0", array(
+                ":ROTINA" => $rotina,
+            ));
 
-		return $string;
-	}
+            $resultado = $mysql->select("SELECT tabela, query FROM tabela as TAB inner join rotina_tabela as ROTTAB on ROTTAB.idtabela = TAB.id inner join rotina as ROT on ROT.id = ROTTAB.idrotina where ROT.rotina = :ROTINA AND tipo = 1", array(
+                ":ROTINA" => $rotina,
+            ));
+
+            $tabelas = array(
+                "precondicao" => array(),
+                "resultado"   => array(),
+            );
+
+            foreach ($precondicao as $value)
+            {
+                array_push($tabelas["precondicao"], array(
+                    $value["tabela"] => $value["query"],
+                ));
+            }
+
+            foreach ($resultado as $value)
+            {
+                array_push($tabelas["resultado"], array(
+                    $value["tabela"] => $value["query"],
+                ));
+            }
+
+            return $tabelas;
+        }
+        else
+        {
+            throw new \Exception("EMPTY_ROTINA");
+        }
+    }
+
+    public static function infTabelas($query = string): string
+    {
+        $sql    = new SQLServer();
+        $string = "";
+
+        $return = $sql->select($query);
+
+        while (odbc_fetch_row($return))
+        {
+            for ($j = 1; $j <= odbc_num_fields($return); $j++)
+            {
+                $field_name = odbc_field_name($return, $j);
+                $sx3        = $sql->select("SELECT X3_TITULO FROM SX3T10 WHERE X3_CAMPO = '$field_name'");
+
+                $string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '" . odbc_result($return, $field_name) . "'\n";
+            }
+
+            $string .= "\n\n";
+        }
+
+        return utf8_encode($string);
+    }
+
 }

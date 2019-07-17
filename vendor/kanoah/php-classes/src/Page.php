@@ -4,67 +4,74 @@ namespace Kanoah;
 
 use \Rain\Tpl;
 
-class Page {
-	private $tpl; // Para ter acesso em outros metodos.
-	private $options = [];
-	private $defaults = [ // Variaveis 'padrao'
-		"header" => true,
-		"scripts" => true,
-		"footer" => true,
-		"data" => [], // Variaveis do template.
-	];
+class Page
+{
+    private $tpl; // Para ter acesso em outros metodos.
+    private $options  = array();
+    private $defaults = array( // Variaveis 'padrao'
+        "header"  => true,
+        "scripts" => true,
+        "footer"  => true,
+        "data"    => array(), // Variaveis do template.
+    );
 
-	public function __construct($opts = array(), $tpl_dir = "/views/") {
-		// $opts -> Variaveis da rota.
-		// $tpl_dir -> Pasta do template
+    public function __construct($opts = array(), $tpl_dir = "/views/")
+    {
+        // $opts -> Variaveis da rota.
+        // $tpl_dir -> Pasta do template
 
-		// Sobrescrever arrays
-		$this->options = array_merge($this->defaults, $opts);
+        // Sobrescrever arrays
+        $this->options = array_merge($this->defaults, $opts);
 
-		// Configuração do RainTpl
-		$config = array(
-			"tpl_dir" => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,
-			"cache_dir" => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
-			"debug" => false, // set to false to improve the speed
-		);
+        // Configuração do RainTpl
+        $config = array(
+            "tpl_dir"   => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,
+            "cache_dir" => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
+            "debug"     => false, // set to false to improve the speed
+        );
 
-		Tpl::configure($config);
+        Tpl::configure($config);
 
-		$this->tpl = new Tpl;
+        $this->tpl = new Tpl;
 
-		// Atribuir as variaveis do template.
-		$this->setDataTemplate($this->options["data"]);
+        // Atribuir as variaveis do template.
+        $this->setDataTemplate($this->options["data"]);
 
-		if ($this->options["header"] === true) {
-			$this->tpl->draw("header");
-		}
-	}
+        if ($this->options["header"] === true)
+        {
+            $this->tpl->draw("header");
+        }
+    }
 
-	private function setDataTemplate($data = array()) {
-		// Atribuir variaveis do template.
-		foreach ($data as $key => $value) {
-			$this->tpl->assign($key, $value);
-		}
-	}
+    private function setDataTemplate($data = array())
+    {
+        // Atribuir variaveis do template.
+        foreach ($data as $key => $value)
+        {
+            $this->tpl->assign($key, $value);
+        }
+    }
 
-	public function setTpl($name, $data = array(), $returnHTML = false) {
-		// $name -> Nome do template.
-		// $data -> Variaveis
-		// $returnHTML -> Retornar o HTML ou apenas executar.
-		$this->setDataTemplate($data);
+    public function setTpl($name, $data = array(), $returnHTML = false)
+    {
+        // $name -> Nome do template.
+        // $data -> Variaveis
+        // $returnHTML -> Retornar o HTML ou apenas executar.
+        $this->setDataTemplate($data);
 
-		return $this->tpl->draw($name, $returnHTML);
-	}
+        return $this->tpl->draw($name, $returnHTML);
+    }
 
-	public function __destruct() {
-		if ($this->options["scripts"] === true) {
-			$this->tpl->draw("scripts");
-		}
+    public function __destruct()
+    {
+        if ($this->options["scripts"] === true)
+        {
+            $this->tpl->draw("scripts");
+        }
 
-		if ($this->options["footer"] === true) {
-			$this->tpl->draw("footer");
-		}
-	}
+        if ($this->options["footer"] === true)
+        {
+            $this->tpl->draw("footer");
+        }
+    }
 }
-
-?>
