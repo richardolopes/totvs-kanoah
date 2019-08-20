@@ -5,17 +5,21 @@ namespace Kanoah\BD;
 class SQLServer
 {
     const DRIVER   = "SQL Server";
-    const DNS      = "SPON5143\SQL2014";
-    const DBNAME   = "P12123MNTDB";
-    const USERNAME = "sa";
-    const PASSWORD = "1234";
+    // const DNS      = "SPON010104935\SQL2014";
+    // const DBNAME   = "P12125MNTDB";
+    // const USERNAME = "sa";
+    // const PASSWORD = "1234";
 
     private $conn;
 
-    public function __construct()
+	public function __construct() {
+		$this->conexao($_SESSION["SERVER"], $_SESSION["DATABASE"], $_SESSION["USER"], $_SESSION["PASSWORD"]);
+	}
+
+    public function conexao($server, $database, $user, $password)
     {
         try {
-            $this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . SQLServer::DNS . ";Database=" . SQLServer::DBNAME . ";", SQLServer::USERNAME, SQLServer::PASSWORD);
+            $this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . $server . ";Database=" . $database . ";", $user, $password);
         }
         catch (Exception $e)
         {

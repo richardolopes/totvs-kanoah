@@ -18,9 +18,43 @@ class Tabela extends Model
         $mysql = new MySQL();
 
         return $mysql->select("SELECT tabela FROM tabela ORDER BY tabela ASC");
-    }
+	}
+	
+	public function tabela($tabela = string)
+    {
+        if (!empty($tabela))
+        {
+            $mysql = new MySQL();
 
-    public function listTabelasRotina($rotina = string): array
+            $data = $mysql->select("SELECT id, tabela, nome, query FROM tabela WHERE tabela = :TABELA", array(
+                ":TABELA" => $tabela,
+            ));
+
+            $this->setData($data[0]);
+        }
+        else
+        {
+            User::setError("EMPTY_TABELA");
+        }
+	}
+
+	public function relacaoTabela($tabela = string): array
+	{
+		if (!empty($tabela))
+        {
+            $mysql = new MySQL();
+
+            return $mysql->select("SELECT TAB.tabela, TAB2.tabela, TABREL.campo, TABREL.camporel FROM tabela AS TAB INNER JOIN tabela_relacao AS TABREL ON TABREL.idtabela = TAB.id INNER JOIN tabela AS TAB2 ON TAB2.id = TABREL.idrelacao WHERE TAB.tabela = :TABELA ", array(
+                ":TABELA" => $tabela,
+			));	
+        }
+        else
+        {
+            User::setError("EMPTY_TABELA");
+        }
+	}
+
+    public static function listTabelasRotina($rotina = string): array
     {
         if (!empty($rotina))
         {
@@ -82,6 +116,24 @@ class Tabela extends Model
         }
 
         return utf8_encode($string);
-    }
+	}
+	
+	public static function criarTabela($tabela = string, $nome = string, $query = string)
+	{
+		if (!empty($tabela) && !empty($nome) && !empty($query)) {
+			$sql = new SQLServer();
+			$sql->select($query . " WHERE R_E_C_N_O_ = 0");
+			$sql->select("SELECT * FROM " . $tabela . "T10 WHERE R_E_C_N_O_ = 0");
+			
+			$mysql = new MySQL();
+			$mysql->query("INSERT INTO tabela(`tabela`, `nome`, `query`) VALUES (:TABELA, :NOME, :QUERY)", array(
+				":TABELA"=>$tabela,
+				":NOME"=>$nome,
+				":QUERY"=>$query
+			));
+		} else {
+			User::setError("EMPTY_CRIARTABELA");
+		}
+	}
 
 }

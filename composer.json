@@ -9,7 +9,8 @@
     ],
     "require": {
     	"slim/slim":"2.0",
-    	"rain/raintpl":"3.0.0"
+		"rain/raintpl":"3.0.0",
+		"phpoffice/phpspreadsheet":"1.8.2"
     },
     "autoload": {
         "psr-4": {

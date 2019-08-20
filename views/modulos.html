@@ -3,8 +3,9 @@
 		<h1>
 			Módulos
 		</h1>
+		<br>
 		<div class="box-tools">
-			<a onclick="criarModulo()"><i class="fa fa-codepen"></i> <span>Adicionar Módulo</span></a>
+			<a style="cursor: pointer" onclick="criarModulo()"><i class="fa fa-codepen"></i> <span>Adicionar Módulo</span></a>
 		</div>
 	</section>
 	<section class="content">
@@ -53,7 +54,7 @@ function criarModulo() {
 		text: "Nome do módulo:",
 		buttons: [
 			"Cancelar",
-			"Criar!"
+			"Criar"
 		],
 		dangerMode: true,
 		content: {

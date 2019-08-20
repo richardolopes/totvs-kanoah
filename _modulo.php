@@ -5,17 +5,6 @@ use \Kanoah\Model\Modulo;
 use \Kanoah\Model\Parametro;
 use \Kanoah\Page;
 
-$app->post("/modulo/criar", function ()
-{
-	$var = Modulo::criarModulo($_POST["modulo"]);
-	echo $var;
-});
-
-$app->get("/modulo/:modulo/rotinas", function ($modulo)
-{
-    echo json_encode(Rotina::listRotinasModulo($modulo));
-});
-
 $app->get("/modulos", function ()
 {
 	$modulos = Modulo::listModulos();
@@ -24,6 +13,16 @@ $app->get("/modulos", function ()
 	$page->setTpl("modulos", array(
 		"modulos"=>$modulos
 	));
+});
+
+$app->post("/modulo/criar", function ()
+{
+	echo Modulo::criarModulo($_POST["modulo"]);
+});
+
+$app->get("/modulo/:modulo/rotinas", function ($modulo)
+{
+    echo json_encode(Rotina::listRotinasModulo($modulo));
 });
 
 $app->get("/modulo/:modulo", function ($nomeModulo)
@@ -66,4 +65,24 @@ $app->get("/modulo/:modulo/delete/parametro/:parametro", function($nomeModulo, $
 
 	header("Location: /modulos/$nomeModulo");
 	exit;
+});
+
+$app->get("/modulo/:modulo/add/parametro", function($nomeModulo) {
+	$modulo = new Modulo();
+	$modulo->modulo($nomeModulo);
+
+	$page = new Page();
+	$page->setTpl("modulo-add-parametro", array(
+		"modulo"=>$modulo->getmodulo()
+	));
+});
+
+$app->get("/modulo/:modulo/add/rotina", function($nomeModulo) {
+	$modulo = new Modulo();
+	$modulo->modulo($nomeModulo);
+
+	$page = new Page();
+	$page->setTpl("modulo-add-rotina", array(
+		"modulo"=>$modulo->getmodulo()
+	));
 });

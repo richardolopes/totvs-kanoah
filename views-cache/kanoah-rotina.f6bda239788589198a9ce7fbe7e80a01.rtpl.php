@@ -62,7 +62,7 @@
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
 							<label for="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" onclick="copiar('PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE')"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
 							<textarea class="form-control" name="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="PRE<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
-								tabindex=<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>></textarea><br>
+								tabindex=<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>>R_E_C_N_O_ </textarea><br>
 							<?php } ?>
 							<?php } ?>
 						</div>
@@ -97,7 +97,7 @@
 							<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
 							<label for="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" onclick="copiar('RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE')"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></label><br>
 							<textarea class="form-control" name="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" id="RES<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>WHERE" cols="50" rows="3"
-								tabindex="<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>"></textarea><br>
+								tabindex="<?php echo htmlspecialchars( $aux, ENT_COMPAT, 'UTF-8', FALSE ); ?>">R_E_C_N_O_ </textarea><br>
 							<?php } ?>
 							<?php } ?>
 						</div>

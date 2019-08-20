@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="/res/admin/index2.html" class="logo">
+    <a href="/" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>Ric</b></span>
       <!-- logo for regular state and mobile devices -->
@@ -72,10 +72,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Optionally, you can add icons to the links -->
         <li><a href="/"><i class="fa fa-home"></i> <span>Home</span></a></li>
         <li><a href="/kanoah"><i class="fa fa-archive"></i> <span>Gerar Kanoah</span></a></li>
+        <!-- <li><a href="/v2/kanoah"><i class="fa fa-archive"></i> <span>Kanoah v2.0</span></a></li> -->
         <li><a href="/kanoah/query"><i class="fa fa-briefcase"></i> <span>Query</span></a></li>
         <li><a href="/modulos"><i class="fa fa-users"></i> <span>Módulos</span></a></li>
         <li><a href="/rotinas"><i class="fa fa-clone"></i> <span>Rotinas</span></a></li>
         <li><a href="/tabelas"><i class="fa fa-table"></i> <span>Tabelas</span></a></li>
+        <li><a href="/sair"><i class="fa fa-times"></i> <span>Limpar configurações</span></a></li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

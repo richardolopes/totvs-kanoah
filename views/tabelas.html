@@ -1,0 +1,40 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>
+			Tabelas
+		</h1>
+		<br>
+		<div class="box-tools">
+			<a href="/tabela/add"><i class="fa fa-codepen"></i> <span>Adicionar Tabela</span></a>
+		</div>
+	</section>
+	<section class="content">
+		<div class="row">
+			<div class="col-xs-12">
+				{loop="$tabelas"}
+				{loop="$value"}
+				<div class="col-md-3">
+					<div class="box box-widget widget-user-2">
+						<div class="widget-user-header label-primary">
+							<div class="widget-user-image">
+								<a href="/tabela/{$value}">
+									<h3 style="color: white">{$value} <i class="fa fa-arrow-circle-right"></i></h3>
+								</a>
+							</div>
+
+						</div>
+						<div class="box-footer no-padding">
+							<ul class="nav nav-stacked">
+								<li><a href="/tabela/{$value}">Rotinas <span class="pull-right badge bg-blue">31</span></a></li>
+
+								<li><a href="/tabela/{$value}">Parâmetros <span class="pull-right badge bg-blue">5</span></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				{/loop}
+				{/loop}
+			</div>
+		</div>
+	</section>
+</div>

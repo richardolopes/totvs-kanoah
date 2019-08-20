@@ -40,7 +40,7 @@
 						<h3 class="box-title">Resultado</h3>
 					</div>
 					<div class="box-body">
-						<label for="query"></label><br>
+						<label for="resultado"></label><br>
 						<textarea class="form-control" name="resultado" id="resultado" rows="10"></textarea><br>
 					</div>
 				</div>

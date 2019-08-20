@@ -23,7 +23,7 @@ class Model
             case "get":
                 // Procura o campo no values.
                 // Se encontrar retorna o proprio campo.
-                return isset($this->values[$fieldName]) ? $this->values[$fieldName] : null;
+                return isset($this->values[$fieldName]) ? utf8_encode($this->values[$fieldName]) : null;
                 break;
 
             case "set":

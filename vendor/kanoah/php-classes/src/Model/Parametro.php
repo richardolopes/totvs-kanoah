@@ -39,6 +39,31 @@ class Parametro extends Model
         }
 	}
 
+	public static function listParametrosRotina($rotina = string): array
+    {
+        if (!empty($rotina))
+        {
+            $mysql = new MySQL();
+
+            $resultado = $mysql->select("SELECT parametro FROM rotina AS rot INNER JOIN rotina_parametro AS rotpar ON rotpar.idrotina = rot.id INNER JOIN parametro AS PAR ON PAR.id = rotpar.idparametro WHERE rot.rotina = :ROTINA", array(
+                ":ROTINA" => $rotina,
+            ));
+
+            $parametros = array();
+
+            foreach ($resultado as $value)
+            {
+                array_push($parametros, $value["parametro"]);
+			}
+			
+            return $parametros;
+        }
+        else
+        {
+            throw new \Exception("EMPTY_MODULO");
+        }
+	}
+
 	public function parametro($parametro = string)
     {
         if (!empty($parametro))
