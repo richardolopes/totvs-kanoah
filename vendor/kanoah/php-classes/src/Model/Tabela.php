@@ -120,11 +120,20 @@ class Tabela extends Model
 	
 	public static function criarTabela($tabela = string, $nome = string, $query = string)
 	{
-		if (!empty($tabela) && !empty($nome) && !empty($query)) {
+		if (!empty($tabela) && !empty($query)) {
+			$tabela = strtoupper($tabela);
+			$query  = strtoupper($query);
+
 			$sql = new SQLServer();
 			$sql->select($query . " WHERE R_E_C_N_O_ = 0");
 			$sql->select("SELECT * FROM " . $tabela . "T10 WHERE R_E_C_N_O_ = 0");
 			
+			if (empty($nome)) {
+				$return = $sql->select("SELECT X2_NOME FROM SX2T10 WHERE X2_CHAVE = '" . $tabela . "' ");
+
+				$nome = odbc_result($return, "X2_NOME");
+			}
+
 			$mysql = new MySQL();
 			$mysql->query("INSERT INTO tabela(`tabela`, `nome`, `query`) VALUES (:TABELA, :NOME, :QUERY)", array(
 				":TABELA"=>$tabela,
@@ -136,4 +145,44 @@ class Tabela extends Model
 		}
 	}
 
+	public static function ajustarTabelas($tabelasRotina):array
+	{
+		$tabs = array();
+		foreach ($tabelasRotina as $key => $value) {
+			foreach ($value as $chave => $e) {
+				array_push($tabs, $chave);
+			}
+		}
+
+		return $tabs;
+	}
+
+
+	public function addTabRot($rotina = int, $tabelas = array(), $tipo = int)
+	{
+		$mysql = new MySQL();
+
+		foreach ($tabelas as $key => $value) {
+			$retTab = $mysql->select("SELECT id FROM tabela WHERE tabela = :TABELA", array(
+				":TABELA"=>$value
+			));
+
+			$return = $mysql->select("SELECT id FROM rotina_tabela WHERE idrotina = :ROTINA AND idtabela = :TABELA AND tipo = :TIPO", array(
+				":ROTINA" => $rotina,
+				":TABELA" => $retTab[0]["id"],
+				":TIPO"   => $tipo
+			));
+
+
+			if (!isset($return[0])) {
+				$mysql->query("INSERT INTO rotina_tabela(`idrotina`, `idtabela`, `tipo`) VALUES (:ROTINA, :TABELA, :TIPO)", array(
+					":ROTINA" => $rotina,
+					":TABELA" => $retTab[0]["id"],
+					":TIPO"   => $tipo
+				));
+			} else {
+				User::setError("TABELA_JA_CADASTRADA");
+			}
+		}
+	}
 }

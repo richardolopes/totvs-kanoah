@@ -5,10 +5,10 @@ namespace Kanoah\BD;
 class SQLServer
 {
     const DRIVER   = "SQL Server";
-    // const DNS      = "SPON010104935\SQL2014";
-    // const DBNAME   = "P12125MNTDB";
-    // const USERNAME = "sa";
-    // const PASSWORD = "1234";
+    const DNS      = "SPON004928\DEVELOPER2014";
+    const DBNAME   = "P12125MNTDB";
+    const USERNAME = "sa";
+    const PASSWORD = "1234";
 
     private $conn;
 

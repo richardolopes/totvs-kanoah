@@ -18,15 +18,18 @@
 							<!-- text input -->
 							<div class="form-group">
 								<label>Tabela:</label>
-								<input type="text" id="tabela" name="tabela" class="form-control" maxlength="3" placeholder="Ex: SE1">
+								<input type="text" id="tabela" name="tabela" class="form-control" maxlength="3"
+									placeholder="Ex: SE1">
 							</div>
 							<div class="form-group">
 								<label>Nome da Tabela:</label>
-								<input type="text" id="nome" name="nome" class="form-control" maxlength="50" placeholder="Ex: Contas a Receber">
+								<input type="text" id="nome" name="nome" class="form-control" maxlength="50"
+									placeholder="Ex: Contas a Receber">
 							</div>
 							<div class="form-group">
 								<label>Query:</label>
-								<textarea class="form-control" id="query" name="query" rows="5" placeholder="Ex: SELECT E1_FILIAL, E1_PREFIXO FROM SE1T10 SE1"></textarea>
+								<textarea class="form-control" id="query" name="query" rows="5"
+									placeholder="Ex: SELECT E1_FILIAL, E1_PREFIXO FROM SE1T10 SE1"></textarea>
 							</div>
 							<div class="box-footer">
 								<button type="submit" class="btn btn-success">Enviar</button>

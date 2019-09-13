@@ -6,6 +6,12 @@
 </script>
 <?php } ?>
 
+<?php if( $error == 'TABELA_JA_CADASTRADA' ){ ?>
+<script>
+	swal("Tabela já cadastrada para essa rotina.", "", "error");
+</script>
+<?php } ?>
+
 <?php if( $error == 'EMPTY_POSTPRE QUERY/WHERE' ){ ?>
 <script>
 	swal("Preencha todos os WHERES da pré-condição.", "", "warning");

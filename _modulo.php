@@ -81,6 +81,10 @@ $app->get("/modulo/:modulo/add/rotina", function($nomeModulo) {
 	$modulo = new Modulo();
 	$modulo->modulo($nomeModulo);
 
+
+	Modulo::rotinasModulo($nomeModulo);
+	exit;
+
 	$page = new Page();
 	$page->setTpl("modulo-add-rotina", array(
 		"modulo"=>$modulo->getmodulo()

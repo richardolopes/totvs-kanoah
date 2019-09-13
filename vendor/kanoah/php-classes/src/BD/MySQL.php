@@ -7,7 +7,7 @@ class MySQL
     const HOSTNAME = "127.0.0.1";
     const USERNAME = "root";
     const PASSWORD = "";
-    const DBNAME   = "kanoah";
+    const DBNAME   = "kanoahPC";
     private $conn;
 
     public function __construct()

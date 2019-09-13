@@ -44,7 +44,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Tabelas de<br> Précondição</h3>
 						<div class="pull-right">
-							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/tabela"><i class="fa fa-plus"></i>
+							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/tabela/pre"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Tabela</span></a>
 						</div>
 					</div>
@@ -60,9 +60,7 @@
 								<tr>
 									<td><a href="/tabela/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
 									<td>
-										<button class="btn btn-danger"
-											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/pre/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
-												class="fa fa-close"></i><span>
+										<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
 												Excluir</span></button>
 										&nbsp;
 									</td>
@@ -81,7 +79,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Tabelas de<br> Resultado Esperado</h3>
 						<div class="pull-right">
-							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/tabela"><i class="fa fa-plus"></i>
+							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/tabela/res"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Tabela</span></a>
 						</div>
 					</div>
@@ -97,9 +95,7 @@
 								<tr>
 									<td><a href="/tabela/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
 									<td>
-										<button class="btn btn-danger"
-											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/res/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
-												class="fa fa-close"></i><span>
+										<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
 												Excluir</span></button>
 										&nbsp;
 									</td>
@@ -115,37 +111,37 @@
 
 
 			<div class="col-md-4">
-				<div class="box box-primary">
-					<div class="box-header with-border">
-						<h3 class="box-title">Parâmetros<br> &nbsp;</h3>
-						<div class="pull-right">
-							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-plus"></i>
-								<span>&nbsp;Adicionar Parâmetro</span></a>
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">Parâmetros<br> &nbsp;</h3>
+							<div class="pull-right">
+								<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-plus"></i>
+									<span>&nbsp;Adicionar Parâmetro</span></a>
+							</div>
 						</div>
-					</div>
-					<div class="box-body">
-						<div class="box-body table-responsive no-padding">
-							<table class="table table-hover">
-								<tr>
-									<th>Parâmetros</th>
-									<th style="width: 150px">Ações</th>
-								</tr>
-								<?php $counter1=-1;  if( isset($parametros) && ( is_array($parametros) || $parametros instanceof Traversable ) && sizeof($parametros) ) foreach( $parametros as $key1 => $value1 ){ $counter1++; ?>
-								<tr>
-									<td><a href="/parametro/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
-									<td>
-										<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
-												Excluir</span></button>
-										&nbsp;
-									</td>
-								</tr>
-								<?php } ?>
-							</table>
+						<div class="box-body">
+							<div class="box-body table-responsive no-padding">
+								<table class="table table-hover">
+									<tr>
+										<th>Parâmetros</th>
+										<th style="width: 150px">Ações</th>
+									</tr>
+									<?php $counter1=-1;  if( isset($parametros) && ( is_array($parametros) || $parametros instanceof Traversable ) && sizeof($parametros) ) foreach( $parametros as $key1 => $value1 ){ $counter1++; ?>
+									<tr>
+										<td><a href="/parametro/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
+										<td>
+											<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
+													Excluir</span></button>
+											&nbsp;
+										</td>
+									</tr>
+									<?php } ?>
+								</table>
+							</div>
+	
 						</div>
-
 					</div>
 				</div>
-			</div>
 
 
 		</div>

@@ -101,4 +101,15 @@ class Rotina extends Model
 			":ROTINA"=>$rotina
 		));
 	}
+
+	public function delTabelaRotina($rotina = int, $tabela = int, $tipo = int)
+	{
+		$sql = new MySQL();
+		$sql->query("DELETE FROM rotina_tabela WHERE idrotina = :ROTINA AND idtabela = :TABELA AND tipo = :TIPO", array(
+			":ROTINA"=>$rotina,
+			":TABELA"=>$tabela,
+			":TIPO"=>$tipo
+		));
+	}
+
 }

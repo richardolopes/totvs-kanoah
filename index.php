@@ -25,14 +25,14 @@ $app->get("/sair", function() {
 });
 
 $app->get("/conf", function() {
-	echo "<textarea cols=30 rows=30>";
-	echo $_SESSION["SERVER"];
+	echo "<textarea cols=60 rows=15>";
+	echo "SERVER:   " . $_SESSION["SERVER"];
 	echo "\n";
-	echo $_SESSION["DATABASE"];
+	echo "DATABASE: " . $_SESSION["DATABASE"];
 	echo "\n";
-	echo $_SESSION["USER"];
+	echo "USUARIO:  " . $_SESSION["USER"];
 	echo "\n";
-	echo $_SESSION["PASSWORD"];
+	echo "SENHA:    " . $_SESSION["PASSWORD"];
 	echo "</textarea>";
 	exit;
 });
@@ -56,6 +56,12 @@ if (
 {
 	$app->get("/", function ()
 	{
+		// $tempo = time() + 7200;
+		// $cookie = "Este valor será armazenado";
+		// $nome_cookie = "precondicao";
+
+		// setcookie($nome_cookie, $cookie, $tempo);
+
 		$page = new Page();
 		$page->setTpl("banco", array(
 			"error" => User::getError()
@@ -93,9 +99,8 @@ $app->notFound(function () use ($app)
 		User::clearError();
 		User::setError("database_undefined");	
 	}
+	
 	User::setError("page_undefined");
-	header("Location: /");
-	exit;
 });
 
 $app->run();

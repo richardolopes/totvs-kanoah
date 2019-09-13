@@ -2,7 +2,6 @@
 	<section class="content-header">
 		<h1>
 			<small> Rotina </small> {}
-			<!-- <small> Tipo </small> <?php if( $tipo == 0 ){ ?>Pré-condição<?php } ?><?php if( $tipo == 1 ){ ?>Resultado esperado<?php } ?> -->
 		</h1>
 	</section>
 
@@ -30,7 +29,7 @@
 														disabled>{}
 												</label>
 											</div>
-											<?php } ?>
+											{}
 										</td>
 										<td>
 											{}

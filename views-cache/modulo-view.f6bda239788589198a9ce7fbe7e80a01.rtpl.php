@@ -35,10 +35,10 @@
 											onclick="deletar('/modulo/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/rotina/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
 												class="fa fa-close"></i><span> Excluir</span></button>
 										&nbsp;
-										<button class="btn label-primary">
+										<a href="/rotina/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn label-primary">
 											<!-- onclick="(/rotinas/<?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?>)" -->
 											<i class="fa fa-search"></i><span> Visualizar rotina</span>
-										</button>
+										</a>
 									</td>
 								</tr>
 								<?php } ?>
