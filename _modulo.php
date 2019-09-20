@@ -68,25 +68,10 @@ $app->get("/modulo/:modulo/delete/parametro/:parametro", function($nomeModulo, $
 });
 
 $app->get("/modulo/:modulo/add/parametro", function($nomeModulo) {
-	$modulo = new Modulo();
-	$modulo->modulo($nomeModulo);
-
 	$page = new Page();
 	$page->setTpl("modulo-add-parametro", array(
-		"modulo"=>$modulo->getmodulo()
+		"modulo"=>$nomeModulo
 	));
 });
 
-$app->get("/modulo/:modulo/add/rotina", function($nomeModulo) {
-	$modulo = new Modulo();
-	$modulo->modulo($nomeModulo);
 
-
-	Modulo::rotinasModulo($nomeModulo);
-	exit;
-
-	$page = new Page();
-	$page->setTpl("modulo-add-rotina", array(
-		"modulo"=>$modulo->getmodulo()
-	));
-});

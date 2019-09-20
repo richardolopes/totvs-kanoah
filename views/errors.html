@@ -1,5 +1,6 @@
 {if="$error != ''"}
 
+
 {if="$error == 'user_where'"}
 <script>
 	swal("Não digite WHERE.", "", "error");
@@ -9,6 +10,12 @@
 {if="$error == 'TABELA_JA_CADASTRADA'"}
 <script>
 	swal("Tabela já cadastrada para essa rotina.", "", "error");
+</script>
+{/if}
+
+{if="$error == 'ROTINA_NOTFOUND'"}
+<script>
+	swal("Rotina não encontrada na sua base.", "", "error");
 </script>
 {/if}
 

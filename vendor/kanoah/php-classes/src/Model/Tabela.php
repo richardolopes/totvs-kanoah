@@ -99,17 +99,32 @@ class Tabela extends Model
     {
         $sql    = new SQLServer();
         $string = "";
+		$campos = array();
+		
+		// $tabela = substr($query, (strpos($query, "FROM ") + 5), 6);
 
-        $return = $sql->select($query);
+		// $pastas = $sql->select("SELECT XA_ORDEM, XA_DESCRIC FROM SXAT10 WHERE XA_ALIAS = '$tabela'");
+
+		$return = $sql->select($query);
 
         while (odbc_fetch_row($return))
         {
             for ($j = 1; $j <= odbc_num_fields($return); $j++)
             {
                 $field_name = odbc_field_name($return, $j);
-                $sx3        = $sql->select("SELECT X3_TITULO FROM SX3T10 WHERE X3_CAMPO = '$field_name'");
+				$sx3        = $sql->select("SELECT XA.XA_DESCRIC,X3.X3_TITULO FROM SX3T10 AS X3 LEFT JOIN SXAT10 AS XA ON XA.XA_ALIAS = X3.X3_ARQUIVO AND XA.XA_ORDEM = X3.X3_FOLDER WHERE X3_CAMPO = '$field_name'");
+				
 
-                $string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '" . odbc_result($return, $field_name) . "'\n";
+				// array_push($campos[$j], array(
+				// 	"PASTA"=>odbc_result($sx3, "XA_ORDEM"),
+				// 	"TABELA"=>odbc_result($sx3, "X3_ARQUIVO"),
+				// 	"TITULO"=>odbc_result($sx3, "X3_TITULO")
+				// ));
+
+				$pasta = substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15); // Pasta/guia do campo
+				$string .= !empty($pasta) ? "($pasta)" : "";
+				$string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '"; // Campo + título do campo
+				$string .= odbc_result($return, $field_name) . "'\n"; // Valor registrado no campo.
             }
 
             $string .= "\n\n";

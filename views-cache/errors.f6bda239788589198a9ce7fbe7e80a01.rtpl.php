@@ -1,5 +1,6 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?><?php if( $error != '' ){ ?>
 
+
 <?php if( $error == 'user_where' ){ ?>
 <script>
 	swal("Não digite WHERE.", "", "error");
@@ -9,6 +10,12 @@
 <?php if( $error == 'TABELA_JA_CADASTRADA' ){ ?>
 <script>
 	swal("Tabela já cadastrada para essa rotina.", "", "error");
+</script>
+<?php } ?>
+
+<?php if( $error == 'ROTINA_NOTFOUND' ){ ?>
+<script>
+	swal("Rotina não encontrada na sua base.", "", "error");
 </script>
 <?php } ?>
 

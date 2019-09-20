@@ -4,12 +4,11 @@ import pyodbc
 import re
 import os
 import pyperclip
-
 import sys
 
 
 def db_conexao():
-	db_SERVER = 'SPON010104935\\SQL2014'
+	db_SERVER = 'SPON004928\\DEVELOPER2014'
 	db_BATABASE = 'P12125MNTDB'
 	db_UID = 'sa'
 	db_PWD = '1234'
@@ -127,17 +126,9 @@ def db_filial(cTabela):
 
 
 #Entrada de dados
-# cQuery = 'a'
-# while cQuery:
-# 	cQuery = input("Query = ")
-# 	if cQuery:
-# 		db_query(cQuery)
-
-cQuery = sys.argv[1]
-
-
-# cQuery = "SELECT E1_FILIAL, E1_PREFIXO, E1_NUM, E1_PARCELA, E1_TIPO, E1_CLIENTE, E1_LOJA, E1_NATUREZ, E1_PORTADO, E1_AGEDEP, E1_MOEDA, E1_VALOR, E1_VLCRUZ, E1_SALDO, E1_STATUS, E1_EMISSAO, E1_VENCTO, E1_VENCREA, E1_BAIXA, E1_IRRF, E1_ISS, E1_INSS, E1_CSLL, E1_COFINS, E1_PIS, E1_ORIGEM, E1_TITPAI, E1_NUMLIQ, E1_IDLAN, E1_CCUSTO, E1_CLVL, E1_ITEMCTA, E1_TIPOLIQ FROM SE1T10 SE1 WHERE R_E_C_N_O_ = 1"
-
-db_query(cQuery)
-# print(cQuery)
+cQuery = 'a'
+while cQuery:
+	cQuery = input("Query = ")
+	if cQuery:
+		db_query(cQuery)
 

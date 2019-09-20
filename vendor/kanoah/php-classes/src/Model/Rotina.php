@@ -112,4 +112,58 @@ class Rotina extends Model
 		));
 	}
 
+	public static function criarRotina($rotina): bool
+	{
+		if (!empty($rotina))
+		{
+			$rotina = strtoupper($rotina);
+
+			$sql = new SQLServer();
+			$return = $sql->select("
+			SELECT RTRIM(DESCR.N_DESC) as N_DESC
+			FROM MPMENU_FUNCTION AS ROTINA 
+			JOIN MPMENU_MENU AS MENU ON MENU.M_NAME LIKE '%%' 
+			JOIN MPMENU_ITEM AS ITEM ON ITEM.I_ID_FUNC = ROTINA.F_ID 
+			AND ITEM.I_ID_MENU = MENU.M_ID 
+			JOIN MPMENU_I18N AS DESCR ON DESCR.N_PAREN_ID = ITEM.I_ID 
+			AND DESCR.N_LANG = '1' 
+			JOIN MPMENU_ITEM AS ITEM2 ON ITEM2.I_ID = ITEM.I_FATHER 
+			AND ITEM2.I_ID_MENU = MENU.M_ID 
+			JOIN MPMENU_I18N AS DESCR2 ON DESCR2.N_PAREN_ID = ITEM2.I_ID 
+			AND DESCR2.N_LANG = '1' 
+			JOIN MPMENU_ITEM AS ITEM3 ON ITEM3.I_ID = ITEM2.I_FATHER 
+			AND ITEM3.I_ID_MENU = MENU.M_ID 
+			JOIN MPMENU_I18N AS DESCR3 ON DESCR3.N_PAREN_ID = ITEM3.I_ID 
+			AND DESCR3.N_LANG = '1' 
+			WHERE ROTINA.F_FUNCTION LIKE '$rotina'
+			");
+
+			$nome = odbc_result($return, "N_DESC");
+
+			if (!empty($nome) || !isset($nome))
+			{
+				$mysql = new MySQL();
+				$mysql->query("INSERT INTO rotina(`rotina`, `nome`) VALUES (:ROTINA, :NOME)", array(
+					":ROTINA"=>$rotina,
+					":NOME"=>$nome
+				));	
+
+				return true;
+			}
+			else
+			{
+				throw new \Exception("ROTINA_NOTFOUND");
+			}
+		}
+		else
+		{
+			throw new \Exception("ROTINA_UNDEFINED");
+		}
+	}
+
+	public static function parametrosRotina($rotina)
+	{
+		return shell_exec("py python/parametros.py $rotina");
+	}
+
 }

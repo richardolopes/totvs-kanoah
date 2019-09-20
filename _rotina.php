@@ -51,9 +51,8 @@ $app->get("/rotinas", function ()
     ));
 });
 
-$app->get("/rotina/add", function() {
-	$page = new Page();
-	$page->setTpl("rotina-add");
+$app->post("/rotina/add", function() {
+	echo Rotina::criarRotina($_POST["rotina"]);
 });
 
 $app->get("/rotina/:id", function($nomeRotina) {
@@ -185,4 +184,8 @@ $app->get("/rotina/:rotina/delete/tabela/res/:tabela", function($nomeRotina, $no
 
 	header("Location: /rotina/". $rotina->getrotina());
 	exit;
+});
+
+$app->get("/rotina/parametros/:diretorio", function($diretorio) {
+	echo Rotina::parametrosRotina($diretorio);
 });

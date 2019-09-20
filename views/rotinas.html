@@ -1,38 +1,84 @@
 <div class="content-wrapper">
-		<section class="content-header">
-			<h1>
-				Rotinas
-			</h1>
-			<br>
-			<div class="box-tools">
-				<a href="/rotina/add"><i class="fa fa-codepen"></i> <span>Adicionar Rotina</span></a>
-			</div>
-		</section>
-		<section class="content">
-			<div class="row">
-				<div class="col-xs-12">
-					{loop="$rotinas"}
-					<div class="col-md-3">
-						<div class="box box-widget widget-user-2">
-							<div class="widget-user-header label-primary">
-								<div class="widget-user-image">
-									<a href="/rotina/{$value.rotina}">
-										<h3 style="color: white">{$value.rotina} <i class="fa fa-arrow-circle-right"></i></h3>
-									</a>
-								</div>
-	
+	<section class="content-header">
+		<h1>
+			Rotinas
+		</h1>
+		<br>
+		<div class="box-tools">
+			<a style="cursor: pointer" onclick="adicionarRotina()"><i class="fa fa-codepen"></i> <span>Adicionar
+					Rotina</span></a>
+		</div>
+	</section>
+	<section class="content">
+		<div class="row">
+			<div class="col-xs-12">
+				{loop="$rotinas"}
+				<div class="col-md-3">
+					<div class="box box-widget widget-user-2">
+						<div class="widget-user-header label-primary">
+							<div class="widget-user-image">
+								<a href="/rotina/{$value.rotina}">
+									<h3 style="color: white">{$value.rotina} <i class="fa fa-arrow-circle-right"></i>
+									</h3>
+								</a>
 							</div>
-							<div class="box-footer no-padding">
-								<ul class="nav nav-stacked">
-									<li><a href="/rotina/{$value.rotina}">Tabelas <span class="pull-right badge bg-blue">{$value.tabelas}</span></a></li>
-	
-									<li><a href="/rotina/{$value.rotina}">Parâmetros <span class="pull-right badge bg-blue">{$value.parametros}</span></a></li>
-								</ul>
-							</div>
+
+						</div>
+						<div class="box-footer no-padding">
+							<ul class="nav nav-stacked">
+								<li><a href="/rotina/{$value.rotina}">Tabelas <span
+											class="pull-right badge bg-blue">{$value.tabelas}</span></a></li>
+
+								<li><a href="/rotina/{$value.rotina}">Parâmetros <span
+											class="pull-right badge bg-blue">{$value.parametros}</span></a></li>
+							</ul>
 						</div>
 					</div>
-					{/loop}
 				</div>
+				{/loop}
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
+</div>
+<script>
+	function adicionarRotina() {
+		swal({
+			icon: "info",
+			title: "Adicionar rotina",
+			text: "Nome do rotina:",
+			buttons: [
+				"Cancelar",
+				"Adicionar"
+			],
+			dangerMode: true,
+			content: {
+				element: "input",
+				attributes: {
+					type: "text",
+				},
+			},
+		}).then((Adicionar) => {
+			if (Adicionar) {
+				console.log(Adicionar);
+				$.post('/rotina/add', {
+					rotina: Adicionar
+				}, function (data) {
+					console.log(data)
+					if (data) {
+						swal("Rotina criada!", {
+							icon: "success",
+						}).then(() => {
+							window.location.reload();
+						});
+					}
+				}).fail(function () {
+					swal({
+						icon: "error",
+						title: "Ooops!",
+						text: "Não foi possível adicionar a rotina.",
+					});
+				});
+			}
+		});
+	}
+</script>

@@ -122,6 +122,11 @@
 							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Parâmetro</span></a>
 						</div>
+						<br>
+						<div class="pull-right">
+							<a style="cursor: pointer" onclick="parametrosRotina()"><i class="fa fa-plus"></i>
+								<span>&nbsp;Adicionar todos os parâmetros da rotina</span></a>
+						</div>
 					</div>
 					<div class="box-body">
 						<div class="box-body table-responsive no-padding">
@@ -151,3 +156,49 @@
 		</div>
 	</section>
 </div>
+
+<script>
+	function parametrosRotina() {
+		swal({
+				text: 'Digite o diretório da rotina:',
+				content: "input",
+				button: {
+					text: "Procurar!",
+					closeModal: false,
+				},
+			})
+			.then(name => {
+				if (!name) throw null;
+
+				// return fetch(`https://itunes.apple.com/search?term=${name}&entity=movie`);
+				return fetch(`http://localhost:12001/rotina/parametros/${name}`);
+			})
+			.then(results => {
+				return results.json();
+			})
+			.then(json => {
+				const movie = json.results[0];
+
+				if (!movie) {
+					return swal("No movie was found!");
+				}
+
+				const name = movie.trackName;
+				const imageURL = movie.artworkUrl100;
+
+				swal({
+					title: "Top result:",
+					text: name,
+					icon: imageURL,
+				});
+			})
+			.catch(err => {
+				if (err) {
+					swal("Oh noes!", "The AJAX request failed!", "error");
+				} else {
+					swal.stopLoading();
+					swal.close();
+				}
+			});
+	}
+</script>

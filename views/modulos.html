@@ -5,7 +5,8 @@
 		</h1>
 		<br>
 		<div class="box-tools">
-			<a style="cursor: pointer" onclick="criarModulo()"><i class="fa fa-codepen"></i> <span>Adicionar Módulo</span></a>
+			<a style="cursor: pointer" onclick="criarModulo()"><i class="fa fa-codepen"></i> <span>Adicionar
+					Módulo</span></a>
 		</div>
 	</section>
 	<section class="content">
@@ -47,42 +48,44 @@
 </div>
 
 <script>
-function criarModulo() {
-	swal({
-		icon: "info",
-		title: "Criar módulo",
-		text: "Nome do módulo:",
-		buttons: [
-			"Cancelar",
-			"Criar"
-		],
-		dangerMode: true,
-		content: {
-			element: "input",
-			attributes: {
-				type: "text",
+	function criarModulo() {
+		swal({
+			icon: "info",
+			title: "Criar módulo",
+			text: "Nome do módulo:",
+			buttons: [
+				"Cancelar",
+				"Criar"
+			],
+			dangerMode: true,
+			content: {
+				element: "input",
+				attributes: {
+					type: "text",
+				},
 			},
-		},
-	}).then((Criar) => {
-		if (Criar) {
-			console.log(Criar);
-			$.post('/modulo/criar', {modulo: Criar}, function(data) {
-				console.log(data)
-				if (data) {
-					swal("Módulo criado!", {
-						icon: "success",
-					}).then(() => {
-						window.location.reload();
+		}).then((Criar) => {
+			if (Criar) {
+				console.log(Criar);
+				$.post('/modulo/criar', {
+					modulo: Criar
+				}, function (data) {
+					console.log(data)
+					if (data) {
+						swal("Módulo criado!", {
+							icon: "success",
+						}).then(() => {
+							window.location.reload();
+						});
+					}
+				}).fail(function () {
+					swal({
+						icon: "error",
+						title: "Ooops!",
+						text: "Não foi possível criar o módulo.",
 					});
-				}
-			}).fail(function() {
-				swal({
-					icon: "error",
-					title: "Ooops!",
-					text: "Não foi possível criar o módulo.",
 				});
-			});
-		}
-	});
-}
+			}
+		});
+	}
 </script>

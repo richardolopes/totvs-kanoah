@@ -14,36 +14,77 @@ use \Slim\Slim;
 $app = new Slim();
 $app->config("debug", true);
 
-$app->get("/sair", function() {
-	unset($_SESSION["SERVER"]);
-	unset($_SESSION["DATABASE"]);
-	unset($_SESSION["USER"]);
-	unset($_SESSION["PASSWORD"]);
-
-	header("Location: /");
-	exit;
+$app->get("/teste2", function() {
+	echo "voltou";
 });
 
-$app->get("/conf", function() {
-	echo "<textarea cols=60 rows=15>";
-	echo "SERVER:   " . $_SESSION["SERVER"];
-	echo "\n";
-	echo "DATABASE: " . $_SESSION["DATABASE"];
-	echo "\n";
-	echo "USUARIO:  " . $_SESSION["USER"];
-	echo "\n";
-	echo "SENHA:    " . $_SESSION["PASSWORD"];
-	echo "</textarea>";
-	exit;
+$app->get("/teste3", function() {
+	$ch = curl_init("http://localhost:12001/teste2");
+	curl_setopt_array($ch, array(
+		CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_HEADER         => array("Content-Type:multipart/form-data"), // cURL headers for file uploading
+		// CURLOPT_SSL_VERIFYHOST => 0,
+		// CURLOPT_SSL_VERIFYPEER => false,
+		// CURLOPT_TIMEOUT        => 120, 
+		// CURLOPT_URL => 'https://someurl.com/',
+		// CURLOPT_POST => 1,
+		// CURLOPT_POSTFIELDS => array(
+		// 			'user' => "richard.lopes@totvs.com.br",
+		// 			'password' => "aa"
+		// )
+	));
+	
+	$resposta = curl_exec($ch);
+	curl_close($ch);
+
+	echo $resposta;
 });
 
-$app->post("/banco", function() {
-	$_SESSION["SERVER"]   = $_POST["SERVER"];
-	$_SESSION["DATABASE"] = $_POST["DATABASE"];
-	$_SESSION["USER"]     = $_POST["USER"];
-	$_SESSION["PASSWORD"] = $_POST["PASSWORD"];
 
-	header("Location: /");
+
+$app->get("/teste", function () {
+	$inf = json_encode(array(
+		"Username"=>"richard.lopes@totvs.com.br",
+		"Password"=>"aaa"
+	));
+
+	// echo ($inf);
+	// exit;
+	try {
+
+		$ch = curl_init("https://apisalas.totvs.com:8888/api/v1/auth/token");
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $inf);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Content-Type: application/json',
+		// 'Content-Length: ' . strlen($inf)
+	));
+	// curl_setopt_array($ch, array(
+		// 	CURLOPT_RETURNTRANSFER => 1,
+	// 	CURLOPT_HTTPHEADER     => array(
+		// 		"Content-Type: application/json",
+	// 		"charset=utf-8"
+	// 	),
+	// 	// CURLOPT_SSL_VERIFYHOST => 0,
+	// 	// CURLOPT_SSL_VERIFYPEER => false,
+	// 	// CURLOPT_TIMEOUT        => 120, 
+	// 	// CURLOPT_URL => 'https://someurl.com/',
+	// 	CURLOPT_POST => 1,
+	// 	CURLOPT_POSTFIELDS => array(
+	// 				'user' => "richard.lopes@totvs.com.br",
+	// 				'password' => "aa"
+	// 	)
+	// ));
+	
+		$resposta = curl_exec($ch);
+		curl_close($ch);
+		
+		echo $resposta;
+	} catch(Excepetion $e) {
+		echo $e->getMessage();
+	}
+
 	exit;
 });
 
@@ -56,12 +97,6 @@ if (
 {
 	$app->get("/", function ()
 	{
-		// $tempo = time() + 7200;
-		// $cookie = "Este valor será armazenado";
-		// $nome_cookie = "precondicao";
-
-		// setcookie($nome_cookie, $cookie, $tempo);
-
 		$page = new Page();
 		$page->setTpl("banco", array(
 			"error" => User::getError()
@@ -78,20 +113,25 @@ else
 		));
 	});
 
-	$app->get("/teste", function ()
-	{
-		$sql = new SQLServer();
-		var_dump($sql);
-	});
-
 	require_once "functions.php";
 	require_once "_kanoah.php";
 	require_once "_modulo.php";
 	require_once "_rotina.php";
 	require_once "_tabela.php";
+	require_once "_banco.php";
 
 	require_once "_kanoah_v2.php";
 }
+
+$app->post("/banco", function() {
+	$_SESSION["SERVER"]   = $_POST["SERVER"];
+	$_SESSION["DATABASE"] = $_POST["DATABASE"];
+	$_SESSION["USER"]     = $_POST["USER"];
+	$_SESSION["PASSWORD"] = $_POST["PASSWORD"];
+
+	header("Location: /");
+	exit;
+});
 
 $app->notFound(function () use ($app)
 {
