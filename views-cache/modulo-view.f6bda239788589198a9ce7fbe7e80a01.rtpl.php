@@ -12,7 +12,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Rotinas</h3>
 						<div class="pull-right">
-							<a href="/modulo/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/rotina"><i class="fa fa-plus"></i>
+							<a style="cursor: pointer" onclick="adicionarRotina()"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Rotina</span></a>
 						</div>
 					</div>
@@ -88,3 +88,44 @@
 		</div>
 	</section>
 </div>
+
+<script>
+	function adicionarRotina() {
+		swal({
+			icon: "info",
+			title: "Adicionar Rotina",
+			text: "Nome da Rotina:",
+			buttons: [
+				"Cancelar",
+				"Criar"
+			],
+			dangerMode: true,
+			content: {
+				element: "input",
+				attributes: {
+					type: "text",
+				},
+			},
+		}).then((Criar) => {
+			if (Criar) {
+				$.post('/modulo/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/rotina', {
+					rotina: Criar
+				}, function (data) {
+					if (data) {
+						swal("Rotina adicionada!", {
+							icon: "success",
+						}).then(() => {
+							window.location.reload();
+						});
+					}
+				}).fail(function () {
+					swal({
+						icon: "error",
+						title: "Ooops!",
+						text: "Não foi possível adicionar a rotina.",
+					});
+				});
+			}
+		});
+	}
+</script>

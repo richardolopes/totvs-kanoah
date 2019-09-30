@@ -7,8 +7,6 @@ use \Kanoah\Page;
 
 $app->get("/banco/inf", function ()
 {
-	$tabelas = Tabela::listTabelas();
-
 	$page = new Page();
 	$page->setTpl("banco-inf", array(
 		"server"   => $_SESSION["SERVER"],

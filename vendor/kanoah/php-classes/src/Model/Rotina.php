@@ -140,7 +140,7 @@ class Rotina extends Model
 
 			$nome = odbc_result($return, "N_DESC");
 
-			if (!empty($nome) || !isset($nome))
+			if (!empty($nome) && isset($nome))
 			{
 				$mysql = new MySQL();
 				$mysql->query("INSERT INTO rotina(`rotina`, `nome`) VALUES (:ROTINA, :NOME)", array(

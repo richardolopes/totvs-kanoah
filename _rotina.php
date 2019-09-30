@@ -5,30 +5,6 @@ use \Kanoah\Model\Tabela;
 use \Kanoah\Model\Parametro;
 use \Kanoah\Page;
 
-// $app->get("/rotinas", function ()
-// {
-//     $modulos = Rotina::retornarRotinas();
-
-//     $infModulos = array();
-
-//     foreach ($modulos as $modulo)
-//     {
-//         $numRotinas    = Rotina::infModulo($modulo, "ROTINAS");
-//         $numParametros = Rotina::infModulo($modulo, "PARAMETROS");
-
-//         array_push($infModulos, array(
-//             "MODULO"     => $modulo,
-//             "ROTINAS"    => count($numRotinas),
-//             "PARAMETROS" => count($numParametros),
-//         ));
-//     }
-
-//     $page = new Page();
-//     $page->setTpl("rotinas", array(
-//         "modulos" => $infModulos,
-//     ));
-// });
-
 $app->get("/rotinas", function ()
 {
 	$rotinas = Rotina::listRotinas();
@@ -49,10 +25,6 @@ $app->get("/rotinas", function ()
     $page->setTpl("rotinas", array(
         "rotinas" => $rotinas,
     ));
-});
-
-$app->post("/rotina/add", function() {
-	echo Rotina::criarRotina($_POST["rotina"]);
 });
 
 $app->get("/rotina/:id", function($nomeRotina) {

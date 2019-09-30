@@ -14,78 +14,59 @@ use \Slim\Slim;
 $app = new Slim();
 $app->config("debug", true);
 
-$app->get("/teste2", function() {
-	echo "voltou";
-});
+require_once "_swal.php";
 
-$app->get("/teste3", function() {
-	$ch = curl_init("http://localhost:12001/teste2");
-	curl_setopt_array($ch, array(
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_HEADER         => array("Content-Type:multipart/form-data"), // cURL headers for file uploading
-		// CURLOPT_SSL_VERIFYHOST => 0,
-		// CURLOPT_SSL_VERIFYPEER => false,
-		// CURLOPT_TIMEOUT        => 120, 
-		// CURLOPT_URL => 'https://someurl.com/',
-		// CURLOPT_POST => 1,
-		// CURLOPT_POSTFIELDS => array(
-		// 			'user' => "richard.lopes@totvs.com.br",
-		// 			'password' => "aa"
-		// )
+$app->get("/robo", function() {
+	// DATA DAS EXECUÇÕES
+	// http://10.171.78.41:8006/rest/filtrosportal/BRA/execDay/12.1.025/RPO_D-1/Todas
+
+	// LOG DO FINANCEIRO
+	$ch = curl_init("http://10.171.78.41:8006/rest/acompanhamentoExecucaoD1/Detail/FINANCEIRO/BRA/12.1.025/20190926/RPO_D-1/Todas");
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Content-Type: application/json',
+		'Content-Length: 0'
 	));
 	
 	$resposta = curl_exec($ch);
 	curl_close($ch);
 
-	echo $resposta;
+	$robo = json_decode($resposta);
+
+	$quebras = array();
+
+	// for ($i = 0; $i < count($robo); $i++)
+	// {
+	// 	// foreach ($robo[$i] as $chave => $value)
+	// 	// {
+	// 		var_dump($robo[$i]["erro"]);
+	// 		exit;
+	// 	// }
+	// }
+
+	// echo json_encode($robo);
+	// echo json_encode($resposta);
+
+	echo var_dump($robo[1]);
+	// var_dump($resposta);
+
 });
 
+$app->post("/api/banco", function() {
+	$_SESSION["SERVER"]   = $_REQUEST["SERVER"];
+	$_SESSION["DATABASE"] = $_REQUEST["DATABASE"];
+	$_SESSION["USER"]     = $_REQUEST["USER"];
+	$_SESSION["PASSWORD"] = $_REQUEST["PASSWORD"];
 
+	$conf = array();
 
-$app->get("/teste", function () {
-	$inf = json_encode(array(
-		"Username"=>"richard.lopes@totvs.com.br",
-		"Password"=>"aaa"
-	));
+	array_push($conf, $_REQUEST["SERVER"]);
+	array_push($conf, $_REQUEST["DATABASE"]);
+	array_push($conf, $_REQUEST["USER"]);
+	array_push($conf, $_REQUEST["PASSWORD"]);
 
-	// echo ($inf);
-	// exit;
-	try {
-
-		$ch = curl_init("https://apisalas.totvs.com:8888/api/v1/auth/token");
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $inf);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		// 'Content-Length: ' . strlen($inf)
-	));
-	// curl_setopt_array($ch, array(
-		// 	CURLOPT_RETURNTRANSFER => 1,
-	// 	CURLOPT_HTTPHEADER     => array(
-		// 		"Content-Type: application/json",
-	// 		"charset=utf-8"
-	// 	),
-	// 	// CURLOPT_SSL_VERIFYHOST => 0,
-	// 	// CURLOPT_SSL_VERIFYPEER => false,
-	// 	// CURLOPT_TIMEOUT        => 120, 
-	// 	// CURLOPT_URL => 'https://someurl.com/',
-	// 	CURLOPT_POST => 1,
-	// 	CURLOPT_POSTFIELDS => array(
-	// 				'user' => "richard.lopes@totvs.com.br",
-	// 				'password' => "aa"
-	// 	)
-	// ));
-	
-		$resposta = curl_exec($ch);
-		curl_close($ch);
-		
-		echo $resposta;
-	} catch(Excepetion $e) {
-		echo $e->getMessage();
-	}
-
-	exit;
+	echo json_encode($conf);
 });
 
 if (

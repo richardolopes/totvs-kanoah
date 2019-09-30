@@ -67,6 +67,13 @@ $app->get("/modulo/:modulo/delete/parametro/:parametro", function($nomeModulo, $
 	exit;
 });
 
+$app->post("/modulo/:modulo/add/rotina", function($nomeModulo) {
+	$modulo = new Modulo();
+	$modulo->modulo($nomeModulo);
+	echo Modulo::adicionarRotina($modulo->getid(), $_POST["rotina"]);
+});
+
+
 $app->get("/modulo/:modulo/add/parametro", function($nomeModulo) {
 	$page = new Page();
 	$page->setTpl("modulo-add-parametro", array(

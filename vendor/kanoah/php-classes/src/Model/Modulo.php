@@ -138,4 +138,33 @@ class Modulo extends Model
 			return $rotinas;
 		}
 	}
+
+	public function adicionarRotina($modulo, $rotina)
+	{
+		if (!empty($modulo) && !empty($rotina))
+		{
+			$rotina = strtoupper($rotina);
+
+			$mysql = new MySQL();
+			$resultado = $mysql->select("SELECT id FROM rotina WHERE rotina = :ROTINA", array(
+				":ROTINA"=>$rotina
+			));
+
+			if (isset($resultado[0]))
+			{
+				$mysql->query("INSERT INTO `modulo_rotina`(`idmodulo`, `idrotina`) VALUES (:MODULO, :ROTINA)", array(
+					":MODULO"=>$modulo,
+					":ROTINA"=>$resultado[0]["id"]
+				));
+
+				return true;
+			}
+		}
+		else
+		{
+			throw new \Exception("EMPTY_MODULO_OU_ROTINA");
+		}
+
+
+	}
 }

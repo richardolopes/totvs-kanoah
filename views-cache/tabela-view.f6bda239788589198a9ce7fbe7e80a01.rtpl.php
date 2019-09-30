@@ -22,13 +22,13 @@
 								<tr>
 									<th>Tabela</th>
 									<th>Nome</th>
-									<th>Query</th>
+									<th onclick="copiar('query')">Query</th>
 									<th>Ações</th>
 								</tr>
 								<tr>
 									<td><?php echo htmlspecialchars( $tabela, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td style="width: 150px"><?php echo htmlspecialchars( $nome, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
-									<td><?php echo htmlspecialchars( $query, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
+									<td><textarea id="query" cols="100vh" rows="10vw"><?php echo htmlspecialchars( $query, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea></td>
 									<td style="width: 150px">
 										<a class="btn label-primary"><i class="fa fa-edit"></i><span> Editar</span></a>
 										&nbsp;
@@ -65,9 +65,8 @@
 									<td><?php echo htmlspecialchars( $value1["campo"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td><?php echo htmlspecialchars( $value1["camporel"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td>
-										<button class="btn btn-danger"
-											onclick=""><i
-												class="fa fa-close"></i><span> Excluir</span></button>
+										<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
+												Excluir</span></button>
 										&nbsp;
 									</td>
 								</tr>

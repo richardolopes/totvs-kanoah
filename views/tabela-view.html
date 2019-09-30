@@ -22,13 +22,13 @@
 								<tr>
 									<th>Tabela</th>
 									<th>Nome</th>
-									<th>Query</th>
+									<th onclick="copiar('query')">Query</th>
 									<th>Ações</th>
 								</tr>
 								<tr>
 									<td>{$tabela}</td>
 									<td style="width: 150px">{$nome}</td>
-									<td>{$query}</td>
+									<td><textarea id="query" cols="100vh" rows="10vw">{$query}</textarea></td>
 									<td style="width: 150px">
 										<a class="btn label-primary"><i class="fa fa-edit"></i><span> Editar</span></a>
 										&nbsp;
@@ -65,9 +65,8 @@
 									<td>{$value.campo}</td>
 									<td>{$value.camporel}</td>
 									<td>
-										<button class="btn btn-danger"
-											onclick=""><i
-												class="fa fa-close"></i><span> Excluir</span></button>
+										<button class="btn btn-danger" onclick=""><i class="fa fa-close"></i><span>
+												Excluir</span></button>
 										&nbsp;
 									</td>
 								</tr>
