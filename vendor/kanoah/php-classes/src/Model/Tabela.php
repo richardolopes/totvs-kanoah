@@ -17,7 +17,17 @@ class Tabela extends Model
     {
         $mysql = new MySQL();
 
-        return $mysql->select("SELECT tabela FROM tabela ORDER BY tabela ASC");
+		$return = $mysql->select("SELECT tabela, nome FROM tabela ORDER BY tabela ASC");
+		
+		for ($i = 0; $i < count($return); $i++) {
+			if (empty($return[$i]["nome"])) {
+				$return[$i]["nome"] = "?";
+			} else {
+				$return[$i]["nome"] = str_pad(substr(utf8_encode($return[$i]["nome"]), 0, 18), 18);
+			}
+		}
+
+		return $return;
 	}
 	
 	public function tabela($tabela = string)
@@ -54,6 +64,35 @@ class Tabela extends Model
         }
 	}
 
+	public static function tabelasRotina($rotina = string, $tipo = int): array
+	{
+		if (!empty($rotina))
+		{
+			$mysql = new MySQL();
+
+            $resultado = $mysql->select("SELECT tabela, query FROM tabela as TAB inner join rotina_tabela as ROTTAB on ROTTAB.idtabela = TAB.id inner join rotina as ROT on ROT.id = ROTTAB.idrotina where ROT.rotina = :ROTINA AND tipo = :TIPO", array(
+				":ROTINA" => $rotina,
+				":TIPO" => $tipo
+			));
+			
+			$tabelas = array(
+                "resultado" => array(),
+            );
+
+            foreach ($resultado as $value)
+            {
+                array_push($tabelas["resultado"], array(
+                    $value["tabela"] => $value["query"],
+                ));
+			}
+			
+			return $tabelas;
+        }
+        else
+        {
+            throw new \Exception("EMPTY_ROTINA");
+        }
+	}
     public static function listTabelasRotina($rotina = string): array
     {
         if (!empty($rotina))
@@ -120,9 +159,10 @@ class Tabela extends Model
 				// 	"TABELA"=>odbc_result($sx3, "X3_ARQUIVO"),
 				// 	"TITULO"=>odbc_result($sx3, "X3_TITULO")
 				// ));
-
-				$pasta = substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15); // Pasta/guia do campo
-				$string .= !empty($pasta) ? "($pasta)" : "";
+				
+				$pasta = str_pad(substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15), 15); // Pasta/guia do campo
+				// $pasta = str_pad((odbc_result($sx3, "XA_DESCRIC")), 15); // Pasta/guia do campo
+				$string .= !empty($pasta) ? "($pasta) " : "";
 				$string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '"; // Campo + título do campo
 				$string .= odbc_result($return, $field_name) . "'\n"; // Valor registrado no campo.
             }

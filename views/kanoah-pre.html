@@ -1,0 +1,77 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>
+			Gerar Kanoah - Precondição
+		</h1>
+	</section>
+	<section class="content">
+		<div class="row">
+			<form action="/kanoah/rotina/res" method="POST" enctype="multipart/form-data">
+				<div class="col-md-12">
+					<div class="box box-primary">
+						<div class="box-body">
+							<div class="col-md-6">
+								<label for="modulo">Módulo: </label>
+								<input type="text" class="form-control" name="modulo" id="modulo" readonly
+									value={$modulo}>
+								<label for="rotina">Rotina: </label>
+								<input type="text" class="form-control" name="rotina" id="rotina" readonly
+									value={$rotina}>
+							</div>
+							<div class="col-md-6">
+								<label for="modulo">Grupo de empresa: </label>
+								<input type="text" class="form-control" name="grupo" id="grupo" value="T1">
+								<label for="modulo">Filial: </label>
+								<input type="text" class="form-control" name="filial" id="filial" value="D MG 01 ">
+								<label for="modulo">Data base: </label>
+								<input type="date" class="form-control" name="database" id="database">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">Query</h3>
+						</div>
+						<div class="box-body">
+							{loop="$tabelas.resultado"}
+							{loop="$value"}
+							<label for="{$key}QUERY" onclick="copiar('{$key}QUERY')">{$key}</label><br>
+							<textarea class="form-control" name="{$key}QUERY" id="{$key}QUERY" cols="50"
+								rows="3">{$value}</textarea><br>
+							{/loop}
+							{/loop}
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">Where</h3>
+						</div>
+						<div class="box-body">
+							{loop="$tabelas.resultado"}
+							{$aux=$key+1}
+							{loop="$value"}
+							<label for="{$key}WHERE" onclick="copiar('{$key}WHERE')">{$key}</label><br>
+							<textarea class="form-control" name="{$key}WHERE" id="{$key}WHERE" cols="50" rows="3"
+								tabindex={$aux}>R_E_C_N_O_ =1</textarea><br>
+							{/loop}
+							{/loop}
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<div class="box box-primary">
+						<div class="box-body">
+							<button type="submit" tabindex="{$aux+1}" class="btn btn-success">Enviar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</div>

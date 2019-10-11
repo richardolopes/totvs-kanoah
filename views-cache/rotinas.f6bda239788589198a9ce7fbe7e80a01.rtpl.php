@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<?php $counter1=-1;  if( isset($rotinas) && ( is_array($rotinas) || $rotinas instanceof Traversable ) && sizeof($rotinas) ) foreach( $rotinas as $key1 => $value1 ){ $counter1++; ?>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<div class="box box-widget widget-user-2">
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
@@ -26,11 +26,7 @@
 						</div>
 						<div class="box-footer no-padding">
 							<ul class="nav nav-stacked">
-								<li><a href="/rotina/<?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">Tabelas <span
-											class="pull-right badge bg-blue"><?php echo htmlspecialchars( $value1["tabelas"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span></a></li>
-
-								<li><a href="/rotina/<?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">Parâmetros <span
-											class="pull-right badge bg-blue"><?php echo htmlspecialchars( $value1["parametros"], ENT_COMPAT, 'UTF-8', FALSE ); ?></span></a></li>
+								<li><a href="/rotina/<?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["nome"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
 							</ul>
 						</div>
 					</div>
@@ -59,11 +55,9 @@
 			},
 		}).then((Adicionar) => {
 			if (Adicionar) {
-				console.log(Adicionar);
 				$.post('/rotina/add', {
 					rotina: Adicionar
 				}, function (data) {
-					console.log(data)
 					if (data) {
 						swal("Rotina criada!", {
 							icon: "success",

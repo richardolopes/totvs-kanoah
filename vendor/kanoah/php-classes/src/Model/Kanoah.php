@@ -57,5 +57,5 @@ class Kanoah extends Model
         {
             User::setError("EMPTY_QUERYS");
         }
-    }
+	}
 }

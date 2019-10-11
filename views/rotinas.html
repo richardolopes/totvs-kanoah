@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				{loop="$rotinas"}
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<div class="box box-widget widget-user-2">
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
@@ -26,11 +26,7 @@
 						</div>
 						<div class="box-footer no-padding">
 							<ul class="nav nav-stacked">
-								<li><a href="/rotina/{$value.rotina}">Tabelas <span
-											class="pull-right badge bg-blue">{$value.tabelas}</span></a></li>
-
-								<li><a href="/rotina/{$value.rotina}">Parâmetros <span
-											class="pull-right badge bg-blue">{$value.parametros}</span></a></li>
+								<li><a href="/rotina/{$value.rotina}">{$value.nome}</a></li>
 							</ul>
 						</div>
 					</div>
@@ -59,11 +55,9 @@
 			},
 		}).then((Adicionar) => {
 			if (Adicionar) {
-				console.log(Adicionar);
 				$.post('/rotina/add', {
 					rotina: Adicionar
 				}, function (data) {
-					console.log(data)
 					if (data) {
 						swal("Rotina criada!", {
 							icon: "success",

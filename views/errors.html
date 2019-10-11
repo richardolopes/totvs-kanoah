@@ -1,9 +1,14 @@
 {if="$error != ''"}
 
-
 {if="$error == 'user_where'"}
 <script>
 	swal("Não digite WHERE.", "", "error");
+</script>
+{/if}
+
+{if="$error == 'sem_conexao'"}
+<script>
+	swal("Sem conexão com o banco de dados.", "", "error");
 </script>
 {/if}
 

@@ -7,7 +7,7 @@
 
 	<section class="content">
 		<div class="row">
-			<form action="/kanoah/rotina" method="POST">
+			<form action="/kanoah/rotina/pre" method="POST">
 				<div class="col-md-6">
 					<div class="box box-primary">
 						<div class="box-body">

@@ -13,32 +13,27 @@
 		<div class="row">
 			<div class="col-xs-12">
 				{loop="$modulos"}
-				{loop="$value"}
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<!-- Widget: user widget style 1 -->
 					<div class="box box-widget widget-user-2">
 						<!-- Add the bg color to the header using any of the bg-* classes -->
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
-								<a href="/modulo/{$value}">
-									<h3 style="color: white">{$value} <i class="fa fa-arrow-circle-right"></i></h3>
+								<a href="/modulo/{$value.modulo}">
+									<h3 style="color: white">{$value.modulo} <i class="fa fa-arrow-circle-right"></i>
+									</h3>
 								</a>
 							</div>
 
 						</div>
 						<div class="box-footer no-padding">
 							<ul class="nav nav-stacked">
-								<li><a href="/modulo/{$value}">Rotinas <span
-											class="pull-right badge bg-blue">31</span></a></li>
-
-								<li><a href="/modulo/{$value}">Parâmetros <span
-											class="pull-right badge bg-blue">5</span></a></li>
+								<li><a href="/modulo/{$value.modulo}">{$value.nome}</a></li>
 							</ul>
 						</div>
 					</div>
 					<!-- /.widget-user -->
 				</div>
-				{/loop}
 				{/loop}
 				<!-- /.box-body -->
 				<!-- /.box -->

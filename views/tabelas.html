@@ -12,27 +12,24 @@
 		<div class="row">
 			<div class="col-xs-12">
 				{loop="$tabelas"}
-				{loop="$value"}
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<div class="box box-widget widget-user-2">
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
-								<a href="/tabela/{$value}">
-									<h3 style="color: white">{$value} <i class="fa fa-arrow-circle-right"></i></h3>
+								<a href="/tabela/{$value.tabela}">
+									<h3 style="color: white">{$value.tabela} <i class="fa fa-arrow-circle-right"></i>
+									</h3>
 								</a>
 							</div>
 
 						</div>
 						<div class="box-footer no-padding">
 							<ul class="nav nav-stacked">
-								<li><a href="/tabela/{$value}">Rotinas <span class="pull-right badge bg-blue">31</span></a></li>
-
-								<li><a href="/tabela/{$value}">Parâmetros <span class="pull-right badge bg-blue">5</span></a></li>
+								<li><a href="/tabela/{$value.tabela}">{$value.nome}</a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
-				{/loop}
 				{/loop}
 			</div>
 		</div>

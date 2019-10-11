@@ -13,8 +13,34 @@ class Modulo extends Model
     {
 		$mysql = new MySQL();
 
-		return $mysql->select("SELECT modulo FROM modulo ORDER BY modulo ASC");
-    }
+		$return = $mysql->select("SELECT modulo, nome FROM modulo ORDER BY modulo ASC");
+		
+		for ($i = 0; $i < count($return); $i++) {
+			if (empty($return[$i]["nome"])) {
+				$return[$i]["nome"] = "?";
+			} else {
+				$return[$i]["nome"] = str_pad(substr(utf8_encode($return[$i]["nome"]), 0, 18), 18);
+			}
+		}
+
+		return $return;
+	}
+	
+	public static function modulosComRotina(): array {
+		$mysql = new MySQL();
+
+		$return = $mysql->select("SELECT modulo, nome FROM modulo as modu JOIN modulo_rotina as rot on rot.idmodulo = modu.id ORDER BY count(modulo) ASC");
+		
+		for ($i = 0; $i < count($return); $i++) {
+			if (empty($return[$i]["nome"])) {
+				$return[$i]["nome"] = "?";
+			} else {
+				$return[$i]["nome"] = str_pad(substr(utf8_encode($return[$i]["nome"]), 0, 18), 18);
+			}
+		}
+
+		return $return;
+	}
 
     public function modulo($modulo = string)
     {

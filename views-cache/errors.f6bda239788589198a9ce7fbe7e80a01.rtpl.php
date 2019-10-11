@@ -1,9 +1,14 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?><?php if( $error != '' ){ ?>
 
-
 <?php if( $error == 'user_where' ){ ?>
 <script>
 	swal("Não digite WHERE.", "", "error");
+</script>
+<?php } ?>
+
+<?php if( $error == 'sem_conexao' ){ ?>
+<script>
+	swal("Sem conexão com o banco de dados.", "", "error");
 </script>
 <?php } ?>
 

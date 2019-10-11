@@ -9,22 +9,14 @@ $app->get("/rotinas", function ()
 {
 	$rotinas = Rotina::listRotinas();
 
-	for ($i = 0; $i < count($rotinas); $i++)
-	{
-		foreach ($rotinas[$i] as $value)
-		{
-			$rotinas[$i]["parametros"] = count(Parametro::listParametrosRotina($value));
-
-			$tabelas = Tabela::listTabelasRotina($value);
-
-			$rotinas[$i]["tabelas"] = count($tabelas["resultado"]) + count($tabelas["precondicao"]);
-		}
-	}
-
     $page = new Page();
     $page->setTpl("rotinas", array(
         "rotinas" => $rotinas,
     ));
+});
+
+$app->post("/rotina/add", function() {
+	echo Rotina::criarRotina($_POST["rotina"]);
 });
 
 $app->get("/rotina/:id", function($nomeRotina) {
@@ -58,10 +50,8 @@ $app->get("/rotina/:rotina/add/tabela", function($nomeRotina) {
 	$tabs = Tabela::listTabelas();
 
 	$tabelas = array();
-	foreach ($tabs as $key => $value) {
-		foreach ($value as $chave => $e) {
-			array_push($tabelas, $e);
-		}
+	for ($i = 0; $i < count($tabs); $i++) {
+		array_push($tabelas, $tabs[$i]["tabela"]);
 	}
 
 	$tabsRotina = Tabela::listTabelasRotina($nomeRotina);

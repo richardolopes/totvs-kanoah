@@ -15,9 +15,19 @@ class Rotina extends Model
 {
     public static function listRotinas(): array
     {
-        $mysql = new MySQL();
+		$mysql = new MySQL();
+		
+		$return = $mysql->select("SELECT rotina, nome FROM rotina ORDER BY rotina ASC");
+		
+		for ($i = 0; $i < count($return); $i++) {
+			if (empty($return[$i]["nome"])) {
+				$return[$i]["nome"] = "?";
+			} else {	
+				$return[$i]["nome"] = str_pad(substr(utf8_encode($return[$i]["nome"]), 0, 18), 18);
+			}
+		}
 
-        return $mysql->select("SELECT rotina FROM rotina ORDER BY rotina ASC");
+		return $return;
     }
 
     public static function listRotinasModulo($modulo = string): array
@@ -157,7 +167,7 @@ class Rotina extends Model
 		}
 		else
 		{
-			throw new \Exception("ROTINA_UNDEFINED");
+			// throw new \Exception("ROTINA_UNDEFINED");
 		}
 	}
 
