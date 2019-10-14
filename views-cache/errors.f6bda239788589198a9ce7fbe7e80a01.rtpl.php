@@ -6,6 +6,12 @@
 </script>
 <?php } ?>
 
+<?php if( $error == 'PARAMETROS_ATT' ){ ?>
+<script>
+	swal("Parâmetros atualizados com sucesso.", "", "success");
+</script>
+<?php } ?>
+
 <?php if( $error == 'sem_conexao' ){ ?>
 <script>
 	swal("Sem conexão com o banco de dados.", "", "error");

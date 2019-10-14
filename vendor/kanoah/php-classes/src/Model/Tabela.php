@@ -137,21 +137,35 @@ class Tabela extends Model
     public static function infTabelas($query = string): string
     {
         $sql    = new SQLServer();
-        $string = "";
-		$campos = array();
+		$string = "";
 		
-		// $tabela = substr($query, (strpos($query, "FROM ") + 5), 6);
+		$mysql  = new MySQL();
+		
+		$tabela = substr($query, (strpos($query, "FROM ") + 5), 3);
 
 		// $pastas = $sql->select("SELECT XA_ORDEM, XA_DESCRIC FROM SXAT10 WHERE XA_ALIAS = '$tabela'");
+		$return = $mysql->select("SELECT X3_CAMPO, X3_TITULO FROM SX3T10 WHERE X3_ARQUIVO = :TABELA", array(
+			":TABELA" => $tabela
+		));
+		$sx3 = array();
 
+		// for ($i = 0; odbc_fetch_row($return); $i++) {
+		// 	$sx3[trim(odbc_result($return, "X3_CAMPO"))] = utf8_encode(odbc_result($return, "X3_TITULO"));
+		// 	echo "<script>console.log($i)</script>";
+		// }
+
+		
+		
 		$return = $sql->select($query);
-
+		$registros = 1;
         while (odbc_fetch_row($return))
         {
+			$string .= "Registro: $registros \n";
             for ($j = 1; $j <= odbc_num_fields($return); $j++)
             {
                 $field_name = odbc_field_name($return, $j);
-				$sx3        = $sql->select("SELECT XA.XA_DESCRIC,X3.X3_TITULO FROM SX3T10 AS X3 LEFT JOIN SXAT10 AS XA ON XA.XA_ALIAS = X3.X3_ARQUIVO AND XA.XA_ORDEM = X3.X3_FOLDER WHERE X3_CAMPO = '$field_name'");
+				// $sx3        = $sql->select("SELECT XA.XA_DESCRIC,X3.X3_TITULO FROM SX3T10 AS X3 LEFT JOIN SXAT10 AS XA ON XA.XA_ALIAS = X3.X3_ARQUIVO AND XA.XA_ORDEM = X3.X3_FOLDER WHERE X3_CAMPO = '$field_name'");
+				// $sx3        = $sql->select("SELECT X3.X3_TITULO FROM SX3T10 AS X3 WHERE X3_CAMPO = '$field_name'");
 				
 
 				// array_push($campos[$j], array(
@@ -160,14 +174,16 @@ class Tabela extends Model
 				// 	"TITULO"=>odbc_result($sx3, "X3_TITULO")
 				// ));
 				
-				$pasta = str_pad(substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15), 15); // Pasta/guia do campo
+				// $pasta = str_pad(substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15), 15); // Pasta/guia do campo
 				// $pasta = str_pad((odbc_result($sx3, "XA_DESCRIC")), 15); // Pasta/guia do campo
-				$string .= !empty($pasta) ? "($pasta) " : "";
-				$string .= str_pad($field_name, 10) . " (" . odbc_result($sx3, "X3_TITULO") . ") = '"; // Campo + título do campo
+				// $string .= !empty($pasta) ? "($pasta) " : "";
+				$string .= str_pad($field_name, 10). " = '"; //. " (" . $sx3["$field_name"] . ") = '"; // Campo + título do campo
+				// $string .= str_pad($field_name, 10). " (" . $sx3["$field_name"] . ") = '"; // Campo + título do campo
 				$string .= odbc_result($return, $field_name) . "'\n"; // Valor registrado no campo.
             }
 
-            $string .= "\n\n";
+			$string .= "\n\n";
+			$registros++;
         }
 
         return utf8_encode($string);

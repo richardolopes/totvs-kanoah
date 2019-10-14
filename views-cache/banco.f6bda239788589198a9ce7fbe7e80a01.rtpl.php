@@ -34,7 +34,7 @@
 							</div>
 							<div class="form-group">
 								<label>PASSWORD:</label>
-								<input type="text" id="PASSWORD" name="PASSWORD" class="form-control" maxlength="50"
+								<input type="password" id="PASSWORD" name="PASSWORD" class="form-control" maxlength="50"
 									placeholder="Ex: 1234">
 							</div>
 							<div class="box-footer">

@@ -2,13 +2,14 @@
 
 session_start();
 
-require_once "config.php";
 require_once "vendor/autoload.php";
+require_once "config.php";
 
 use \Kanoah\Model\Modulo;
 use \Kanoah\Model\User;
 use \Kanoah\Model\Tabela;
 use \Kanoah\BD\SQLServer;
+use \Kanoah\BD\MySQL;
 use \Kanoah\Page;
 use \Slim\Slim;
 

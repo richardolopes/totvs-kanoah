@@ -31,7 +31,7 @@
 						</div>
 						<div class="form-group">
 							<label>PASSWORD:</label>
-							<input type="text" id="PASSWORD" name="PASSWORD" class="form-control" maxlength="50"
+							<input type="password" id="PASSWORD" name="PASSWORD" class="form-control" maxlength="50"
 								value="<?php echo htmlspecialchars( $password, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
 						</div>
 					</div>

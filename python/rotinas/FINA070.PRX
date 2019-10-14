@@ -142,7 +142,7 @@ __lCancTBx	:= .F.
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 If !(AmIIn(5,6,12,11,14,41,97,33,49,59,72))		// S¢ Fat,Fin,Loja,Veiculos,Ofina, Pecas, Especiais e PLS, 49-GE, 59-GAC
 	Return
-Endif
+EndIf
 
 If lF070Auto .and. lPodeTVA
 	//Valores Acessórios - Rotina Automatica Bx CR
@@ -150,8 +150,8 @@ If lF070Auto .and. lPodeTVA
 		__aVAAuto := aClone(aVAAut)
 	Else
 		__aVAAuto := {}
-	Endif
-Endif
+	EndIf
+EndIf
 
 If lF070Auto .and. len(aRatEvEz) > 0
 	aRatAut := aClone(aRatEvEz)
@@ -161,10 +161,10 @@ EndIf
 //No retorno CNAB com calculo de PCC + IR esta variável já vem declarada.
 If Type("nValRec")=="U"
 	PRIVATE nValRec := 0
-Endif
+EndIf
 If Type("nOldValRec")=="U"
 	PRIVATE nOldValRec := 0
-Endif
+EndIf
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³ Define Vari veis                                             ³
@@ -291,12 +291,12 @@ Else
 			//³ Se o GE estiver ativo utilizar a ACmBrowse                     |
 			//³ devido aos controles de filtro para restrição de visibilidade  ³
 			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-			ACmBrowse( 6,1,22,75,"SE1",,,,,,Fa040Legenda("SE1"),,,,,,,,cFiltro)
+			ACmBrowse(6, 1, 22, 75, "SE1",,,,,, Fa040Legenda("SE1"),,,,,,,, cFiltro)
 		Else
 			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 			//³ Endere‡a a fun‡„o de BROWSE                                  ³
 			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-			mBrowse( 6,1,22,75,"SE1",,,,,,Fa040Legenda("SE1"))
+			mBrowse(6, 1, 22, 75, "SE1",,,,,, Fa040Legenda("SE1"),,,,,,,, Iif(ExistBlock("F070FILB"), ExecBlock("F070FILB", .F., .F.), Nil))
 		EndIf
 
 		If GetMv("MV_CMC7FIN") == "S"
@@ -549,7 +549,7 @@ Local oModelVA	 := Nil
 Local nLaco		 := 0
 Local aFKDID	 := {}
 //Validaca da Baixa para nao permitir a baixa apenas no Protheus da Integracao RM Classis X Protheus
-Local cProdRM	 := GETNEWPAR('MV_RMORIG', "E|U|S")
+Local cProdRM	 := SuperGetMv('MV_RMORIG',, "E|U|S")
 Local lExistVA 	 := TableInDic("FKD") .and. TableInDic("FKC")
 Local lFKDID     := lExistVA .And. FKD->( FieldPos("FKD_IDFKD") ) > 0 .And. ExistFunc("FN040VAID") // Proteção campo criado 12.1.25
 Local cAcaoVA    := ""
@@ -562,8 +562,6 @@ Local lSaldoChq  := GetMv("MV_SLDBXCR") == "C"
 Local lAntCred   := GetMv("MV_ANTCRED")
 Local cPrefRM    := SuperGetMv("MV_PREFRM",,"TIN")
 Local aRetInteg	 := {}
-Local lAutoCab	 := Type("aAutoCab") == "A"
-Local l070Auto	 := Type('lF070Auto') =='U'
 Local nRecSe1    := 0
 Local lJFilBco   := ExistFunc("JurVldSA6") .And. SuperGetMv("MV_JFILBCO", .F., .F.) //Indica se filtra as contas correntes vinculadas ao escritório logado - SIGAPFS
 Local cEscrit    := IIF(lJFilBco, JurGetDados("NS7", 4, xFilial("NS7") + cFilant + cEmpAnt, "NS7_COD"), "")
@@ -583,6 +581,7 @@ Local nAux2			:= 0
 Local nAuxImpAut	:= 0
 Local nOldTxmoeda	:= 0
 Local nValParc      := 0
+Local nOldMoeBco    := 1
 
 
 PRIVATE lRaRtImp		:= lFinImp .And.FRaRtImp()     //Define se ha retencao de impostos PCC/IRPJ no R.A
@@ -909,11 +908,11 @@ EndIf
 //Obtem a moeda do banco
 nOrdSA6:=SA6->(IndexOrd())
 DbSetOrder(1)
-If cPaisLoc == "BRA"
+If cPaisLoc <> "ARG"	
 	SA6->(MsSeek(xFilial("SA6")+cBanco+cAgencia+cConta))
-ElseIf cPaisLoc == "ARG" .And. !(Empty(cBanco) .And. Empty(cAgencia) .And. Empty(cConta))
+ElseIf !(Empty(cBanco) .And. Empty(cAgencia) .And. Empty(cConta))
 	SA6->(MsSeek(xFilial("SA6")+cBanco+cAgencia+cConta))
-Endif
+EndIf
 nMoedaBco:= Max(SA6->A6_MOEDA,1)
 SA6->(DbSetOrder(nOrdSA6))
 
@@ -921,7 +920,7 @@ If lF070Auto .AND. (nT := ascan(aAutoCab,{|x| x[1]='AUTMOTBX'})) > 0
 	cMotBx	:=	aAutoCab[nT,2]
     If ( (Len(AllTrim(cMotBx)) == 3 .AND. (nY := AScan(aMotBx, {|x| SubStr(x, 01, 03) == AllTrim(cMotBx)})) == 0) ;
      .OR. (Len(cMotBx) >= 10 .AND. (nY := AScan(aMotBx, {|x| SubStr(x, 07, 10) == Subs(cMotBx,1,10)})) == 0) );
-     .AND. Alltrim(cMotBx) != 'STP'
+     .AND. !(Alltrim(cMotBx) $ 'STP|DIF') 
         HELP(" ", 01, "MOTBX" , , STR0089 + " " + cMotBx + " " + STR0297, 02,0,,,,,, {STR0298})//"Mot. Baixa" ## "não encontrado" ## "Selecione um motivo de baixa existente"
         Return .F. 
     EndIf	
@@ -976,7 +975,23 @@ EndIf
 If UPPER(Alltrim(SE1->E1_ORIGEM)) $ "JURA203"
 	nTxMoeda := If(SE1->E1_MOEDA > 1, RecMoeda(dBaixa,SE1->E1_MOEDA), 0)
 Else
-	nTxMoeda 	:= If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
+	If cPaisLoc == "BRA"
+		If nMoedaBco == SE1->E1_MOEDA
+			nTxMoeda := 1
+		ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
+            nTxMoeda := RecMoeda(dBaixa,nMoedaBco)
+        Else   
+        	nTxMoeda 	:= If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
+        EndIf
+	Else
+		If nMoedaBco == SE1->E1_MOEDA
+			nTxMoeda := 1
+        ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
+            nTxMoeda := RecMoeda(dBaixa,nMoedaBco)
+        Else
+            nTxMoeda := RecMoeda(dBaixa,SE1->E1_MOEDA)
+   		EndIf
+	EndIf
 EndIf
 
 // Se estiver utilizando CMC7, abre a porta para cadastro do cheque recebido.
@@ -988,7 +1003,7 @@ Endif
 lTemImpPad := !( __lPccMR .And. __lInsMR .And. __lIrfMR .And. __lIssMR )
 
 If !lF070Auto .And. lImpBxCr .And. (SE1->E1_MULTNAT != "1" .or. (SE1->E1_MULTNAT == "1" .AND. F070RTMNBL())) .And. lTemImpPad
-	AADD(aButtons, {"SIMULACAO", {|| FaCalcImp(.T.)}, STR0195, "Impostos" }) //"Recálculo dos Impostos"
+	AADD(aButtons, {"SIMULACAO", {|| FaCalcImp()}, STR0195, STR0299 }) //"Recálculo dos Impostos"
 EndIf
 
 //Botao de Cheques no Painel Financeiro
@@ -1149,8 +1164,7 @@ While .T.
 	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	//³Verifica se o T¡tulo j  foi Baixado Totalmente                      ³
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-	If SE1->E1_SALDO == 0 .And. !(FWHasEAI("FINI070A",.T.,,.T.) .And. FWHasEai("FINA070",.T.,,.T.) .And. (AllTrim(SE1->E1_ORIGEM) $ 'L|S|T' .Or. SE1->E1_IDLAN > 0)) .And. ;
-		!( lFINA200 .And. lREC2TIT )// Tratamento do Parâmeto MV_REC2TIT - Geração de RECANT(RA) via RETORNO CNAB.
+		If SE1->E1_SALDO == 0 .And. !( lFINA200 .And. lREC2TIT )// Tratamento do Parâmeto MV_REC2TIT - Geração de RECANT(RA) via RETORNO CNAB.
 		Help(" ",1,"TITBAIXADO")
 		MsUnlock()
 		Exit
@@ -1267,8 +1281,14 @@ While .T.
 				Loop
 			EndIf
 
-			nValParc := Iif(SE1->E1_MOEDA > 1, aBaixaSE5[x][8]-aBaixaSE5[x,17]/*VlCorr*/, aBaixaSE5[x][8]/*E5_VALOR*/)
-
+			If SE1->E1_MOEDA == Val(aBaixaSE5[x][24]) .And. SE1->E1_MOEDA > 1
+				nValParc := xMoeda(aBaixaSE5[x][36],Val(aBaixaSE5[x][24]),1,aBaixaSE5[x][7],nDecs,nTxMoeda)
+			ElseIf SE1->E1_MOEDA > 1 .AND. Val(aBaixaSE5[x][24]) = 1  
+				nValParc := xMoeda(aBaixaSE5[x][36],SE1->E1_MOEDA,1,aBaixaSE5[x][7],nDecs,nTxMoeda)
+			Else
+				nValParc := aBaixaSE5[x][8]
+			EndIf 
+			
    			If lPccBxCR
    				If lRaRtImp //.And. nParciais > nVlMinImp
 			   		nValParc += aBaixaSE5[x][18]+aBaixaSE5[x][19]+aBaixaSE5[x][20]+aBaixaSE5[x][30]// somar impostos PCC
@@ -1287,10 +1307,6 @@ While .T.
 			If ABAIXASE5[x][16] > 0 .and. lSDACRVL
 				nValParc += ABAIXASE5[x][16]
             Endif
-
-            If aBaixaSE5[x][24] # "01" .AND. aBaixaSE5[x][36] == aBaixaSE5[x][08]
-            	nValParc := xMoeda(nValParc,Val(aBaixaSE5[x][24]),1,aBaixaSE5[x][7],nDecs,nTxMoeda)
-			EndIf
 
 			nParciais += nValParc
 		Next
@@ -1341,7 +1357,7 @@ While .T.
 	// Carrega varivael cMotBx para sua verifcacao na funcao fa070totmes()
 	cMotBx	:= aDescMotBx[1]	//Motivo das baixas
 
-	If !(AllTrim(SE1->E1_ORIGEM) $ 'L|S|T' .Or. SE1->E1_IDLAN > 0)
+	If !( Upper(AllTrim(SE1->E1_ORIGEM)) $ cProdRM ) // Integração RM -> Origem pertence ao parâmetro = Baixa RM |||  Origem não pertence ao parâmetro = Baixa Protheus
 		// Calcula o desconto e o juros (se houver) e valida a data
 		// Idem para Valores Acessórios
 		fA070Data(@nTxMoeda,.F.)
@@ -1459,7 +1475,7 @@ While .T.
 					Else
 						nParciais += nIrrf
 					EndIf
-					If lAutoCab .and. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0 .AND. (aAutoCab[nPos][2] == 'TRF'))
+					If lF070Auto .and. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0 .AND. (aAutoCab[nPos][2] == 'TRF'))
 						nIrrf := 0
 					ElseIf !__lIrfMR
 						nIrrf:= Iif(cPaisLoc == "BRA",FCaIrBxCR(nValRec,,(SE1->E1_VALOR <> SE1->E1_SALDO .AND. (lRaRtImp .Or. lBQ10925)),,!(nParciais == 0),dBaixa),0)
@@ -1489,7 +1505,7 @@ While .T.
 				AFill( aDadosRet, 0 )
 			Endif
 		Else
-			If lAutoCab .and. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0 .AND. (aAutoCab[nPos][2] == 'TRF'))
+			If lF070Auto .and. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0 .AND. (aAutoCab[nPos][2] == 'TRF'))
 				aAdd(aDadosRet, 0)
 			Else
 				If dBaixa < dLastPcc
@@ -1558,7 +1574,7 @@ While .T.
   		aImpos := F070VldImp(nValRec, dBaixa, @lPccBxCr, @lIrPjBxCr, @lCalcIssBx)
   	EndIf
 	//Carrego a variável para validação quando origem for mensagem única
-	cAuxMBx	:= IIf(lAutoCab .And. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0), aAutoCab[nPos][2],"")
+	cAuxMBx	:= IIf(lF070Auto .And. ((nPos := aScan(aAutoCab,{|x| x[1] == 'AUTMOTBX'})) > 0), aAutoCab[nPos][2],"")
 
 	*ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 	*³Pr‚-inicializa o valor recebido.                                   ³
@@ -1606,7 +1622,7 @@ While .T.
     Endif
 
 
-	If l070Auto .or. ! lF070Auto
+	If !lF070Auto
 		bSetKey := SetKey(VK_F4,{|| If( !SE1->E1_TIPO $ MV_CRNEG,CadCheqCR(cBanco,cAgencia,cConta,nValRec,dBaixa,1),.F.)})
 		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 		//³Recebe os dados do t¡tulo a ser baixado                               ³
@@ -1639,6 +1655,7 @@ While .T.
 		nOldBanco  	:= cBanco
 		nOldAgencia	:= cAgencia
 		nOldConta	:= cConta
+		nOldMoeBco  := nMoedaBco
 
 		//Defino o tamanho dos componentes através do método FwDefSize(), amarrando ao objeto oDlg
 		oSize := FwDefSize():New(.T.,,,oDlg)
@@ -1727,7 +1744,8 @@ While .T.
 				Valid (AtulValidou() .And. !MovBcobx(cMotBx, .T.) .and. Empty(cBanco)) .or. ;
 						(IiF(lFa070Bco,ExecBlock("FA070BCO",.F.,.F.),.T.) .And.;
 							  F070VldBco(cBanco,@cAgencia,@cConta,.T.,.T.) .And. ;
-							  f070AltBco(@nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, @nValRec, @oTxMoeda) .And. ;
+							  f070AltBco(@nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, @nValRec, @oTxMoeda,@nOldMoeBco) .And. ;
+							  ValTxMoeda( nTxMoeda , @nOldTxmoeda , nMulta , nOldMulta , nJuros , nOldJuros ).And. ;
 							  Iif(lMoedaBco .And. SE1->E1_MOEDA <> SA6->A6_MOEDA, (F070CnvPcc(nTxMoeda, SE1->E1_MOEDA), oPanel2:Refresh(), .T.),.T.) .And. ;
 							  IIF(lJFilBco, JurVldSA6("1", {cEscrit, cBanco, cAgencia, cConta}), .T.)) HASBUTTON
 		oBanco:lReadOnly := (FN022SITCB(SE1->E1_SITUACA)[3] .OR. !MovBcobx(cMotBx, .T.))
@@ -1736,15 +1754,17 @@ While .T.
 		@ nUltLin,005 SAY STR0018 SIZE 32, 07 OF oPanel2 PIXEL //"Agˆncia"
 		@ nUltLin,065 MSGET oAgencia var cAgencia  SIZE 65, 08 OF oPanel2 PIXEL Valid ;
 							If(!lValidou,If(F070VldBco(cBanco,cAgencia,@cConta,.T.,.T.,cAgencia) .AND. ;
-							f070AltBco(@nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, @nValRec, @oTxMoeda),.T.,oBanco:SetFocus()),.T.) .And. ;
+							f070AltBco(@nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, @nValRec, @oTxMoeda,@nOldMoeBco) .And. ;
+							ValTxMoeda( nTxMoeda , @nOldTxmoeda , nMulta , nOldMulta , nJuros , nOldJuros ),.T.,oBanco:SetFocus()),.T.) .And. ;
 							IIF(lJFilBco, JurVldSA6("2", {cEscrit, cBanco, cAgencia, cConta}), .T.) ;
 							WHEN ( !FN022SITCB(SE1->E1_SITUACA)[3] .and. MovBcoBx(cMotBx, .T.) )
 		nUltLin += 12
 		@ nUltLin,005 SAY STR0019 SIZE 28, 07 OF oPanel2 PIXEL //"Conta"
 		@ nUltLin,065 MSGET oConta var cConta  SIZE 65, 08 OF oPanel2 PIXEL Valid ;
 							If(!lValidou,If(F070VldBco(cBanco,cAgencia,cConta,.T.,.T.,cAgencia+cConta) .And. ;
-							f070AltBco(nTxMoeda,oJuros, oMulta, oDescont, oCm,oBanco,nValRec, @oTxMoeda),.T.,oBanco:SetFocus()),.T.) .And. ;
-							IIF(lJFilBco, JurVldSA6("3", {cEscrit, cBanco, cAgencia, cConta}), .T.) ;
+							f070AltBco(@nTxMoeda,oJuros, oMulta, oDescont, oCm,oBanco,@nValRec, @oTxMoeda,@nOldMoeBco) .And. ;
+							ValTxMoeda( nTxMoeda , @nOldTxmoeda , nMulta , nOldMulta , nJuros , nOldJuros ),.T.,oBanco:SetFocus()),.T.) .And. ;
+							IIF(lJFilBco, JurVldSA6("3", {cEscrit, cBanco, cAgencia, cConta}), .T.)   ;
 							WHEN ( !FN022SITCB(SE1->E1_SITUACA)[3] .and. MovBcoBx(cMotBx, .T.) )
 
 		nUltLin += 12
@@ -2066,7 +2086,7 @@ While .T.
 			oModelVA := FWLoadModel("FINA070VA")
 			oModelVA:SetOperation( MODEL_OPERATION_UPDATE )
 			oModelVA:Activate()
-			cOldVA  := oModelVA:GetXMLData()
+			cOldVA  := oModelVA:GetXMLData(,,,,.F.,,,)
 			oModelVa:Deactivate()
 			oModelVa:Destroy()
 			oModelVa := NIL
@@ -2175,7 +2195,7 @@ While .T.
 		nEstOriginal := nValEstrang-(xMoeda(nJuros+nVA+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0),nMoedaBco,SE1->E1_MOEDA,,,,nTxMoeda))
 		FA070CORR(nEstOriginal)
 
-		If !(AllTrim(SE1->E1_ORIGEM) $ 'L|S|T' .Or. SE1->E1_IDLAN > 0)
+		If !( Upper(AllTrim(SE1->E1_ORIGEM)) $ cProdRM )	// Integração RM -> Origem pertence ao parâmetro = Baixa RM |||  Origem não pertence ao parâmetro = Baixa Protheus
 			If ! SE1->(MsVldGAuto(aValidGet)) // consiste os gets
 				Return .f.
 			EndIf
@@ -2385,7 +2405,7 @@ While .T.
 			If MovBcobx(cMotBx, .T.) .and. !CarregaSA6(@cBanco,@cAgencia,@cConta,.T.,,.T.)
 				// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 				// dados, senao abandona a baixa.
-				If l070Auto .or. ! lF070Auto
+				If !lF070Auto
 					loop
 				Else
 					lRet := .F.
@@ -2402,7 +2422,7 @@ While .T.
 			Help(" ",1,"FINA070BCO")
 			// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 			// dados, senao abandona a baixa.
-			If l070Auto .or. ! lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2425,7 +2445,7 @@ While .T.
                     If ( SE1->E1_MOEDA == 1 )
 						// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 						// dados, senao abandona a baixa.
-						If l070Auto .or. ! lF070Auto
+						If !lF070Auto
 							nIrrf := 0
 							loop
 						Else
@@ -2477,7 +2497,7 @@ While .T.
 			Help(" ",1,"TX_MOEDA",, STR0168,1,0)	//"Nao sera possivel baixar este titulo pois a cotacao da moeda do titulo na data da baixa é igual a zero."
 			// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 			// dados, senao abandona a baixa.
-			If l070Auto .or. ! lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2589,7 +2609,7 @@ While .T.
 			Help( " ", 1, "DATAERR" )
 			// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 			// dados, senao abandona a baixa.
-			If l070Auto .or. ! lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2604,7 +2624,7 @@ While .T.
 			IF !(SpbTipo("SE1",cModSpb,SE1->E1_TIPO))
 				// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 				// dados, senao abandona a baixa.
-				If l070Auto .or. ! lF070Auto
+				If !lF070Auto
 					loop
 				Else
 					lRet := .F.
@@ -2618,7 +2638,7 @@ While .T.
 		//³que a soma dos valores de juros, multa e desconto                     ³
 		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 		If !F070VldRec()
-			If l070Auto .or. !lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2640,7 +2660,7 @@ While .T.
 			lRet := ExecBlock("FA070TIT",.F.,.F.,{nParciais})
 			If !lRet
 				// Se nao for baixa por rotina automatica, volta para o usuario corrigir os dados, senao abandona a baixa.
-				If l070Auto .or. !lF070Auto
+				If !lF070Auto
 					loop
 				Else
 					Exit
@@ -2657,7 +2677,7 @@ While .T.
 			Help(" ",1,"FA070INV")
 			// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 			// dados, senao abandona a baixa.
-			If l070Auto .or. ! lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2677,7 +2697,7 @@ While .T.
 					Help(" ",1,"FA070INV")
 					// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 					// dados, senao abandona a baixa.
-					If l070Auto .or. ! lF070Auto
+					If !lF070Auto
 						loop
 					Else
 						lRet := .F.
@@ -2694,7 +2714,7 @@ While .T.
 					Help(" ",1,"FA070INV")
 					// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 					// dados, senao abandona a baixa.
-					If l070Auto .or. ! lF070Auto
+					If !lF070Auto
 						loop
 					Else
 						lRet := .F.
@@ -2719,7 +2739,7 @@ While .T.
 		If !FA070ValMo()
 			// Se nao for baixa por rotina automatica, volta para o usuario corrigir os
 			// dados, senao abandona a baixa.
-			If l070Auto .or. ! lF070Auto
+			If !lF070Auto
 				loop
 			Else
 				lRet := .F.
@@ -2747,7 +2767,7 @@ While .T.
 		cPadrao   := fA070Pad()
 		lPadrao   := VerPadrao(cPadrao)
 
-	  	IF l070Auto .or. ! lF070Auto
+	  	IF !lF070Auto
 			// Verifica se esta utilizando multiplas naturezas
 			// E chama a rotina para distribuir o valor entre as naturezas
 			If MV_MULNATR .and. lMultNat
@@ -2819,12 +2839,10 @@ While .T.
 
 			Aadd(aHdlPrv,{nHdlPrv,cPadrao,aFlagCTB,cArquivo})
 
-			If !l070Auto
-				If lF070Auto .And. len(aAutoCab) > 0
-					nPos := aScan(aAutoCab,{|x| x[1] == 'AUTVALREC'})
-					If nPos > 0
-						nValrec := aAutoCab[nPos,2]
-					EndIf
+			If lF070Auto .And. len(aAutoCab) > 0
+				nPos := aScan(aAutoCab,{|x| x[1] == 'AUTVALREC'})
+				If nPos > 0
+					nValrec := aAutoCab[nPos,2]
 				EndIf
 			EndIf
 			iF FwIsInCallStack("FA450CMP")
@@ -2836,7 +2854,7 @@ While .T.
 			//Valores Acessorios.
 			//-----------------------------------------------------------
 			//Se for execauto, primeiro chama as funções de baixa e somente depois chama a função FAtuFKDBx, para atualização da data de baixa do VA na FKD, evitando gravação duplicada de FK6 quando informadas 2 baixas parciais via integração com VA de aplicação única
-			If !l070Auto .And. lF070Auto
+			If lF070Auto
 
 				lBaixou := fA070Grv(lPadrao,Nil,NIl,Nil,lFINA200,dDtCredito,lJuros,Nil,Nil,nTxMoeda,mv_par08==1,aSeqSe5,aHdlPrv,lBloqSa1,lMultNat,, aImpos,__lPccMR,__lIrfMR,__lInsMR,__lIssMR,__lGlosaMr,__lImpMR) //Nil=Arquivo Cnab
 
@@ -2849,7 +2867,7 @@ While .T.
 				If lPodeTVA .and. lExistVA
 					FAtuFKDBx()
 				Endif
-
+					
 				lBaixou := fA070Grv(lPadrao,Nil,NIl,Nil,lFINA200,dDtCredito,lJuros,Nil,Nil,nTxMoeda,mv_par08==1,aSeqSe5,aHdlPrv,lBloqSa1,lMultNat,, aImpos,__lPccMR,__lIrfMR,__lInsMR,__lIssMR,__lGlosaMr,__lImpMR) //Nil=Arquivo Cnab
 
 			Endif
@@ -2868,7 +2886,7 @@ While .T.
 			// Se nao for baixa por rotina automatica, chama a rotina de contabilizacao
 		  	//-----
 		  	//Caso o o executo esteja com a opção de ratear a baixa poderá ser rateada com a replica do rateio da inclusão
-		  	IF l070Auto .or. ! lF070Auto
+		  	IF !lF070Auto
 				// Verifica se esta utilizando multiplas naturezas
 				If MV_MULNATR .and. lMultNat .and. lOk .And. ( AllTrim(SE1->E1_TIPO) <> "RA" )
 					MultNatC("SE1",@nHdlPrv,@nTotal,@cArquivo,lContabiliza,.F.,STR(mv_par07,1),,lOk,aColsSEV,lBaixou,aGrvLctPco)
@@ -2970,7 +2988,7 @@ While .T.
 				EndIf
 			EndIf
 
-			IF lPadrao .and. lContabiliza .and. lBaixou
+			If lPadrao .and. lContabiliza .and. lBaixou
 				If nHdlPrv <= 0
 					nHdlPrv		:= HeadProva(cLote,"FINA070",Substr(cUsuario,7,6),@cArquivo)
 				EndIf
@@ -2980,15 +2998,15 @@ While .T.
 
 				If lUsaFlag  // Armazena em aFlagCTB para atualizar no modulo Contabil
 					aAdd( aFlagCTB, {"E5_LA", "S", "SE5", SE5->( Recno() ), 0, 0, 0} )
-				Endif
+				EndIf
 				nTotal += DetProva( nHdlPrv, cPadrao, "FINA070", cLote, /*nLinha*/, /*lExecuta*/,;
 				                    /*cCriterio*/, /*lRateio*/, /*cChaveBusca*/, /*aCT5*/,;
 				                    /*lPosiciona*/, @aFlagCTB, /*aTabRecOri*/, /*aDadosProva*/ )
 
 				If lF070CTB
 					nTotal += ExecBlock("F070CTB",.F.,.F.,{cPadrao,nHdlPrv})
-				Endif
-			Endif
+				EndIf
+			EndIf
 			IF lPadrao .and. lContabiliza .and. lBaixou
 				//-- Se for rotina automatica força exibir mensagens na tela, pois mesmo quando não exibe os lançametnos, a tela
 				//-- sera exibida caso ocorram erros nos lançamentos padronizados
@@ -3707,7 +3725,7 @@ Local lExistVA 		:= TableInDic("FKD") .and. TableInDic("FKC")
 Local nXVa			:= 0
 Local lFKDID		:= lExistVA .And. FKD->( FieldPos("FKD_IDFKD") ) > 0 .And. ExistFunc("FN040VAID") .And. ExistFunc("FN70VAFKD") // Proteção campo criado 12.1.25
 //Efetua a Validacao da Baixa do RM Classis x Protheus
-Local cProdRM		:= GETNEWPAR('MV_RMORIG', "E|U|S")
+Local cProdRM		:= SuperGetMv('MV_RMORIG',, "E|U|S")
 Local lBxLoja		:= .F. //Baixa do título no Controle de Lojas (LOJXREC)
 Local lLojPdv		:= AllTrim(Funname()) == "LOJA701" .Or. nModulo == 23 // Estorno da baixa pelo PDV.
 Local aRetInteg		:= {}
@@ -4441,9 +4459,13 @@ Else
 			Endif
 		EndIf
 	Else
-		nTxMoeda := RecMoeda(dBaixa,SE1->E1_MOEDA)
+		If SE5->E5_MOEDA > '01'
+			nTxMoeda := SE5->E5_VLMOED2 / SE5->E5_VALOR 
+		Else
+			nTxMoeda := RecMoeda(dBaixa,SE1->E1_MOEDA)
+		EndIf
 	EndIf
-Endif
+EndIf
 
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Caso moeda == 1 a funcao RecMoeda iguala nTxMoeda = 0. Iguala-se   ³
@@ -5426,7 +5448,7 @@ IF nOpc1 == 1
 				nHdlPrv := HeadProva(cLote,"FINA070",Substr(cUsuario,7,6),@cArquivo)
 				lCtbEst := .T.
 
-				If lUsaFlag .And. !lEstnCtb  // Armazena em aFlagCTB para atualizar no modulo Contabil
+				If lUsaFlag // Armazena em aFlagCTB para atualizar no modulo Contabil
 					aAdd( aFlagCTB, {"E5_LA", "S", "SE5", SE5->( Recno() ), 0, 0, 0} )
 				EndIf
 
@@ -5443,7 +5465,7 @@ IF nOpc1 == 1
 					cFilAnt := cFilBkpLj
 					SM0->( DbSeek( SM0->M0_CODIGO + cFilAnt ) )
 				EndIf
-			Endif
+			EndIf
 		EndIf
 
 		dbSelectArea("SE1")
@@ -5514,18 +5536,18 @@ IF nOpc1 == 1
 				If SE1->E1_SALDO == SE1->E1_VALOR .AND. SE1->E1_ACRESC != SE1->E1_SDACRES
 					nValor := SE1->E1_SALDO
 				Else
-					nValor := SE1->E1_SALDO + ( nValRec - nJuros - nVA - nMulta + nDescont + nTotAbat )
+					If SE1->E1_MOEDA <> nMoedaBco
+						nValor := SE1->E1_SALDO + ( ( nValRec - nJuros - nVA - nMulta + nDescont + nTotAbat ) * NoRound(nTxMoeda,5) )				
+					Else
+						nValor := SE1->E1_SALDO + ( nValRec - nJuros - nVA - nMulta + nDescont + nTotAbat )	
+					EndIf
 				Endif
 			Else
 				If cMot070 == "DEV"
 					nValor := SE1->E1_SALDO + ((nValRec - nJuros - nVA - IIF(SE1->E1_MOEDA <= 1,nCorrec,0) - nMulta + nDescont + nTotAbat) / IIF(SE5->E5_TXMOEDA <> 0,SE5->E5_TXMOEDA,RecMoeda(SE1->E1_EMISSAO,SE1->E1_MOEDA)))
 				Else
 					If SE1->E1_MOEDA  <>   nMoedaBco
-						If SE1->E1_MOEDA > 1 
-							nValor:=ROUND(SE1->E1_SALDO+((nValorM2-nJuros-nVA-Iif(SE1->E1_MOEDA<=1,nCorrec,0)-nMulta+nDescont+nTotAbat) ),2)
-						Else
-							nValor:=ROUND(SE1->E1_SALDO+((nValRec-nJuros-nVA-Iif(SE1->E1_MOEDA<=1,nCorrec,0)-nMulta+nDescont+nTotAbat) / NoRound(nTxMoeda,5)),2)
-						End
+						nValor:=ROUND(SE1->E1_SALDO+(nValorM2-((nJuros-nVA-Iif(SE1->E1_MOEDA<=1,nCorrec,0)-nMulta+nDescont+nTotAbat) / NoRound(nTxMoeda,5))),2)						
 					Else
 						nValor:=ROUND(SE1->E1_SALDO+((nValRec-nJuros-nVA-Iif(SE1->E1_MOEDA<=1,nCorrec,0)-nMulta+nDescont+nTotAbat)),2)
 				   EndIf
@@ -5749,7 +5771,7 @@ IF nOpc1 == 1
 							oModelBx:SetValue( "MASTER", "E5_OPERACAO", 2 )
 							oModelBx:SetValue( "MASTER", "E5_CAMPOS", "{ {'E5_DTCANBX' , '" + DTOS(dDataBase) +"'} }" )
 							oModelBx:SetValue( "MASTER", "HISTMOV", cHistCan070 )
-							oModelBx:SetValue( "MASTER", "E5_LA", Iif(lPadrao .And. MV_PAR04 == 1 .And. lCtbBaixa .Or. (lEstnCtb .And. lCtbEst .And. nHdlPrv > 0) , "S" , "N" ))
+							oModelBx:SetValue( "MASTER", "E5_LA", Iif(lPadrao .And. MV_PAR04 == 1 .And. lCtbBaixa .and. !lUsaFlag .Or. (lEstnCtb .And. lCtbEst .And. nHdlPrv > 0 .and. !lUsaFlag) , "S" , "N" ))
 
 							If empty(VALOR)
 							  VALOR := nValor
@@ -5893,7 +5915,7 @@ IF nOpc1 == 1
 								//E5_OPERACAO 3 = Deleta da SE5 e gera estorno na FK5
 								oModelBx:SetValue( "MASTER", "E5_OPERACAO", 1 )
 								oModelBx:SetValue( "MASTER", "HISTMOV", cHistCan070 )
-								oModelBx:SetValue( "MASTER", "E5_LA", Iif(lPadrao .and. mv_par04 == 1,"S","N") )
+								oModelBx:SetValue( "MASTER", "E5_LA", Iif(lPadrao .and. mv_par04 == 1 .and. !lUsaFlag,"S","N") )
 
 								If oModelBx:VldData()
 									oModelBx:CommitData()
@@ -7020,6 +7042,7 @@ Return lBaixou
 Function Fa070OK(cBanco,cAgencia,cConta,nValRec,dBaixa,nJuros,nCM,nMulta,;
 						nDescont,nTotAbat,nTolerPg,lMovBco,aDescMotBx,nAcresc,nDecresc,;
 						lSpbInUse,nTxMoeda,nTotLtEZ,nVa)
+										
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Verifica se nao foi alterado o banco quando for tit. em desconto.     ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
@@ -7032,13 +7055,11 @@ EndIf
 //ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 //³Verifica se valor da baixa ‚ maior que o valor m ximo a receber       ³
 //ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-IF SE1->E1_MOEDA == 1 .and. Str(xMoeda(nValRec, SE1->E1_MOEDA, nMoedaBco,dbaixa,7,nTxMoeda),17,2) > Str((xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda)+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc)),17,2)
-	Help(" ",1,"ValorMaior")
-	Return .F.
-ElseIF SE1->E1_MOEDA > 1 .and. Str(xMoeda(nValRec, nMoedaBco,SE1->E1_MOEDA ,dbaixa,7,nTxMoeda),17,2) > Str((xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda)+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc)),17,2)
+
+If Str(nValRec,17,2) > Str(Round(NoRound(xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc),17,2)
     Help(" ",1,"ValorMaior")
     Return .F.
-Endif
+EndIf
 
 dbSelectArea("SE1")
 If Empty( cMotBx )
@@ -7172,7 +7193,7 @@ If nOpca == 1
 	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 	If ExistBlock("FA070TIT")
 		lRet := ExecBlock("FA070TIT",.F.,.F.,{nParciais})
-	Endif
+	EndIf
 
 	If !lRet
 		Return lRet
@@ -7296,9 +7317,9 @@ If nOpca == 1
 			DbSelectArea("SE1")
 			FinaCONC(aAlt)
 
-		Endif
+		EndIf
 
-		IF lBaixou .and. lContabiliza .and. !lMultNat
+		If lBaixou .and. lContabiliza .and. !lMultNat
 
 			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 			//³ Localizacao Portugal - Gera dados para diario contabil ³
@@ -7318,7 +7339,7 @@ If nOpca == 1
 		 		nHdlPrv:=HeadProva(cLote,"FINA070",Substr(cUsuario,7,6),@cArquivo)
 				lHdlPrv := .T.
 			EndIF
-			IF lPadrao .and. lHdlPrv .and. !FwIsInCallStack("Fa450Can")
+			If lPadrao .and. lHdlPrv .and. !FwIsInCallStack("Fa450Can")
 				VALOR := 0
 				ABATIMENTO := Round(NoRound(xMoeda(nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,3),3),2)
 
@@ -7329,9 +7350,9 @@ If nOpca == 1
 				                    /*cCriterio*/, /*lRateio*/, /*cChaveBusca*/, /*aCT5*/,;
 				                    /*lPosiciona*/, @aFlagCTB, /*aTabRecOri*/, /*aDadosProva*/ )
 
-			EndIF
+			EndIf
 
-		Endif
+		EndIf
 
 		If !lFini055 .and. FWHasEAI("FINA070",.T.,,.T.)
 			FwIntegDef( 'FINA070' )
@@ -8000,8 +8021,8 @@ IF (lHdlPrv .And. lPadrao .and. lContabiliza) .OR. nHdlPrv > 0 .and. !!FwIsInCal
 			nTotal += DetProva( nHdlPrv, cPadrao, "FINA070", cLote, /*nLinha*/, /*lExecuta*/,;
 			                    /*cCriterio*/, /*lRateio*/, /*cChaveBusca*/, /*aCT5*/,;
 			                    /*lPosiciona*/, @aFlagCTB, /*aTabRecOri*/, /*aDadosProva*/ )
-		Endif
-	Endif
+		EndIf
+	EndIf
 
 	RodaProva(nHdlPrv,nTotal)
 	cA100Incl( cArquivo, nHdlPrv, 3 /*nOpcx*/, cLote, lDigita, lAglut,;
@@ -8180,7 +8201,7 @@ Else
 							oModelVA := FWLoadModel("FINA070VA")
 							oModelVA:SetOperation( MODEL_OPERATION_UPDATE )
 							oModelVA:Activate()
-							cOldVA  := oModelVA:GetXMLData()
+							cOldVA  := oModelVA:GetXMLData(,,,,.F.,,,)
 							oModelVa:Deactivate()
 							oModelVa:Destroy()
 							oModelVa := NIL
@@ -8333,146 +8354,182 @@ Return lRet
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-Function fa070ValVR(nTxMoeda)
-Local nSaveVar
-Local nEstOriginal 		:= 0
-Local nMoedaBx			:=1
-Local lArred			:=	.F.
-Local nBsVlEstr			:= 0
-Local nSalvRec
-Local nOrdSA6
-LOCAL lPccBxCr			:= FPccBxCr(.T.)	// Controla o Pis Cofins e Csll na baixa  (1-Retem PCC na Baixa ou 2-Retem PCC na Emissão(default) )
-Local lIrPjBxCr			:= FIrPjBxCr(.T.)	// Controla IRPJ na baixa
-Local nOutrosValores	:= 0				// Outros valores além do valor do título
+Function fa070ValVR(nTxMoeda As Numeric) As Logical
+	Local nSaveVar		As Numeric
+	Local nEstOriginal 	As Numeric
+	Local nMoedaBx		As Numeric
+	Local lArred		As Logical
+	Local nBsVlEstr		As Numeric
+	Local nSalvRec		As Numeric
+	Local nOrdSA6		As Numeric
+	Local lPccBxCr		As Logical		// Controla o Pis Cofins e Csll na baixa  (1-Retem PCC na Baixa ou 2-Retem PCC na Emissão(default) )
+	Local lIrPjBxCr		As Logical		// Controla IRPJ na baixa
+	Local nOutrosValores As Numeric		// Outros valores além do valor do título
+	Local nVlEstNRd8	As Numeric
+	
+	nEstOriginal 	:= 0
+	nMoedaBx		:= 1
+	lArred			:= .F.
+	nBsVlEstr		:= 0
+	lPccBxCr		:= FPccBxCr(.T.)	// Controla o Pis Cofins e Csll na baixa  (1-Retem PCC na Baixa ou 2-Retem PCC na Emissão(default) )
+	lIrPjBxCr		:= FIrPjBxCr(.T.)	// Controla IRPJ na baixa
+	nOutrosValores	:= 0				// Outros valores além do valor do título
+	nVlEstNRd8		:= 0
+	
+	If __lTemMR
+		F070VerImp("2",cFilAnt,SE1->E1_CLIENTE,SE1->E1_LOJA,,.T.,@lIrPjBxCr,@lPccBxCr)
+	EndIf
 
-If __lTemMR
-	F070VerImp("2",cFilAnt,SE1->E1_CLIENTE,SE1->E1_LOJA,,.T.,@lIrPjBxCr,@lPccBxCr)
-EndIf
-
-nValTot     := SE1->E1_VLCRUZ
-nValEstrang := nValOrig    := SE1->E1_SALDO-nTotAbat
-nAcresc     := If(Type("nAcresc") != "N",SE1->E1_SDACRES,nAcresc)
-nAcrescf    := If(Type("nAcrescf") != "N",SE1->E1_SDACRES,nAcrescf)
-nDecresc    := If(Type("nDecresc") != "N",SE1->E1_SDDECRE,nDecresc)
-nDecrescf   := If(Type("nDecrescf") != "N",SE1->E1_SDDECRE,nDecrescf)
-If FUNNAME()=="FINA074"
-	nMoedaBx:=SE1->E1_MOEDA
-Else
-	nMoedaBx:=nMoedaBco
-EndIf
-If cPaisloc<>"BRA"
-	nTxMoeda:=Iif(nMoedaBco>0,aTxMoedas[nMoedaBco][2],1)
-	nTxMdaOr:=aTxMoedas[SE1->E1_MOEDA][2]
-EndIf
-If GetMv("MV_SIGAGSP") <> "1"  //Roberto - Integração com o SIGAGSP 0=Não integra 1=Integra
-   nAcresc     := Round(NoRound(xMoeda(nAcrescF,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
-EndIf
-nDecresc    := Round(NoRound(xMoeda(SE1->E1_SDDECRE,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
-DEFAULT nTxMoeda := 0
-If Substr(cMotBx,1,3) != "DEV"
-	If cPaisLoc <> "BRA"
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,Iif(nTxMdaOr>0,nTxMdaOr,nMoedaBx),nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,Iif(nTxMdaOr>0,nTxMdaOr,nMoedaBx),nTxMoeda)
+	nValTot     := SE1->E1_VLCRUZ
+	nValEstrang := nValOrig    := SE1->E1_SALDO-nTotAbat
+	nAcresc     := If(Type("nAcresc") != "N",SE1->E1_SDACRES,nAcresc)
+	nAcrescf    := If(Type("nAcrescf") != "N",SE1->E1_SDACRES,nAcrescf)
+	nDecresc    := If(Type("nDecresc") != "N",SE1->E1_SDDECRE,nDecresc)
+	nDecrescf   := If(Type("nDecrescf") != "N",SE1->E1_SDDECRE,nDecrescf)
+	If FUNNAME()=="FINA074"
+		nMoedaBx:=SE1->E1_MOEDA
 	Else
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+		nMoedaBx:=nMoedaBco
 	EndIf
+	If cPaisloc<>"BRA"
+		nTxMoeda:=Iif(nMoedaBco>0,aTxMoedas[nMoedaBco][2],1)
+		nTxMdaOr:=aTxMoedas[SE1->E1_MOEDA][2]
+	EndIf
+	If GetMv("MV_SIGAGSP") <> "1"  //Roberto - Integração com o SIGAGSP 0=Não integra 1=Integra
+	   nAcresc     := Round(NoRound(xMoeda(nAcrescF,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
+	EndIf
+	nDecresc    := Round(NoRound(xMoeda(SE1->E1_SDDECRE,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
+	DEFAULT nTxMoeda := 0
+	If Substr(cMotBx,1,3) != "DEV"
+		If cPaisLoc <> "BRA"
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,Iif(nTxMdaOr>0,nTxMdaOr,nMoedaBx),nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,Iif(nTxMdaOr>0,nTxMdaOr,nMoedaBx),nTxMoeda)
+		Else
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+		EndIf
 
-	nValMoeda1	:= Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
-Else
-	If cPaisLoc <> "BRA"
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,,nTxMoeda)
+		nValMoeda1	:= Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
 	Else
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+		If cPaisLoc <> "BRA"
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,,nTxMoeda)
+		Else
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+		EndIf
+
+		nValMoeda1	:= Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
 	EndIf
 
-	nValMoeda1	:= Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
-EndIf
-
-If cPaisLoc == "BRA" .And. SE1->E1_MOEDA > 1 .And. SE1->E1_TXMOEDA > 0 .And. nValRec == Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
-	lArred	:=	.T.
-	nValRec	:=	nValMoeda
-Else
-	nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
-Endif
-
-
-nBsVlEstr := nValEstrang
-nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
-If Substr(cMotBx,1,3) == "DEV"
-    nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,SE1->E1_EMISSAO,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-Else
-    If SE1->E1_MOEDA == 1 
-        nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-    Else
-        //"Resolver" problemas de arredondamento em moeda 2
-        nVlEstRnd := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-        nVlEstNoRd := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
-        If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0	// Se saldo igual Round do nValRec
-            nValEstrang := nVlEstRnd
-        ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
-            nValEstrang := nVlEstNoRd
-        Else // mudou o valor de baixa, faço como o padrão sempre fez
-            nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-        EndIf
-    EndIf
-EndIf
-If nOutrosValores == 0 // Vai baixar o título sem nenhum outro valor além do título?
-	If Abs(nValEstrang - nBsVlEstr ) == 0.01
-		nValEstrang := nBsVlEstr		// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+	If cPaisLoc == "BRA" .And. SE1->E1_MOEDA > 1 .And. SE1->E1_TXMOEDA > 0 .And. nValRec == Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
+		lArred	:=	.T.
+		nValRec	:=	nValMoeda
+	Else
+		nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
 	EndIf
-EndIf
 
-If lArred
-	nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
-	nValRec     := Round(nValRec,MsDecimais(SE1->E1_MOEDA))
-Endif
-SE5->(DbSetOrder(8))
-If cPaisloc<>"BRA" .And. !Empty( SE1->E1_RECIBO )
-	SE5->(DbSeek(xFilial("SE5")+SE1->E1_RECIBO+SE1->E1_SERREC))
-	While SE5->(!Eof()) .AND. (SE5->E5_FILIAL== xFilial("SE5").AND. SE5->E5_ORDREC==SE1->E1_RECIBO .AND. SE5->E5_SERREC == SE1->E1_SERIE)
-		If Alltrim(SE5->E5_ORIGEM) $ "FINA087A|FINA840"
-			nSalvRec:= SA6->( Recno() )
-			nOrdSA6:=SA6->(IndexOrd())
-			SA6->(DbSetOrder(1))
-			SA6->(MsSeek(xFilial("SA6")+SE5->E5_BANCO+SE5->E5_AGENCIA+SE5->E5_CONTA))
-			nMoedaBx:= Max(SA6->A6_MOEDA,1)
-			lRetMoeda := .T.
-			SA6->(DbSetOrder(nOrdSA6))
-			SA6->(dbGoto(nSalvRec))
-			Exit
-		Endif
-		SE5->(dbSkip())
-	Enddo
-Endif
-If cPaisLoc<>"BRA" 
-    If SE1->E1_MOEDA == 1 
-        nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-    Else
-        //"Resolver" problemas de arredondamento em moeda 2
-        nVlEstRnd := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),3),MsDecimais(SE1->E1_MOEDA))
-        nVlEstNoRd := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),MsDecimais(SE1->E1_MOEDA))
-        If SE1->E1_SALDO == nVlEstRnd // Se saldo igual Round do nValRec
-            nValEstrang := nVlEstRnd
-        ElseIf SE1->E1_SALDO == nVlEstNoRd // Se saldo igual a noRound do nValRec
-            nValEstrang := nVlEstNoRd
-        Else // mudou o valor de baixa, faço como o padrão sempre fez
-            nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),3),MsDecimais(SE1->E1_MOEDA))
-        EndIf
-    EndIf
-EndIf
-nSaveVar := nValEstrang   // Pau de gerenciamento de Memoria (Wilson)
-nValLiq     := nValRec-nMulta-nJuros-nVa-nPis-nCofins-nCsll+nDescont-nAcresc+nDecresc+Round(NoRound(xMoeda(nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
-nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,,,nTxMoeda))
-FA070CORR(nEstOriginal,nTxMoeda) // calcula Correc. Monetaria
-nValEstrang := nSaveVar
 
-If !lF415Auto .and. Type('lF070Auto') =='L' .and. !lF070Auto
-	oVlEstrang:Refresh()
-	oCM:Refresh()
-EndIf
+	nBsVlEstr := nValEstrang
+	nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
+	If Substr(cMotBx,1,3) == "DEV"
+		nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,SE1->E1_EMISSAO,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+	Else
+		If SE1->E1_MOEDA == 1 
+    		If nMoedaBx > 1
+    			nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+    		Else
+    			nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+    		EndIf
+		Else
+			//"Resolver" problemas de arredondamento em moeda 2
+			nVlEstRnd := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+			nVlEstNoRd := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
+			If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0	// Se saldo igual Round do nValRec
+				nValEstrang := nVlEstRnd
+			ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
+				nValEstrang := nVlEstNoRd
+			Else // mudou o valor de baixa, faço como o padrão sempre fez
+	        		If nOutrosValores <> 0
+						nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,8,,nTxMoeda),8),MsDecimais(SE1->E1_MOEDA) + 2)
+					Else
+						nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+					EndIf
+			EndIf
+		EndIf
+	EndIf
+	If nOutrosValores == 0 // Vai baixar o título sem nenhum outro valor além do título?
+		If Abs(nValEstrang - nBsVlEstr ) == 0.01
+			nValEstrang := nBsVlEstr		// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+		EndIf
+	EndIf
+
+	If lArred
+		nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
+		nValRec     := Round(nValRec,MsDecimais(SE1->E1_MOEDA))
+	EndIf
+	SE5->(DbSetOrder(8))
+	If cPaisloc<>"BRA" .And. !Empty( SE1->E1_RECIBO )
+		SE5->(DbSeek(xFilial("SE5")+SE1->E1_RECIBO+SE1->E1_SERREC))
+		While SE5->(!Eof()) .AND. (SE5->E5_FILIAL== xFilial("SE5").AND. SE5->E5_ORDREC==SE1->E1_RECIBO .AND. SE5->E5_SERREC == SE1->E1_SERIE)
+			If Alltrim(SE5->E5_ORIGEM) $ "FINA087A|FINA840"
+				nSalvRec:= SA6->( Recno() )
+				nOrdSA6:=SA6->(IndexOrd())
+				SA6->(DbSetOrder(1))
+				SA6->(MsSeek(xFilial("SA6")+SE5->E5_BANCO+SE5->E5_AGENCIA+SE5->E5_CONTA))
+				nMoedaBx:= Max(SA6->A6_MOEDA,1)
+				lRetMoeda := .T.
+				SA6->(DbSetOrder(nOrdSA6))
+				SA6->(dbGoto(nSalvRec))
+				Exit
+			EndIf
+			SE5->(dbSkip())
+		EndDo
+	EndIf
+	If cPaisLoc<>"BRA" 
+		If SE1->E1_MOEDA == 1 
+    		If nMoedaBx > 1
+    			nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),3),MsDecimais(SE1->E1_MOEDA))
+    		Else
+    			nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+    		EndIf
+		Else
+			//"Resolver" problemas de arredondamento em moeda 2
+			nVlEstRnd := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),3),MsDecimais(SE1->E1_MOEDA))
+			nVlEstNoRd := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),MsDecimais(SE1->E1_MOEDA))
+			If SE1->E1_SALDO == nVlEstRnd // Se saldo igual Round do nValRec
+				nValEstrang := nVlEstRnd
+			ElseIf SE1->E1_SALDO == nVlEstNoRd // Se saldo igual a noRound do nValRec
+				nValEstrang := nVlEstNoRd
+			Else // mudou o valor de baixa, faço como o padrão sempre fez
+				nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda,nTxMdaOr),3),MsDecimais(SE1->E1_MOEDA))
+			EndIf
+		EndIf
+	EndIf
+	nSaveVar := nValEstrang   // Pau de gerenciamento de Memoria (Wilson)
+	nValLiq     := nValRec-nMulta-nJuros-nVa-nPis-nCofins-nCsll+nDescont-nAcresc+nDecresc+Round(NoRound(xMoeda(nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(nMoedaBx))
+	nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,,,nTxMoeda))
+
+	If nOutrosValores <> 0	// Vai baixar o título sem nenhum outro valor além do título?
+		If Abs(NoRound(nEstOriginal,MsDecimais(SE1->E1_MOEDA)) - nBsVlEstr ) == 0.01
+			nEstOriginal := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+		EndIf
+		nVlEstNRd8	:= NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,8,,nTxMoeda),8)
+		nVlEstNRd8	:= nVlEstNRd8-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,3,,nTxMoeda))
+	EndIf
+	
+	If Round(nVlEstNRd8, MsDecimais(SE1->E1_MOEDA) + 1) <> NoRound(nVlEstNRd8, MsDecimais(SE1->E1_MOEDA) + 1)
+		FA070CORR(nVlEstNRd8,nTxMoeda)
+	Else
+		FA070CORR(NoRound(nEstOriginal, MsDecimais(SE1->E1_MOEDA)),nTxMoeda) // calcula Correc. Monetaria
+	EndIf
+
+	nValEstrang := nSaveVar
+
+	If !lF415Auto .and. Type('lF070Auto') =='L' .and. !lF070Auto
+		oVlEstrang:Refresh()
+		oCM:Refresh()
+	EndIf
 
 Return .T.
 
@@ -8525,247 +8582,288 @@ Return( lRetorno )
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 */
-Function fa070Calc(nTxMoeda, lRecalcVRec,lAltlVal,lValRec)
-Local nEstOriginal 	:= 0	// Valor Estrangeiro Original para Correcao Monet.
-Local nMoedaBx		:= 1
-Local x
-Local nTxMdaOr		:= 0
-Local lPccBxCr		:= FPccBxCr(.T.)
-Local lBq10925		:= SupergetMv("MV_BQ10925",.F.,"2") == "1"
-Local lIrPjBxCr		:= FIrPjBxCr(.T.)	//Controla IRPJ na baixa
-Local nBsVlEstr		:= 0
-Local nTotMultas	:= 0
-Local lArred		:=	.F.
-Local lFINA200		:= FunName() == "FINA200" .Or. FwIsInCallStack("fa200Ger")
-Local nA			:=1
-Local cMoedaTx		:= ""
-Local cAuxMoeda		:=""
-Local lCalcIssBx 	:= GetNewPar("MV_MRETISS","1") == "2"  //Retencao do ISS pela emissao (1) ou baixa (2)
-Local aOutImp 		:= {}
-Local aDadosPar 	:= {}
-Local nOutrosValores:= 0
+Function fa070Calc(nTxMoeda As Numeric, lRecalcVRec As Logical, lAltlVal As Logical, lValRec As Logical) As Logical
+	Local nEstOriginal 	As Numeric 	// Valor Estrangeiro Original para Correcao Monet.
+	Local nMoedaBx		As Numeric
+	Local nTxMdaOr		As Numeric
+	Local lPccBxCr		As Logical
+	Local lBq10925		As Logical
+	Local lIrPjBxCr		As Logical 	//Controla IRPJ na baixa
+	Local nBsVlEstr		As Numeric
+	Local nTotMultas	As Numeric
+	Local lArred		As Logical
+	Local lFINA200		As Logical
+	Local nA			As Numeric
+	Local cMoedaTx		As Character
+	Local cAuxMoeda		As Character
+	Local lCalcIssBx 	As Logical //Retencao do ISS pela emissao (1) ou baixa (2)
+	Local aOutImp 		As Array
+	Local aDadosPar 	As Array
+	Local nOutrosValores As Numeric
+	Local nVlEstNRd8	As Numeric
+	Local x				As Numeric
+	
+	nEstOriginal 	:= 0	// Valor Estrangeiro Original para Correcao Monet.
+	nMoedaBx		:= 1
+	nTxMdaOr		:= 0
+	lPccBxCr		:= FPccBxCr(.T.)
+	lBq10925		:= SupergetMv("MV_BQ10925",.F.,"2") == "1"
+	lIrPjBxCr		:= FIrPjBxCr(.T.)	//Controla IRPJ na baixa
+	nBsVlEstr		:= 0
+	nTotMultas		:= 0
+	lArred			:=	.F.
+	lFINA200		:= FunName() == "FINA200" .Or. FwIsInCallStack("fa200Ger")
+	nA				:=1
+	cMoedaTx		:= ""
+	cAuxMoeda		:=""
+	lCalcIssBx 		:= GetNewPar("MV_MRETISS","1") == "2"  //Retencao do ISS pela emissao (1) ou baixa (2)
+	aOutImp 		:= {}
+	aDadosPar 		:= {}
+	nOutrosValores	:= 0
+	nVlEstNRd8		:= 0
 
-If __lTemMR
-	F070VerImp("2",cFilAnt,SE1->E1_CLIENTE,SE1->E1_LOJA,,.T.,@lIrPjBxCr,@lPccBxCr,@lCalcIssBx)
-EndIf
-
-DEFAULT nTxMoeda := 0
-DEFAULT lRecalcVRec := .T. //-- Adicionado argumento à função para tratamento de Bx Parcial em outra moeda
-/*DEFAULT lAltlVal := .F.*/
-DEFAULT lValRec := .F.
-
-nMoedaBx	:= If(Type("nMoedaBco") != "N" .or. (cPaisLoc == "ARG" .and. FwIsInCallStack("FINA846") .and. FwIsInCallStack("F074GRAVA") ),SE1->E1_MOEDA,nMoedaBco)
-lAutValRec	:= If(Type("lAutValRec") != "L",.F.,lAutValRec)
-
-If Type("nVA") == "U"
-	Private nVa := 0
-EndIf
-
-If  cPaisLoc <> "BRA" .and. Type("aTxMoedas") == "U"
-	 aTxMoedas := {}
-	aAdd(aTxMoedas,{"",1,PesqPict("SM2","M2_MOEDA1")})
-	For nA:=	2 To MoedFin()
-	  cMoedaTx := Str(nA,IIf(nA <= 9,1,2))
-	  cAuxMoeda := GetMv( "MV_MOEDA" + cMoedaTx )
-	  If ! Empty( cAuxMoeda )
-	  	If lF070Auto .And. nA==SE1->E1_MOEDA
-			 aAdd( aTxMoedas, {cAuxMoeda, SE1->E1_TXMOEDA, PesqPict("SM2", "M2_MOEDA" + cMoedaTx)} )
-		Else
-			 aAdd( aTxMoedas, {cAuxMoeda, RecMoeda(dDataBase,nA), PesqPict("SM2", "M2_MOEDA" + cMoedaTx)} )
-		Endif
-	  Else
-		 Exit
-	  Endif
-   Next
-EndIf
-
-If Type("nOdlMoedBco") == "U"
-	nOdlMoedBco	 := 1
-EndIf
-
-If cPaisLoc <> "BRA"
-    If nTxMoeda == 0 
-        nTxMoeda := Iif(nMoedaBco > 0, aTxMoedas[nMoedaBco][2],1)
-    EndIf
-	nTxMdaOr := aTxMoedas[SE1->E1_MOEDA][2]
-EndIf
-
-If SE1->E1_APLVLMN == "2"
-	lAplVlMin := .F.
-Endif
-
-If FunName() == "FINA110"
-	nParciais  := 0
-	aBaixaSE5 := {}
-
-	cPrefixo   := SE1->E1_PREFIXO
-	cNum       := SE1->E1_NUM
-	cParcela   := SE1->E1_PARCELA
-	cTipo      := SE1->E1_TIPO
-	nTotAdto   := 0
-	lBaixaAbat := .F.
-	cCliente   := SE1->E1_CLIENTE
-	cLoja      := SE1->E1_LOJA
-	nVlrBaixa  := 0
-	lBxCec     := .F.
-	lBxLiq     := .F.
-
-	//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-	//³Para que o valor da baixa parcial nao fique negativo, verifico o saldo³
-	//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-	If (SE1->E1_VALOR > SE1->E1_SALDO)
-		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-		//³Procura pelas baixas deste titulo                                     ³
-		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		aBaixa := Sel070Baixa( "VL /V2 /BA /RA /CP /LJ /"+MV_CRNEG,cPrefixo,cNum,cParcela,cTipo,@nTotAdto,@lBaixaAbat,cCliente,cLoja,@nVlrBaixa,,@lBxCec,@lBxLiq)
-		For x := 1 To Len(aBaixaSE5)
-			nParciais += aBaixaSE5[x][8]
-			nTotMultas += aBaixaSE5[x][15]
-		Next
-		nParciais += nTotAdto
-		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-		//³ Soma valor de decrescimo em baixas parciais, para evitar         ³
-		//³ diferencas entre valor original e valor recebido                 ³
-		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		If SE1->E1_SDDECRE <> SE1->E1_DECRESC
-			nParciais += ( SE1->E1_DECRESC - SE1->E1_SDDECRE )
-			nParciais -= 	nTotMultas
-		EndIf
-
-	Else
-		nParciais 	:= SE1->E1_VALOR-SE1->E1_SALDO
-	Endif
-EndIf
-
-
-nOtrGa		:= If(Type("nOtrGa") != "N",0,nOtrGa)
-nDifCambio	:= If(Type("nDifCambio") != "N",0,nDifCambio)
-nAcresc		:= If(Type("nAcresc") != "N",SE1->E1_SDACRES,nAcresc)
-nAcrescf	:= If(Type("nAcrescf") != "N",SE1->E1_SDACRES,nAcrescf)
-nDecresc	:= If(Type("nDecresc") != "N",SE1->E1_SDDECRE,nDecresc)
-nDecrescf	:= If(Type("nDecrescf") != "N",SE1->E1_SDDECRE,nDecrescf)
-
-nValTot     := SE1->E1_VLCRUZ
-
-nValEstrang := nValOrig := SE1->E1_SALDO-nTotAbat
-nAcresc     := xMoeda(nAcrescF,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
-nDecresc    := xMoeda(SE1->E1_SDDECRE,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
-
-If TrazCodMot(cMotBx) == "DEV"
-	If cPaisLoc <> "BRA"
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMdaOr,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMdaOr,nTxMoeda)
-	Else
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+	If __lTemMR
+		F070VerImp("2",cFilAnt,SE1->E1_CLIENTE,SE1->E1_LOJA,,.T.,@lIrPjBxCr,@lPccBxCr,@lCalcIssBx)
 	EndIf
-	nValMoeda1  := Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
-Else
-    If cPaisLoc <> "BRA"
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMdaOr,nTxMoeda)
-		nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,5,nTxMdaOr,nTxMoeda)
-		nValMoeda   := Round(NoRound(nValMoeda,5),4)
-	Else
-		nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
-        nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+
+	DEFAULT nTxMoeda := 0
+	DEFAULT lRecalcVRec := .T. //-- Adicionado argumento à função para tratamento de Bx Parcial em outra moeda
+	/*DEFAULT lAltlVal := .F.*/
+	DEFAULT lValRec := .F.
+
+	nMoedaBx	:= If(Type("nMoedaBco") != "N" .or. (cPaisLoc == "ARG" .and. FwIsInCallStack("FINA846") .and. FwIsInCallStack("F074GRAVA") ),SE1->E1_MOEDA,nMoedaBco)
+	lAutValRec	:= If(Type("lAutValRec") != "L",.F.,lAutValRec)
+
+	If Type("nVA") == "U"
+		Private nVa := 0
 	EndIf
-	nValMoeda1  := Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
-Endif
 
-If cPaisLoc == "BRA" .And. SE1->E1_MOEDA > 1 .And. SE1->E1_TXMOEDA > 0
-	lArred	:=	.T.
-Endif
-
-If __lTemMR .and. nValrec <> 0 .and. nValrec < __nTotImp .And. lRecalcVRec
-	//Garanto que não vai tentar reter um valor maior que o saldo do título
-	aAdd(aOutImp, {"PIS", nPis })
-	aAdd(aOutImp, {"COF", nCofins })
-	aAdd(aOutImp, {"CSL", nCsll })
-	aAdd(aOutImp, {"IRF", nIrrf })
-	aAdd(aOutImp, {"ISS", nIss })
-	aAdd(aOutImp, {"OUT", nlImpMR })
-
-	aDadosPar 	:= verVrAR(nValrec, aOutImp, __lTemMR, __lImpMR)
-	nPis		:= aDadosPar[1]
-	nCofins	:= aDadosPar[2]
-	nCsll		:= aDadosPar[3]
-	nlImpMR 	:= aDadosPar[4]
-
-	__lPropPcc	:= .T.
-	__nTotImp	:= (nPis + nCofins + nCsll + nIrrf + nInss + nIss + nlImpMR)
-
-	nValRec := nValMoeda+nMulta+nJuros+nVa+(nCm1+nProRata)-nDescont-nOtrGa+nAcresc-nDecresc-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-Iif(__lImpMR,nlImpMR,0)
-Else
-	//-- Quando for chamada pela validação do campo nValRec, não recalcula o valor recebido (baixa parcial)
-	If (lRecalcVRec .And. If(cPaisLoc == "BRA",.T.,nValRec==0 ) .And. (!lAutValRec .OR. FwIsInCallStack("BAIXAUTSE1")) ) .OR. (cPaisLoc != "BRA" .AND. nMoedaBco!=nOdlMoedBco .And. !lValRec)
-		nValRec := nValMoeda+nMulta+nJuros+nVa+(nCm1+nProRata)-nDescont-nOtrGa+nAcresc-nDecresc-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-Iif(__lImpMR,nlImpMR,0)
-	ElseIf cPaisLoc == "BRA" .And. SE1->E1_MOEDA == 1 .And. SE1->E1_TXMOEDA == 0 .AND. (SA6->A6_MOEDA == 1 .or. SA6->A6_MOEDA == 0)
-		If lBq10925 .and. nValRec <> 0 .And. lRecalcVRec
-			If (nOldPis <> nPis .and.  nPis < nOldPis) .or. (nOldCofins <> nCofins .and.  nCofins < nOldCofins) .or.(nOldCsll <> nCsll .and.  nCsll < nOldCsll) .or.;
-				If(lIrPjBxCr,nOldIrrf <> nIrrf .and.  nIrrf < nOldIrrf,.f.)
-				nValRec := nValMoeda-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-nInss-Iif(__lImpMR,nlImpMR,0)
+	If  cPaisLoc <> "BRA" .and. Type("aTxMoedas") == "U"
+		 aTxMoedas := {}
+		aAdd(aTxMoedas,{"",1,PesqPict("SM2","M2_MOEDA1")})
+		For nA:=	2 To MoedFin()
+		  cMoedaTx := Str(nA,IIf(nA <= 9,1,2))
+		  cAuxMoeda := GetMv( "MV_MOEDA" + cMoedaTx )
+		  If ! Empty( cAuxMoeda )
+	  		If lF070Auto .And. nA==SE1->E1_MOEDA
+				 aAdd( aTxMoedas, {cAuxMoeda, SE1->E1_TXMOEDA, PesqPict("SM2", "M2_MOEDA" + cMoedaTx)} )
 			Else
-				nValRec-= Iif(nOldPis <> nPis, nPis - nOldPis,0)
-				nValRec-= Iif(nOldCofins <> nCofins, nCofins - nOldCofins,0)
-				nValRec-= Iif(nOldCsll <> nCsll, nCsll -nOldCsll,0)
-				If lIrPjBxCr .and. nOldIrrf <> nIrrf
-					nValRec-= Iif(nOldIrrf <> nIrrf, nIrrf -nOldIrrf,0)
-				Endif
+				 aAdd( aTxMoedas, {cAuxMoeda, RecMoeda(dDataBase,nA), PesqPict("SM2", "M2_MOEDA" + cMoedaTx)} )
 			Endif
-	  	Else
-			nValRec    := nValRec
-	  	Endif
+		  Else
+			 Exit
+		  EndIf
+	   Next
 	EndIf
-Endif
 
-If nIrrf > 0 .and. cPaisLoc == "BRA" .AND. (SA1->A1_RECIRRF = '2' .or. (SED->ED_RECIRRF = '3' .AND. SA1->A1_RECIRRF = '2') .OR. SED->ED_RECIRRF = '2')
-	nValRec += nIrrf
-EndIf
-
-nBsVlEstr := nValEstrang
-nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
-If Substr(cMotBx,1,3) == "DEV" .and. cPaisLoc == "BRA"
-    nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,SE1->E1_EMISSAO,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-Else
-    //tratativa p/ ñ gerar bx parcial na subst. de Tít. PR, qundo o mesmo estiver em moda 2 e c/ taxa da moeda
-    If (AllTrim(SE1->E1_TIPO) <> "PR" .OR. SE1->E1_TXMOEDA == 0 .OR. SE1->E1_MOEDA == 1)
-        If SE1->E1_MOEDA == 1    
-            nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-        Else
-            //"Resolver" problemas de arredondamento em moeda 2
-            nVlEstRnd   := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-            nVlEstNoRd  := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
-            If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0 // Se saldo igual Round do nValRec
-                nValEstrang := nVlEstRnd
-            ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
-                nValEstrang := nVlEstNoRd
-            Else // mudou o valor de baixa, faço como o padrão sempre fez
-                nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-            EndIf
-        EndIf
-    EndIf
-EndIf
-If nOutrosValores == 0	// Vai baixar o título sem nenhum outro valor além do título?
-	If Abs(nValEstrang - nBsVlEstr ) == 0.01
-		nValEstrang := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+	If Type("nOdlMoedBco") == "U"
+		nOdlMoedBco	 := 1
 	EndIf
-EndIf
 
-If lArred
-	nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
-	nValRec     := Round(nValRec,MsDecimais(SE1->E1_MOEDA))
-Endif
-
-nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,,,nTxMoeda))
-
-FA070CORR(nEstOriginal,nTxMoeda)
-
-
-If !lAltlVal .OR. SE1->E1_MOEDA==1
-	If !lFINA200
-		nOldValRec := nValRec
+	If cPaisLoc <> "BRA"
+		If nTxMoeda == 0 
+			nTxMoeda := Iif(nMoedaBco > 0, aTxMoedas[nMoedaBco][2],1)
+		EndIf
+		nTxMdaOr := aTxMoedas[SE1->E1_MOEDA][2]
 	EndIf
-EndIf
+
+	If SE1->E1_APLVLMN == "2"
+		lAplVlMin := .F.
+	EndIf
+
+	If FunName() == "FINA110"
+		nParciais  := 0
+		aBaixaSE5 := {}
+
+		cPrefixo   := SE1->E1_PREFIXO
+		cNum       := SE1->E1_NUM
+		cParcela   := SE1->E1_PARCELA
+		cTipo      := SE1->E1_TIPO
+		nTotAdto   := 0
+		lBaixaAbat := .F.
+		cCliente   := SE1->E1_CLIENTE
+		cLoja      := SE1->E1_LOJA
+		nVlrBaixa  := 0
+		lBxCec     := .F.
+		lBxLiq     := .F.
+
+		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+		//³Para que o valor da baixa parcial nao fique negativo, verifico o saldo³
+		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+		If (SE1->E1_VALOR > SE1->E1_SALDO)
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//³Procura pelas baixas deste titulo                                     ³
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			aBaixa := Sel070Baixa( "VL /V2 /BA /RA /CP /LJ /"+MV_CRNEG,cPrefixo,cNum,cParcela,cTipo,@nTotAdto,@lBaixaAbat,cCliente,cLoja,@nVlrBaixa,,@lBxCec,@lBxLiq)
+			For x := 1 To Len(aBaixaSE5)
+				nParciais += aBaixaSE5[x][8]
+				nTotMultas += aBaixaSE5[x][15]
+			Next
+			nParciais += nTotAdto
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//³ Soma valor de decrescimo em baixas parciais, para evitar         ³
+			//³ diferencas entre valor original e valor recebido                 ³
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			If SE1->E1_SDDECRE <> SE1->E1_DECRESC
+				nParciais += ( SE1->E1_DECRESC - SE1->E1_SDDECRE )
+				nParciais -= 	nTotMultas
+			EndIf
+
+		Else
+			nParciais 	:= SE1->E1_VALOR-SE1->E1_SALDO
+		EndIf
+	EndIf
+
+	nOtrGa		:= If(Type("nOtrGa") != "N",0,nOtrGa)
+	nDifCambio	:= If(Type("nDifCambio") != "N",0,nDifCambio)
+	nAcresc		:= If(Type("nAcresc") != "N",SE1->E1_SDACRES,nAcresc)
+	nAcrescf	:= If(Type("nAcrescf") != "N",SE1->E1_SDACRES,nAcrescf)
+	nDecresc	:= If(Type("nDecresc") != "N",SE1->E1_SDDECRE,nDecresc)
+	nDecrescf	:= If(Type("nDecrescf") != "N",SE1->E1_SDDECRE,nDecrescf)
+
+	nValTot     := SE1->E1_VLCRUZ
+
+	nValEstrang := nValOrig := SE1->E1_SALDO-nTotAbat
+	nAcresc     := xMoeda(nAcrescF,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+	nDecresc    := xMoeda(SE1->E1_SDDECRE,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+
+	If TrazCodMot(cMotBx) == "DEV"
+		If cPaisLoc <> "BRA"
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMdaOr,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMdaOr,nTxMoeda)
+		Else
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,SE1->E1_EMISSAO,3,nTxMoeda)
+		EndIf
+		nValMoeda	:= Round(NoRound(nValMoeda,3),MsDecimais(SE1->E1_MOEDA))
+		nValMoeda1  := Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
+	Else
+		If cPaisLoc <> "BRA"
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMdaOr,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,5,nTxMdaOr,nTxMoeda)
+			nValMoeda   := Round(NoRound(nValMoeda,5),4)
+		Else
+			nValMoeda1	:= xMoeda(SE1->E1_VALOR-nTotAbat,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+			nValMoeda	:= xMoeda(nValOrig,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda)
+		EndIf
+		nValMoeda	:= Round(NoRound(nValMoeda,3),MsDecimais(SE1->E1_MOEDA)) 
+		nValMoeda1  := Round(NoRound(nValMoeda1,3),MsDecimais(nMoedaBx))
+	EndIf
+
+	If cPaisLoc == "BRA" .And. SE1->E1_MOEDA > 1 .And. SE1->E1_TXMOEDA > 0
+		lArred	:=	.T.
+	EndIf
+
+	If __lTemMR .and. nValrec <> 0 .and. nValrec < __nTotImp .And. lRecalcVRec
+		//Garanto que não vai tentar reter um valor maior que o saldo do título
+		aAdd(aOutImp, {"PIS", nPis })
+		aAdd(aOutImp, {"COF", nCofins })
+		aAdd(aOutImp, {"CSL", nCsll })
+		aAdd(aOutImp, {"IRF", nIrrf })
+		aAdd(aOutImp, {"ISS", nIss })
+		aAdd(aOutImp, {"OUT", nlImpMR })
+
+		aDadosPar 	:= verVrAR(nValrec, aOutImp, __lTemMR, __lImpMR)
+		nPis		:= aDadosPar[1]
+		nCofins	:= aDadosPar[2]
+		nCsll		:= aDadosPar[3]
+		nlImpMR 	:= aDadosPar[4]
+
+		__lPropPcc	:= .T.
+		__nTotImp	:= (nPis + nCofins + nCsll + nIrrf + nInss + nIss + nlImpMR)
+
+		nValRec := nValMoeda+nMulta+nJuros+nVa+(nCm1+nProRata)-nDescont-nOtrGa+nAcresc-nDecresc-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-Iif(__lImpMR,nlImpMR,0)
+	Else
+		//-- Quando for chamada pela validação do campo nValRec, não recalcula o valor recebido (baixa parcial)
+		If (lRecalcVRec .And. If(cPaisLoc == "BRA",.T.,nValRec==0 ) .And. (!lAutValRec .OR. FwIsInCallStack("BAIXAUTSE1")) ) .OR. (cPaisLoc != "BRA" .AND. nMoedaBco!=nOdlMoedBco .And. !lValRec)
+			nValRec := nValMoeda+nMulta+nJuros+nVa+(nCm1+nProRata)-nDescont-nOtrGa+nAcresc-nDecresc-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-Iif(__lImpMR,nlImpMR,0)
+		ElseIf cPaisLoc == "BRA" .And. SE1->E1_MOEDA == 1 .And. SE1->E1_TXMOEDA == 0 .AND. (SA6->A6_MOEDA == 1 .or. SA6->A6_MOEDA == 0)
+			If lBq10925 .and. nValRec <> 0 .And. lRecalcVRec
+				If (nOldPis <> nPis .and.  nPis < nOldPis) .or. (nOldCofins <> nCofins .and.  nCofins < nOldCofins) .or.(nOldCsll <> nCsll .and.  nCsll < nOldCsll) .or.;
+					If(lIrPjBxCr,nOldIrrf <> nIrrf .and.  nIrrf < nOldIrrf,.f.)
+					nValRec := nValMoeda-Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)-Iif(lCalcIssBx,nIss,0)-nInss-Iif(__lImpMR,nlImpMR,0)
+				Else
+					nValRec-= Iif(nOldPis <> nPis, nPis - nOldPis,0)
+					nValRec-= Iif(nOldCofins <> nCofins, nCofins - nOldCofins,0)
+					nValRec-= Iif(nOldCsll <> nCsll, nCsll -nOldCsll,0)
+					If lIrPjBxCr .and. nOldIrrf <> nIrrf
+						nValRec-= Iif(nOldIrrf <> nIrrf, nIrrf -nOldIrrf,0)
+					Endif
+				Endif
+	  		Else
+				nValRec    := nValRec
+	  		EndIf
+		EndIf
+	EndIf
+
+	If nIrrf > 0 .and. cPaisLoc == "BRA" .AND. (SA1->A1_RECIRRF = '2' .or. (SED->ED_RECIRRF = '3' .AND. SA1->A1_RECIRRF = '2') .OR. SED->ED_RECIRRF = '2')
+		nValRec += nIrrf
+	EndIf
+
+	nBsVlEstr := nValEstrang
+	nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
+	If Substr(cMotBx,1,3) == "DEV" .and. cPaisLoc == "BRA"
+		nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,SE1->E1_EMISSAO,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+	Else
+		//tratativa p/ ñ gerar bx parcial na subst. de Tít. PR, qundo o mesmo estiver em moda 2 e c/ taxa da moeda
+		If (AllTrim(SE1->E1_TIPO) <> "PR" .OR. SE1->E1_TXMOEDA == 0 .OR. SE1->E1_MOEDA == 1)
+			If SE1->E1_MOEDA == 1    
+        		If nMoedaBx > 1
+        			nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+        		Else
+        			nValEstrang := Round(NoRound(xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBx,dBaixa,3,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+        		EndIf
+			Else
+				//"Resolver" problemas de arredondamento em moeda 2
+				nVlEstRnd   := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+				nVlEstNoRd  := NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
+				If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0 // Se saldo igual Round do nValRec
+					nValEstrang := nVlEstRnd
+				ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
+					nValEstrang := nVlEstNoRd
+				Else // mudou o valor de baixa, faço como o padrão sempre fez
+	            		If nOutrosValores <> 0
+	            			nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,8,,nTxMoeda),8),MsDecimais(SE1->E1_MOEDA) + 2)
+	            		Else
+							nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,3,,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+						EndIf
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+	If nOutrosValores == 0	// Vai baixar o título sem nenhum outro valor além do título?
+		If Abs(nValEstrang - nBsVlEstr ) == 0.01
+			nValEstrang := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+		EndIf
+	EndIf
+
+	If lArred
+		nValMoeda   := Round(NoRound(nValMoeda,3),MsDecimais(nMoedaBx))
+		nValRec     := Round(nValRec,MsDecimais(SE1->E1_MOEDA))
+	EndIf
+
+	nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,,,nTxMoeda))
+
+	If nOutrosValores <> 0	// Vai baixar o título sem nenhum outro valor além do título?
+		If Abs(NoRound(nEstOriginal,MsDecimais(SE1->E1_MOEDA)) - nBsVlEstr ) == 0.01
+			nEstOriginal := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+		EndIf
+		nVlEstNRd8	:= NoRound(xMoeda(nValRec,nMoedaBx,SE1->E1_MOEDA,dBaixa,8,,nTxMoeda),8)
+		nVlEstNRd8	:= nVlEstNRd8-(xMoeda(nOutrosValores,nMoedaBx,SE1->E1_MOEDA,,3,,nTxMoeda))
+	EndIf
+	
+	If Round(nVlEstNRd8, MsDecimais(SE1->E1_MOEDA) + 1) <> NoRound(nVlEstNRd8, MsDecimais(SE1->E1_MOEDA) + 1)
+		FA070CORR(nVlEstNRd8,nTxMoeda)
+	Else
+		FA070CORR(NoRound(nEstOriginal, MsDecimais(SE1->E1_MOEDA)),nTxMoeda)
+	EndIf
+	
+	If !lAltlVal .OR. SE1->E1_MOEDA==1
+		If !lFINA200
+			nOldValRec := nValRec
+		EndIf
+	EndIf
+
 Return .T.
 
 /*/
@@ -9422,10 +9520,7 @@ If Type("nTxMoeda") == "U" .and. cPaisLoc <> "BRA"
     nTxMoeda    := aTxMoedas[SE1->E1_MOEDA][2]
 EndIf
 
-IF SE1->E1_MOEDA == 1 .and.  Str(xMoeda(nValRec, SE1->E1_MOEDA, nMoedaBco,dbaixa,7,nTxMoeda),17,2) > Str((xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda)+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc)),17,2)
-        Help(" ",1,"ValorMaior")
-        Return .F.
-ElseIf SE1->E1_MOEDA > 1 .and. Str(xMoeda(nValEstrang, SE1->E1_MOEDA, nMoedaBco,dbaixa,7,nTxMoeda),17,2)  > Str((xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda)+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc)),17,2)
+If Str(nValRec,17,2) > Str(Round(NoRound(xMoeda(SE1->E1_SALDO-nTotAbat,SE1->E1_MOEDA,nMoedaBco,dBaixa,7,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))+Iif(Alltrim(SE1->E1_ORIGEM) == "FINA074",0,nJuros+nVa+nMulta-nDescont-nOtrga+nTolerPg+nAcresc-nDecresc),17,2)
     Help(" ",1,"ValorMaior")
     Return .F.
 EndIf
@@ -9539,7 +9634,7 @@ If  lAltValor .And. lPccBxCr
 			nValRec := nOldValRec
 		Endif
 
-		If SE1->E1_MOEDA == 1
+		If SE1->E1_MOEDA == 1 .And. nMoedaBco == SE1->E1_MOEDA
 			nValEstrang := nValRec // nValEstrang = variavel que contem o valor do campo "valor pago" na baixa
 		EndIf
 
@@ -9555,7 +9650,7 @@ If  lAltValor .And. lPccBxCr
 			nValRec := nOldRec
 		EndIf
 
-		If SE1->E1_MOEDA == 1
+		If SE1->E1_MOEDA == 1 .And. nMoedaBco == SE1->E1_MOEDA
 			nValEstrang := nValRec // nValEstrang = variavel que contem o valor do campo "valor pago" na baixa
 		EndIf
 
@@ -9612,7 +9707,6 @@ If	ExistBlock("F070DSC")
 Endif
 
 Return lRet
-
 
 /*/
 ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
@@ -10231,13 +10325,13 @@ If (Type("aCols") == "A" .And. Empty(aCols)) .Or. Type("aCols") != "A"
 	RestArea(aArea)
 Endif
 
-If (cFunname == "FINA040" .Or. (cFunname == "FINA740" .And. !Empty(aCols) .And. Type("M->E1_CLIENTE") <> "U")) .and. cPaisLoc =="BRA" .and. nChamada <> 3
+If (cFunname == "FINA040" .Or. (cFunname == "FINA740" .And. !Empty(aCols) .And. Type("M->E1_CLIENTE") <> "U")) .And. cPaisLoc == "BRA" .And. nChamada == 2 
 	SA1->(dbSetOrder(1))
-	SA1->(MsSeek(xFilial("SA1")+M->E1_CLIENTE+M->E1_LOJA))
+	SA1->(MsSeek(xFilial("SA1") + M->E1_CLIENTE + M->E1_LOJA ))
 	aCols[1][7]  := SA1->A1_NOME
 	aCols[1][10] := SA1->A1_CGC
-	aCols[1][11] := Pad(AllTrim(SA1->A1_DDD)+" "+AllTrim(SA1->A1_TEL),TamSx3("EF_TEL")[1])
-Endif
+	aCols[1][11] := Pad(AllTrim(SA1->A1_DDD) + " " + AllTrim(SA1->A1_TEL), TamSx3("EF_TEL")[1])
+EndIf
 
 If lTela
 
@@ -11299,110 +11393,118 @@ Return nJurDev
 ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
 /*/
-Static Function f070AltBco(nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, nValRec, oTxMoeda)
-Local lRet := .T.
-Local lPccBxCr  := FPccBxCr()
-Local lIrPjBxCr := FIrPjBxCr()
-Local nMoedaBx  := Max(SE1->E1_MOEDA, 1)
-Local nBaseVR   := nValRec
-Local nTxMdaOr  := 0
+Static Function f070AltBco(nTxMoeda, oJuros, oMulta, oDescont, oCm, oBanco, nValRec, oTxMoeda, nOldMoeBco)
+Local lRet		 := .T.
+Local lPccBxCr   := FPccBxCr()
+Local lIrPjBxCr  := FIrPjBxCr()
+Local nMoedaBx   := Max(SE1->E1_MOEDA, 1)
+Local nTxMdaOr   := 0
 
 DEFAULT oBanco := ""
+DEFAULT nOldMoeBco := 0
 
 If (cBanco+cAgencia+cConta == SA6->A6_COD+SA6->A6_AGENCIA+SA6->A6_NUMCON)
 	nMoedaBco := Max( SA6->A6_MOEDA, 1)
-	If cPaisLoc <> "BRA"
-		If nMoedaBco == nMoedaBx
-			nTxMoeda := 1
-        ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
-            If aTxMoedas[SE1->E1_MOEDA][2] <> nMoedaBco
-                nTxMoeda:=aTxMoedas[SE1->E1_MOEDA][2]
-            Else
-                nTxMoeda := RecMoeda(dBaixa,nMoedaBco)
-            EndIf
+	If nOldMoeBco <> nMoedaBco
+		If cPaisLoc <> "BRA"
+			If nMoedaBco == nMoedaBx
+				nTxMoeda := 1
+	        ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
+	            nTxMoeda := aTxMoedas[nMoedaBco][2]
+			ElseIf SE1->E1_MOEDA > 1 .AND. nMoedaBco =1
+	            nTxMoeda := aTxMoedas[SE1->E1_MOEDA][2]
+	        Else
+	            nTxMoeda := RecMoeda(dBaixa,SE1->E1_MOEDA)
+	   		EndIf
+			nTxMdaOr:=aTxMoedas[SE1->E1_MOEDA][2]
 		Else
-            If aTxMoedas[SE1->E1_MOEDA][2] <> nMoedaBco
-                nTxMoeda:=aTxMoedas[SE1->E1_MOEDA][2]
-            Else
-                nTxMoeda := RecMoeda(dBaixa,SE1->E1_MOEDA)
-            EndIf
-		EndIf
-		nTxMdaOr:=aTxMoedas[SE1->E1_MOEDA][2]
-	Else
-		//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-		//³ SIGAPFS‚ A cotação para baixa dos títulos no módulo jurídico deve ser sempre na cotação diária.  ³
-		//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
-		If UPPER(Alltrim(SE1->E1_ORIGEM)) $ "JURA203"
-			nTxMoeda := If(SE1->E1_MOEDA > 1, RecMoeda(dBaixa,SE1->E1_MOEDA), 0)
-		ElseIf nMoedaBco == nMoedaBx
-			nTxMoeda := 1
-        ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
-            nTxMoeda := RecMoeda(dBaixa,nMoedaBco)
-        Else
-			nTxMoeda := If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
-		EndIf
-
-		nTxMdaOr := If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
-	Endif
-
-	nBsVlEstr := SE1->E1_SALDO - nTotAbat
-	nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
-    If SE1->E1_MOEDA == 1
-        nValEstrang:=  xMoeda(nValRec,SE1->E1_MOEDA,nMoedaBco,dBaixa,5,nTxMdaOr,nTxMoeda)
-    Else
-        //"Resolver" problemas de arredondamento em moeda 2
-        nVlEstRnd   := Round(NoRound(xMoeda(nValRec,nMoedaBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-        nVlEstNoRd  := NoRound(xMoeda(nValRec,nMoedaBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
-        If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0 // Se saldo igual Round do nValRec
-            nValEstrang := nVlEstRnd
-        ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
-            nValEstrang := nVlEstNoRd
-        Else // mudou o valor de baixa, faço como o padrão sempre fez
-            nValEstrang := Round(NoRound(xMoeda(nValRec,nMoedaBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
-        EndIf
-	EndIf	
-	If nOutrosValores == 0	// Vai baixar o título sem nenhum outro valor além do título?
-		If Abs(nValEstrang - nBsVlEstr ) == 0.01
-			nValEstrang := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
-		EndIf
-	EndIf
-
-	oValRec:Refresh()
-
-	If Type("oTxMoeda") == "O"
-		oTxMoeda:Refresh()
-	Endif
-
-    If Type("oVlEstrang") == "O" .and. oVlEstrang:lModified
-        oVlEstrang:Refresh()
-	Endif
-
-	nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,1,SE1->E1_MOEDA,,,,nTxMoeda))
-    If (!EMPTY(oDescont) .AND. oDescont:lModified) .OR. EMPTY(oDescont)
-		nDescont := FaDescFin("SE1",dBaixa,SE1->E1_SALDO-nTotAbat,nMoedaBco)
-	EndIf
-	IF (!Empty(oJuros) .AND. oJuros:lModified) .or. Empty(oJuros)
-		fa070Juros(nMoedaBco)
-	EndIf
-
-	If (!Empty(oBanco) .AND. (oBanco:lModified))
-		FA070CORR(nEstOriginal,nTxMoeda)
-    endIF
-
-	If cPaisLoc == "BRA"
-		oJuros:Refresh()
-		oMulta:Refresh()
-		oDescont:Refresh()
-		If Type("oCm") == "O"
-			oCm:Refresh()
+			//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+			//³ SIGAPFS‚ A cotação para baixa dos títulos no módulo jurídico deve ser sempre na cotação diária.  ³
+			//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+			If UPPER(Alltrim(SE1->E1_ORIGEM)) $ "JURA203"
+				nTxMoeda := If(SE1->E1_MOEDA > 1, RecMoeda(dBaixa,SE1->E1_MOEDA), 0)
+			ElseIf nMoedaBco == nMoedaBx
+				nTxMoeda := 1
+	        ElseIf nMoedaBco > 1 .AND. SE1->E1_MOEDA = 1
+	            nTxMoeda := RecMoeda(dBaixa,nMoedaBco)
+	        Else
+				nTxMoeda := If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
+			EndIf
+	
+			nTxMdaOr := If(SE1->E1_MOEDA > 1, If(SE1->E1_TXMOEDA > 0, SE1->E1_TXMOEDA,RecMoeda(dBaixa,SE1->E1_MOEDA)),0)
 		Endif
-	Endif
+		
+		nBsVlEstr := SE1->E1_SALDO - nTotAbat
+		nOutrosValores := nJuros+nVa+(nCm1+nProRata)+nMulta-nDescont-nOtrga+nAcresc-nDecresc - Iif(lPccBxCr,nPis+nCofins+nCsll,0)-Iif(lIrPjBxCr,nIrrf,0)
+	    If SE1->E1_MOEDA == 1
+	    	If nMoedaBco > 1
+	    		nValRec := Round(NoRound( xMoeda(nValEstrang,SE1->E1_MOEDA,nMoedaBco,dBaixa,5,nTxMdaOr,nTxMoeda) ,3),MsDecimais(SE1->E1_MOEDA)) 
+	    		nValEstrang := Round(NoRound( xMoeda(nValRec,nMoedaBco,SE1->E1_MOEDA,dBaixa,5,nTxMoeda,) ,3),MsDecimais(SE1->E1_MOEDA))  
+	    	Else
+	    		nValRec := nValEstrang
+	    	EndIf
+	    Else
+	        //"Resolver" problemas de arredondamento em moeda 2
+	        nVlEstRnd   := Round(NoRound(xMoeda(nValEstrang,nOldMoeBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+	        nVlEstNoRd  := NoRound(xMoeda(nValEstrang,nOldMoeBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),MsDecimais(SE1->E1_MOEDA))
+	        If SE1->E1_SALDO == nVlEstRnd .AND. nOutrosValores == 0 // Se saldo igual Round do nValRec
+	            nValEstrang := nVlEstRnd
+	        ElseIf SE1->E1_SALDO == nVlEstNoRd .AND. nOutrosValores == 0 // Se saldo igual a noRound do nValRec
+	            nValEstrang := nVlEstNoRd
+	        Else // mudou o valor de baixa, faço como o padrão sempre fez
+	            nValEstrang := Round(NoRound(xMoeda(nValEstrang,nOldMoeBco,SE1->E1_MOEDA,dBaixa,5,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA))
+	        EndIf
+			If SE1->E1_MOEDA == nMoedaBco
+				nValRec := nValEstrang
+			Else
+				nValRec := Round(NoRound(xMoeda(nValEstrang,nOldMoeBco,nMoedaBco,dBaixa,5,nTxMdaOr,nTxMoeda),3),MsDecimais(SE1->E1_MOEDA)) 
+			EndIf
+		EndIf	
+		If nOutrosValores == 0	// Vai baixar o título sem nenhum outro valor além do título?
+			If Abs(nValEstrang - nBsVlEstr ) == 0.01
+				nValEstrang := nBsVlEstr	// Corrigir diferença de 0,01 em conversão de moedas. Exemplo: E1_VALOR = 115890, E1_MOEDA = 2 , Taxa = 0,03348
+			EndIf
+		EndIf
+	
+		oValRec:Refresh()
+	
+		If Type("oTxMoeda") == "O"
+			oTxMoeda:Refresh()
+		Endif
+	
+	    If Type("oVlEstrang") == "O" .and. oVlEstrang:lModified
+	        oVlEstrang:Refresh()
+		Endif
+	
+		nEstOriginal := nValEstrang-(xMoeda(nOutrosValores,1,SE1->E1_MOEDA,,,,nTxMoeda))
+	    If (!EMPTY(oDescont) .AND. oDescont:lModified) .OR. EMPTY(oDescont)
+			nDescont := FaDescFin("SE1",dBaixa,SE1->E1_SALDO-nTotAbat,nMoedaBco)
+		EndIf
+		IF (!Empty(oJuros) .AND. oJuros:lModified) .or. Empty(oJuros)
+			fa070Juros(nMoedaBco)
+		EndIf
+	
+		If (!Empty(oBanco) .AND. (oBanco:lModified))
+			FA070CORR(nEstOriginal,nTxMoeda)
+	    endIF
+	
+		If cPaisLoc == "BRA"
+			oJuros:Refresh()
+			oMulta:Refresh()
+			oDescont:Refresh()
+			If Type("oCm") == "O"
+				oCm:Refresh()
+			Endif
+		Endif
+	EndIf
+
+	nOldMoeBco := nMoedaBco
 EndIf
 
 //Ponto de entrada para validacao do Banco
 If ExistBlock("F070KCO")
 	lRet := ExecBlock("F070KCO",.F.,.F.,{cBanco,cAgencia,cConta})
-Endif
+EndIf
 
 Return lRet
 
@@ -11438,12 +11540,11 @@ EndIf
 If nTxMoeda > 0 .And. oVlEstrang:lModified
 	// Converte o valor em moeda estrangeira para identificar o valor total do pagto.
 	If cPaisLoc <> "BRA"
-		nValRec := xMoeda(nValEstrang,SE1->E1_MOEDA,nMoedaBco,dBaixa,3,nTxMoeda,nTxMdaOr)
+		nValRec := Round(NoRound( xMoeda(nValEstrang,SE1->E1_MOEDA,nMoedaBco,dBaixa,3,nTxMoeda,nTxMdaOr) ,3),MsDecimais(SE1->E1_MOEDA))
 	Else
-		nValRec := xMoeda(nValEstrang,SE1->E1_MOEDA,nMoedaBco,dBaixa,3,nTxMoeda)
+		nValRec := Round(NoRound( xMoeda(nValEstrang,SE1->E1_MOEDA,nMoedaBco,dBaixa,3,nTxMoeda) ,3),MsDecimais(SE1->E1_MOEDA)) 
 	EndIf
-	// Verifica a taxa utilizada
-	nTxMoeda := nValRec/nValEstrang
+
 	// Atualiza os objetos
 	If cPaisLoc=="BRA" .AND. Type("oTxMoeda") == "O"
 		oTxMoeda:Refresh()
@@ -16348,10 +16449,11 @@ Verifica o tipo de juros para calcular a multa.
 Function faLojxRMul(dDtBaixa)
 	Local cMvJurTipo := SuperGetMv("MV_JURTIPO",,"")
 	Local lMulLoj    := SuperGetMv("MV_LJINTFS", ,.F.)
+	Local cProdRM	 := SuperGetMv('MV_RMORIG',, "E|U|S")
 
 	Default dDtBaixa := dDataBase
 
-	If !(AllTrim(SE1->E1_ORIGEM) $ 'L|S|T' .Or. SE1->E1_IDLAN > 0)
+	If !( Upper(AllTrim(SE1->E1_ORIGEM)) $ cProdRM )	// Integração RM -> Origem pertence ao parâmetro = Baixa RM |||  Origem não pertence ao parâmetro = Baixa Protheus
 		// Verifica se o tipo de calculo de juros é igual (L)loja ou Indicacao do calculo de Multa do Loja, calcula a multa
 		If !(SE1->E1_TIPO $ MVRECANT + "|" + MV_CRNEG) .And. (cMvJurTipo == "L" .OR. lMulLoj)
 			nMulta := LojxRMul( , , , SE1->E1_SALDO, SE1->E1_ACRESC, SE1->E1_VENCREA, dDtBaixa, , SE1->E1_MULTA, ,;
