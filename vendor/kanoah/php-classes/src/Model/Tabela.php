@@ -138,47 +138,25 @@ class Tabela extends Model
     {
         $sql    = new SQLServer();
 		$string = "";
-		
-		$mysql  = new MySQL();
-		
+		$registros = 1;
+				
 		$tabela = substr($query, (strpos($query, "FROM ") + 5), 3);
-
-		// $pastas = $sql->select("SELECT XA_ORDEM, XA_DESCRIC FROM SXAT10 WHERE XA_ALIAS = '$tabela'");
-		$return = $mysql->select("SELECT X3_CAMPO, X3_TITULO FROM SX3T10 WHERE X3_ARQUIVO = :TABELA", array(
-			":TABELA" => $tabela
-		));
-		$sx3 = array();
-
-		// for ($i = 0; odbc_fetch_row($return); $i++) {
-		// 	$sx3[trim(odbc_result($return, "X3_CAMPO"))] = utf8_encode(odbc_result($return, "X3_TITULO"));
-		// 	echo "<script>console.log($i)</script>";
-		// }
-
-		
 		
 		$return = $sql->select($query);
-		$registros = 1;
+
         while (odbc_fetch_row($return))
         {
 			$string .= "Registro: $registros \n";
+			
             for ($j = 1; $j <= odbc_num_fields($return); $j++)
             {
                 $field_name = odbc_field_name($return, $j);
-				// $sx3        = $sql->select("SELECT XA.XA_DESCRIC,X3.X3_TITULO FROM SX3T10 AS X3 LEFT JOIN SXAT10 AS XA ON XA.XA_ALIAS = X3.X3_ARQUIVO AND XA.XA_ORDEM = X3.X3_FOLDER WHERE X3_CAMPO = '$field_name'");
-				// $sx3        = $sql->select("SELECT X3.X3_TITULO FROM SX3T10 AS X3 WHERE X3_CAMPO = '$field_name'");
+				if (isset($GLOBALS["sx3"][$field_name])) {
+					$string .= str_pad($field_name, 10). " (" . $GLOBALS["sx3"][$field_name] . ") = '"; // Campo + título do campo
+				} else {
+					$string .= str_pad($field_name, 10). " (" . "            " . ") = '"; // Titulo nao encontrado
+				}
 				
-
-				// array_push($campos[$j], array(
-				// 	"PASTA"=>odbc_result($sx3, "XA_ORDEM"),
-				// 	"TABELA"=>odbc_result($sx3, "X3_ARQUIVO"),
-				// 	"TITULO"=>odbc_result($sx3, "X3_TITULO")
-				// ));
-				
-				// $pasta = str_pad(substr((odbc_result($sx3, "XA_DESCRIC")), 0, 15), 15); // Pasta/guia do campo
-				// $pasta = str_pad((odbc_result($sx3, "XA_DESCRIC")), 15); // Pasta/guia do campo
-				// $string .= !empty($pasta) ? "($pasta) " : "";
-				$string .= str_pad($field_name, 10). " = '"; //. " (" . $sx3["$field_name"] . ") = '"; // Campo + título do campo
-				// $string .= str_pad($field_name, 10). " (" . $sx3["$field_name"] . ") = '"; // Campo + título do campo
 				$string .= odbc_result($return, $field_name) . "'\n"; // Valor registrado no campo.
             }
 
@@ -197,7 +175,7 @@ class Tabela extends Model
 
 			$sql = new SQLServer();
 			$sql->select($query . " WHERE R_E_C_N_O_ = 0");
-			$sql->select("SELECT * FROM " . $tabela . "T10 WHERE R_E_C_N_O_ = 0");
+			$sql->select("SELECT R_E_C_N_O_ FROM " . $tabela . "T10 WHERE R_E_C_N_O_ = 0");
 			
 			if (empty($nome)) {
 				$return = $sql->select("SELECT X2_NOME FROM SX2T10 WHERE X2_CHAVE = '" . $tabela . "' ");
@@ -208,9 +186,14 @@ class Tabela extends Model
 			$mysql = new MySQL();
 			$mysql->query("INSERT INTO tabela(`tabela`, `nome`, `query`) VALUES (:TABELA, :NOME, :QUERY)", array(
 				":TABELA"=>$tabela,
-				":NOME"=>$nome,
+				":NOME"=>utf8_decode($nome),
 				":QUERY"=>$query
 			));
+
+			unset($sql);
+			unset($mysql);
+
+			User::attSx3();
 		} else {
 			User::setError("EMPTY_CRIARTABELA");
 		}

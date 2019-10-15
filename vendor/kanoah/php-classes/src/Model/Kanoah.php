@@ -4,6 +4,7 @@ namespace Kanoah\Model;
 
 use \Kanoah\Model;
 use \Kanoah\Model\Tabela;
+use \Kanoah\BD\SQLServer;
 
 class Kanoah extends Model
 {
@@ -57,5 +58,37 @@ class Kanoah extends Model
         {
             User::setError("EMPTY_QUERYS");
         }
+	}
+
+
+	public static function compararParametros($rotina) {
+		$parametrosRotina = Parametro::listParametrosRotina($rotina);
+		$parametrosQuery  = "";
+		$parametrosBase   = array();
+		$parametrosKanoah = array();
+
+		foreach ($parametrosRotina as $chave => $valor) {
+			$parametrosQuery .= "'" . $chave . "',";
+			$parametrosBase[trim($chave)] = $valor;
+		}
+
+		$parametrosQuery = substr($parametrosQuery, 0, strlen($parametrosQuery)-1);
+
+		$sql = new SQLServer();
+		$paramsUsuario = $sql->select("SELECT X6_VAR, X6_CONTEUD FROM SX6T10 WHERE X6_VAR IN ($parametrosQuery)");
+
+		while (odbc_fetch_row($paramsUsuario)) {
+			$parametro = trim(odbc_result($paramsUsuario, "X6_VAR"));
+			$valor     = trim(odbc_result($paramsUsuario, "X6_CONTEUD"));
+
+			$valorBase = $parametrosBase[$parametro];
+
+			if ($valorBase != $valor) {
+				$parametrosKanoah[$parametro] = $valor;
+			}
+		}
+
+		echo json_encode($parametrosKanoah);
+
 	}
 }

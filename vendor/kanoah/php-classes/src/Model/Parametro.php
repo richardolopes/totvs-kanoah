@@ -45,7 +45,7 @@ class Parametro extends Model
         {
             $mysql = new MySQL();
 
-            $resultado = $mysql->select("SELECT parametro FROM rotina AS rot INNER JOIN rotina_parametro AS rotpar ON rotpar.idrotina = rot.id INNER JOIN parametro AS PAR ON PAR.id = rotpar.idparametro WHERE rot.rotina = :ROTINA", array(
+            $resultado = $mysql->select("SELECT parametro, valor FROM rotina AS rot INNER JOIN rotina_parametro AS rotpar ON rotpar.idrotina = rot.id INNER JOIN parametro AS PAR ON PAR.id = rotpar.idparametro WHERE rot.rotina = :ROTINA", array(
                 ":ROTINA" => $rotina,
             ));
 
@@ -53,7 +53,7 @@ class Parametro extends Model
 
             foreach ($resultado as $value)
             {
-                array_push($parametros, $value["parametro"]);
+                $parametros[$value["parametro"]] = $value["valor"];
 			}
 			
             return $parametros;

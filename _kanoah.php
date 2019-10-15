@@ -5,6 +5,7 @@ use \Kanoah\Model\Rotina;
 use \Kanoah\Model\Tabela;
 use \Kanoah\Model\Kanoah;
 use \Kanoah\Model\User;
+use \Kanoah\Model\Parametro;
 use \Kanoah\Page;
 
 $app->get("/kanoah", function ()
@@ -93,6 +94,13 @@ $app->post("/kanoah/rotina/res", function ()
 
 	$modulo = new Modulo();
 	$modulo->modulo($_POST["modulo"]);
+
+	
+
+	
+
+	exit;
+
 
 	if (!isset($_COOKIE["precondicao"]) || empty($_COOKIE["precondicao"])) {
 		$texto  = "Grupo de empresa: " . $_POST["grupo"] . "\n";

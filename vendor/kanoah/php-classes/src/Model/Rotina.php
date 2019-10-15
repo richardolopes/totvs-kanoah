@@ -4,6 +4,7 @@ namespace Kanoah\Model;
 
 use \Kanoah\BD\MySQL;
 use \Kanoah\BD\SQLServer;
+use \Kanoah\BD\SQLCongelada;
 use \Kanoah\Model;
 
 /*
@@ -75,7 +76,7 @@ class Rotina extends Model
 
     public function menuRotina($modulo = string): string
     {
-        $sql    = new SQLServer();
+        $sql    = new SQLCongelada();
         $return = $sql->select("
 			SELECT (RTRIM(MENU.M_NAME) + ' (' + RTRIM(MENU.M_MODULE) + ')' + ' > ' + RTRIM(DESCR3.N_DESC) + ' > ' + RTRIM(DESCR2.N_DESC) + ' > ' + RTRIM(DESCR.N_DESC) + ' (' + RTRIM(ROTINA.F_FUNCTION) + ')') AS 'MENU'
 			FROM MPMENU_FUNCTION AS ROTINA
@@ -128,7 +129,7 @@ class Rotina extends Model
 		{
 			$rotina = strtoupper($rotina);
 
-			$sql = new SQLServer();
+			$sql = new SQLCongelada();
 			$return = $sql->select("
 			SELECT RTRIM(DESCR.N_DESC) as N_DESC
 			FROM MPMENU_FUNCTION AS ROTINA 

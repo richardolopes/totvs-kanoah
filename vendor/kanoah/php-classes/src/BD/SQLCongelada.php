@@ -2,26 +2,25 @@
 
 namespace Kanoah\BD;
 
-class SQLServer
+class SQLCongelada
 {
     const DRIVER   = "SQL Server";
+    const DNS      = "SPON004928\DEVELOPER2014";
+    const DBNAME   = "CONGELADA";
+    const USERNAME = "sa";
+    const PASSWORD = "1234";
 
     private $conn;
 
 	public function __construct() {
-		$this->conexao($_SESSION["SERVER"], $_SESSION["DATABASE"], $_SESSION["USER"], $_SESSION["PASSWORD"]);
-	}
-
-    public function conexao($server, $database, $user, $password)
-    {
-        try {
-            $this->conn = odbc_connect("Driver={" . SQLServer::DRIVER . "};Server=" . $server . ";Database=" . $database . ";", $user, $password);
+		try {
+            $this->conn = odbc_connect("Driver={" . SQLCongelada::DRIVER . "};Server=" . SQLCongelada::DNS . ";Database=" . SQLCongelada::DBNAME . ";", SQLCongelada::USERNAME, SQLCongelada::PASSWORD);
         }
         catch (Exception $e)
         {
             die("Sem conexao com o banco de dados.");
         }
-    }
+	}
 
     public function __destruct()
     {

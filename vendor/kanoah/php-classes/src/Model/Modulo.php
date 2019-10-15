@@ -3,6 +3,7 @@
 namespace Kanoah\Model;
 
 use \Kanoah\BD\SQLServer;
+use \Kanoah\BD\SQLCongelada;
 use \Kanoah\BD\MySQL;
 use \Kanoah\Model;
 
@@ -69,7 +70,7 @@ class Modulo extends Model
 				throw new \Exception("NO_MODULE");
 			}
 
-			$sql = new SQLServer();
+			$sql = new SQLCongelada();
 			$infModulo = $sql->select("SELECT M_NAME, M_MODULE FROM MPMENU_MENU WHERE M_NAME = '$nomeModulo'");
 		
 			if (odbc_fetch_row($infModulo) != 1)
@@ -121,7 +122,7 @@ class Modulo extends Model
 	{
 		if (!empty($modulo))
 		{
-			$sql = new SQLServer();
+			$sql = new SQLCongelada();
 			$return = $sql->select("		
 			SELECT Rtrim(ROTINA.F_FUNCTION) as F_FUNCTION
 			FROM   MPMENU_FUNCTION AS ROTINA 

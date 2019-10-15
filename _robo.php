@@ -130,38 +130,53 @@ $app->get("/att/parametros", function() {
 	User::setError("PARAMETROS_ATT");
 });
 
-$app->get("/att/sx3/:tabela", function($tabela) {
+$app->get("/att/sx3", function() {
 	set_time_limit(900);
 
 	$sql = new SQLServer();
 	$mysql = new MySQL();
 
-	$return = $sql->select("SELECT
+	$tabelas = $mysql->select("SELECT tabela FROM tabela");
+
+	for ($i = 0; $i < count($tabelas); $i++) {
+		$return = $sql->select("SELECT
 		X3_ARQUIVO as tabela, 
 		X3_CAMPO as campo, 
 		X3_TITULO as titulo, 
 		X3_FOLDER as pasta, 
-		X3_ORDEM as ordem 
-	FROM SX3T10 WHERE X3_ARQUIVO = '$tabela' ORDER BY X3_ORDEM");
+		X3_ORDEM as ordem 	
+		FROM SX3T10 WHERE X3_ARQUIVO = '" . $tabelas[$i]['tabela'] . "' ORDER BY X3_ORDEM");
 
-	while (odbc_fetch_row($return)) {
-		$tabela = odbc_result($return, "tabela");
-		$campo  = odbc_result($return, "campo");
-		$titulo = odbc_result($return, "titulo");
-		$pasta  = odbc_result($return, "pasta");
-		$ordem  = odbc_result($return, "ordem");
+		while (odbc_fetch_row($return)) {
+			$tabela = odbc_result($return, "tabela");
+			$campo  = odbc_result($return, "campo");
+			$titulo = odbc_result($return, "titulo");
+			$pasta  = odbc_result($return, "pasta");
+			$ordem  = odbc_result($return, "ordem");
 
-		$mysql->query("INSERT INTO `sx3`(`tabela`, `campo`, `titulo`, `pasta`, `ordem`) VALUES (
-			:TABELA, 
-			:CAMPO, 
-			:TITULO, 
-			:PASTA, 
-			:ORDEM)", array(
-			":TABELA" => $tabela,
-			":CAMPO"  => $campo,
-			":TITULO" => $titulo,
-			":PASTA"  => $pasta,
-			":ORDEM"  => $ordem
-		));
+			$campos = $mysql->select("SELECT id FROM `sx3` WHERE tabela = :TABELA AND campo = :CAMPO AND titulo = :TITULO", array(
+				":TABELA" => $tabela,
+				":CAMPO"  => $campo,
+				":TITULO" => $titulo
+			));
+
+			// echo json_encode($campos);
+			// exit;
+			
+			if (!isset($campos[0])) {		
+				$mysql->query("INSERT INTO `sx3`(`tabela`, `campo`, `titulo`, `pasta`, `ordem`) VALUES (
+				:TABELA, 
+				:CAMPO, 
+				:TITULO, 
+				:PASTA, 
+				:ORDEM)", array(
+					":TABELA" => $tabela,
+					":CAMPO"  => $campo,
+					":TITULO" => $titulo,
+					":PASTA"  => $pasta,
+					":ORDEM"  => $ordem
+				));
+			}
+		}
 	}
 });

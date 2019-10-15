@@ -5,10 +5,12 @@ session_start();
 require_once "vendor/autoload.php";
 require_once "config.php";
 
-use \Kanoah\Model\Modulo;
 use \Kanoah\Model\User;
+use \Kanoah\Model\Modulo;
 use \Kanoah\Model\Tabela;
+use \Kanoah\Model\Kanoah;
 use \Kanoah\BD\SQLServer;
+use \Kanoah\BD\SQLCongelada;
 use \Kanoah\BD\MySQL;
 use \Kanoah\Page;
 use \Slim\Slim;
@@ -16,7 +18,9 @@ use \Slim\Slim;
 $app = new Slim();
 $app->config("debug", true);
 
-require_once "_robo.php";
+$app->get("/teste", function() {
+	echo Kanoah::compararParametros("FINA070");
+});
 
 if (
 	!isset($_SESSION["SERVER"])   || empty($_SESSION["SERVER"])   ||
@@ -42,11 +46,12 @@ if (
 	});
 
 	require_once "functions.php";
+	require_once "_rotina.php";
 	require_once "_kanoah.php";
 	require_once "_modulo.php";
-	require_once "_rotina.php";
 	require_once "_tabela.php";
 	require_once "_banco.php";
+	require_once "_robo.php";
 
 	require_once "_kanoah_v2.php";
 }

@@ -5,8 +5,7 @@ use \Kanoah\Model\Tabela;
 use \Kanoah\Model\Parametro;
 use \Kanoah\Page;
 
-$app->get("/rotinas", function ()
-{
+$app->get("/rotinas", function () {
 	$rotinas = Rotina::listRotinas();
 
     $page = new Page();
