@@ -95,27 +95,35 @@ $app->post("/kanoah/rotina/res", function ()
 	$modulo = new Modulo();
 	$modulo->modulo($_POST["modulo"]);
 
-	
-
-	
-
-	exit;
-
-
 	if (!isset($_COOKIE["precondicao"]) || empty($_COOKIE["precondicao"])) {
 		$texto  = "Grupo de empresa: " . $_POST["grupo"] . "\n";
 		$texto .= "Filial: " . $_POST["filial"] . "\n";
 		$texto .= "Data base: " . (empty($_POST["database"]) ? date("Y-m-d") : $_POST["database"]) . "\n";
-		$texto .= "Rotina: " . $rotina->menuRotina($modulo->getmodulo()) . "\n\n";
+		$texto .= "Rotina: " . $rotina->menuRotina($modulo->getmodulo()) . "\n\n\n";
+		
+		$parametros = Kanoah::compararParametros($rotina->getrotina());
+		
+		if (isset($parametros) && !empty($parametros)) {
+			$texto .= "Parâmetros alterados: \n";
+			
+			foreach($parametros as $parametro => $conteudo) {
+				$texto .= str_pad($parametro, 10) . " = '$conteudo' \n";
+			}
+		}
+
+		// echo "<textarea cols=80 rows= 50>".$texto."</textarea>";
+		// exit;
+
+		$texto .= "\n\n";
 		
 		$tabelas = Tabela::listTabelasRotina($_POST["rotina"]);
 		
 		for ($i = 0; $i < count($tabelas); $i++) {
 			foreach ($tabelas["precondicao"][$i] as $key => $value) {
-				$texto .= Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]);
+				$texto .= utf8_decode(Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]));
 			}
 		}
-		
+
 		setcookie("precondicao", $texto, time()+60*60*24*365);
 	}
 
@@ -136,15 +144,14 @@ $app->post("/kanoah/rotina/res", function ()
     ));
 });
 
-$app->post("/kanoah/rotina/gerar", function ()
-{
+$app->post("/kanoah/rotina/gerar", function () {
 	$tabelas = Tabela::listTabelasRotina($_COOKIE["rotina"]);
 
 	$resultado = "";
 
 	for ($i = 0; $i < count($tabelas["resultado"]); $i++) {
 		foreach ($tabelas["resultado"][$i] as $key => $value) {
-			$resultado .= Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]);
+			$resultado .= utf8_decode(Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]));
 		}
 	}
 

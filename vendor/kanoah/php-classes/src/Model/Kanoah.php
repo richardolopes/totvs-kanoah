@@ -88,7 +88,6 @@ class Kanoah extends Model
 			}
 		}
 
-		echo json_encode($parametrosKanoah);
-
+		return $parametrosKanoah;
 	}
 }
