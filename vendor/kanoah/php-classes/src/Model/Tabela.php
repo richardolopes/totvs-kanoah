@@ -93,6 +93,7 @@ class Tabela extends Model
             throw new \Exception("EMPTY_ROTINA");
         }
 	}
+	
     public static function listTabelasRotina($rotina = string): array
     {
         if (!empty($rotina))
@@ -114,16 +115,12 @@ class Tabela extends Model
 
             foreach ($precondicao as $value)
             {
-                array_push($tabelas["precondicao"], array(
-                    $value["tabela"] => $value["query"],
-                ));
+                $tabelas["precondicao"][$value["tabela"]] = $value["query"];
             }
 
             foreach ($resultado as $value)
             {
-                array_push($tabelas["resultado"], array(
-                    $value["tabela"] => $value["query"],
-                ));
+                $tabelas["resultado"][$value["tabela"]] = $value["query"];
             }
 
             return $tabelas;
@@ -214,19 +211,6 @@ class Tabela extends Model
 			User::setError("EMPTY_CRIARTABELA");
 		}
 	}
-
-	public static function ajustarTabelas($tabelasRotina):array
-	{
-		$tabs = array();
-		foreach ($tabelasRotina as $key => $value) {
-			foreach ($value as $chave => $e) {
-				array_push($tabs, $chave);
-			}
-		}
-
-		return $tabs;
-	}
-
 
 	public function addTabRot($rotina = int, $tabelas = array(), $tipo = int)
 	{

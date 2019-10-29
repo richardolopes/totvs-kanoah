@@ -56,18 +56,16 @@
 									<th style="width: 150px">Ações</th>
 								</tr>
 								<?php $counter1=-1;  if( isset($precondicao) && ( is_array($precondicao) || $precondicao instanceof Traversable ) && sizeof($precondicao) ) foreach( $precondicao as $key1 => $value1 ){ $counter1++; ?>
-								<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
 								<tr>
-									<td><a href="/tabela/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
+									<td><a href="/tabela/<?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
 									<td>
 										<button class="btn btn-danger"
-											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/pre/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
+											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/pre/<?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
 												class="fa fa-close"></i><span>
 												Excluir</span></button>
 										&nbsp;
 									</td>
 								</tr>
-								<?php } ?>
 								<?php } ?>
 							</table>
 						</div>
@@ -93,18 +91,16 @@
 									<th style="width: 150px">Ações</th>
 								</tr>
 								<?php $counter1=-1;  if( isset($resultado) && ( is_array($resultado) || $resultado instanceof Traversable ) && sizeof($resultado) ) foreach( $resultado as $key1 => $value1 ){ $counter1++; ?>
-								<?php $counter2=-1;  if( isset($value1) && ( is_array($value1) || $value1 instanceof Traversable ) && sizeof($value1) ) foreach( $value1 as $key2 => $value2 ){ $counter2++; ?>
 								<tr>
-									<td><a href="/tabela/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
+									<td><a href="/tabela/<?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?></a></td>
 									<td>
 										<button class="btn btn-danger"
-											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/res/<?php echo htmlspecialchars( $key2, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
+											onclick="deletar('/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete/tabela/res/<?php echo htmlspecialchars( $key1, ENT_COMPAT, 'UTF-8', FALSE ); ?>')"><i
 												class="fa fa-close"></i><span>
 												Excluir</span></button>
 										&nbsp;
 									</td>
 								</tr>
-								<?php } ?>
 								<?php } ?>
 							</table>
 						</div>

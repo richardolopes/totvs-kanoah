@@ -25,8 +25,11 @@ $app->get("/teste", function() {
 
 	$tabelas = Tabela::listTabelasRotina($rotina);
 
-	$relacionamentos = Tabela::relacaoTabela("SE5");
+	// $relacionamentos = Tabela::relacaoTabela("SE5");
+	// unset($tabelas["precondicao"]["SED"]);
 	// echo json_encode($tabelas["precondicao"]);
+	echo json_encode($tabelas["resultado"]);
+	exit;
 	// echo json_encode($relacionamentos);
 
 	// exit;

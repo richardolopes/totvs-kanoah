@@ -57,11 +57,17 @@ $app->get("/rotina/:rotina/add/tabela", function($nomeRotina) {
 
 	// pre condicao - ja add
 	$_SESSION["tabelasPrecondicao"] = array();
-	$_SESSION["tabelasPrecondicao"] = Tabela::ajustarTabelas($tabsRotina["precondicao"]);
-	
+	for ($i = 0; $i < count($tabsRotina["precondicao"]); $i++) {
+		$_SESSION["tabelasPrecondicao"][$i] = key($tabsRotina["precondicao"]);
+		next($tabsRotina["precondicao"]);
+	}
+
 	// resultado esperado - ja add
 	$_SESSION["tabelasResultado"] = array();
-	$_SESSION["tabelasResultado"] = Tabela::ajustarTabelas($tabsRotina["resultado"]);
+	for ($i = 0; $i < count($tabsRotina["resultado"]); $i++) {
+		$_SESSION["tabelasResultado"][$i] = key($tabsRotina["resultado"]);
+		next($tabsRotina["resultado"]);
+	}
 
 	// Tabelas que ainda nao foram adicionadas no resultado esperado
 	$_SESSION["tabsNaddRes"] = array();
