@@ -75,10 +75,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<li><a href="/kanoah"><i class="fa fa-archive"></i> <span>Gerar Kanoah</span></a></li>
 					<!-- <li><a href="/v2/kanoah"><i class="fa fa-archive"></i> <span>Kanoah v2.0</span></a></li> -->
 					<li><a href="/kanoah/query"><i class="fa fa-briefcase"></i> <span>Query</span></a></li>
+
+					<!-- <li class="treeview">
+						<a href="#">
+							<i class="fa fa-laptop"></i>
+							<span>Configurações Kanoah</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu"> -->
 					<li><a href="/modulos"><i class="fa fa-users"></i> <span>Módulos</span></a></li>
 					<li><a href="/rotinas"><i class="fa fa-clone"></i> <span>Rotinas</span></a></li>
 					<li><a href="/tabelas"><i class="fa fa-table"></i> <span>Tabelas</span></a></li>
-					<li><a href="/banco/inf"><i class="fa fa-database"></i> <span>BD configurações</span></a></li>
+					<li><a href="/banco/inf"><i class="fa fa-database"></i> <span>BD configurações</span></a>
+					</li>
+					<!-- </ul>
+					</li> -->
+					<!-- <li class="treeview">
+						<a href="#">
+							<i class="fa fa-laptop"></i>
+							<span>Base Congelada Local</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="/congelada/parametros"><i class="fa fa-gears"></i> <span>Parâmetros</span></a>
+							</li>
+							<li><a href="/congelada/banco"><i class="fa fa-database"></i> <span>Banco
+										Congelada</span></a></li>
+					</li> -->
+				</ul>
+				</li>
 				</ul>
 				<!-- /.sidebar-menu -->
 			</section>

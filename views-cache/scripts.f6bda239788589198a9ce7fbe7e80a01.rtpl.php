@@ -23,22 +23,60 @@
 
 <script>
 	function resultado() {
+		if ($("#resultado").val() == null) {
+			$("#resultado").html(" ");
+		}
 		if ($("#query").val() == null || $("#query").val() == "") {
 			swal("Digite a query.", "", "error");
 		} else {
 			swal({
 				title: "Carregando...",
-				icon:  "/res/loading.gif",
+				icon: "/res/loading.gif",
 				onOpen: () => {
 					swal.showLoading()
 				}
 			});
 
-			$.post("/kanoah/query", {query: $("#query").val()}, function (data) {
-				var resultado = $("#resultado").val() + data; 
+			$.post("/kanoah/query", {
+				query: $("#query").val()
+			}, function (data) {
+				if ($("#resultado").val() != null || $("#resultado").val() != "") {
+					var resultado = $("#resultado").val() + data + "\n";
+					$("#resultado").html(resultado);
+				} else {
+					var resultado = data + "\n";
+					$("#resultado").html(resultado);
+				}
+
+				setTimeout(function () {
+					swal.close()
+				}, 1000);
+
+			});
+		}
+	}
+</script>
+
+<script>
+	function resultadoCongelada() {
+		if ($("#query").val() == null || $("#query").val() == "") {
+			swal("Digite a query.", "", "error");
+		} else {
+			swal({
+				title: "Carregando...",
+				icon: "/res/loading.gif",
+				onOpen: () => {
+					swal.showLoading()
+				}
+			});
+
+			$.post("/congelada/query", {
+				query: $("#query").val()
+			}, function (data) {
+				var resultado = $("#resultado").val() + data;
 				$("#resultado").html(resultado + "\n");
 
-				setTimeout(function(){
+				setTimeout(function () {
 					swal.close()
 				}, 1000);
 
@@ -59,8 +97,8 @@
 	function deletar(url) {
 		swal({
 			title: "Excluir",
-			text:  "Você tem certeza que deseja excluir este item?",
-			icon:  "warning",
+			text: "Você tem certeza que deseja excluir este item?",
+			icon: "warning",
 			buttons: [
 				"Cancelar",
 				"Sim!"
@@ -68,7 +106,7 @@
 			dangerMode: true,
 		}).then((willDelete) => {
 			if (willDelete) {
-				$.get(url, function() {
+				$.get(url, function () {
 					swal("Excluído!", {
 						icon: "success",
 					}).then(() => {

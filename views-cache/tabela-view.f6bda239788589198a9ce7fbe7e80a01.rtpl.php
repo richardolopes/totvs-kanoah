@@ -22,7 +22,7 @@
 								<tr>
 									<th>Tabela</th>
 									<th>Nome</th>
-									<th onclick="copiar('query')">Query</th>
+									<th onclick="copiar('query')" style="cursor: pointer">Query</th>
 									<th>Ações</th>
 								</tr>
 								<tr>
@@ -30,8 +30,8 @@
 									<td style="width: 150px"><?php echo htmlspecialchars( $nome, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td><textarea id="query" cols="100vh" rows="10vw"><?php echo htmlspecialchars( $query, ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea></td>
 									<td style="width: 150px">
-										<a class="btn label-primary"><i class="fa fa-edit"></i><span> Editar</span></a>
-										&nbsp;
+										<!-- <a class="btn label-primary"><i class="fa fa-edit"></i><span> Editar</span></a>
+										&nbsp; -->
 									</td>
 								</tr>
 							</table>

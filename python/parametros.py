@@ -4,7 +4,7 @@ import sys
 
 def getParam(program):
     program = "C:\\xampp\\htdocs\\python\\rotinas\\{0}".format(program)
-    text = open(program, "r")
+    text = open(program, "r", encoding="utf-8")
 
     parametros = []
     perguntas = []

@@ -5,7 +5,7 @@ namespace Kanoah\Model;
 use \Kanoah\Model;		
 use \Kanoah\BD\MySQL;
 use \Kanoah\BD\SQLServer;
-use \Kanoah\BD\SQLCongelada;
+use \Kanoah\BD\SQLBase;
 
 class User extends Model
 {
@@ -36,7 +36,7 @@ class User extends Model
 	{
 		set_time_limit(500);
 
-		$sql = new SQLCongelada();
+		$sql = new SQLBase();
 		$mysql = new MySQL();
 
 		$tabelas = $mysql->select("SELECT tabela FROM tabela");

@@ -54,7 +54,8 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Parâmetros</h3>
 						<div class="pull-right">
-							<a href="/modulo/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-plus"></i>
+							<!-- /modulo/<?php echo htmlspecialchars( $modulo, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro -->
+							<a href="#"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Parâmetro</span></a>
 						</div>
 					</div>

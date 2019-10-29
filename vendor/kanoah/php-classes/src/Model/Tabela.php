@@ -48,7 +48,7 @@ class Tabela extends Model
         }
 	}
 
-	public function relacaoTabela($tabela = string): array
+	public static function relacaoTabela($tabela = string): array
 	{
 		if (!empty($tabela))
         {
@@ -157,7 +157,23 @@ class Tabela extends Model
 					$string .= str_pad($field_name, 10). " (" . "            " . ") = '"; // Titulo nao encontrado
 				}
 				
-				$string .= odbc_result($return, $field_name) . "'\n"; // Valor registrado no campo.
+				$valorCampo = odbc_result($return, $field_name);
+				// if (odbc_field_type($return, $j) == "float") {
+
+				// 	echo "teste";
+				// } else {
+				// 	echo odbc_field_type($return, $j);
+				// 	echo "A:" . intval(odbc_result($return, $j));
+				// 	echo "<br>";
+				// 	echo gettype($valorCampo);
+				// }
+				// exit;
+
+				if (odbc_field_type($return, $j) == "float" || odbc_field_type($return, $j) == "integer") {
+					$string .= floatval($valorCampo) . "'\n";
+				} else {
+					$string .= $valorCampo . "'\n"; // Valor registrado no campo.
+				}
             }
 
 			$string .= "\n\n";

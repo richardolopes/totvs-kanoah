@@ -119,7 +119,8 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Parâmetros<br> &nbsp;</h3>
 						<div class="pull-right">
-							<a href="/rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro"><i class="fa fa-plus"></i>
+							<!-- /rotina/<?php echo htmlspecialchars( $rotina, ENT_COMPAT, 'UTF-8', FALSE ); ?>/add/parametro -->
+							<a href="#"><i class="fa fa-plus"></i>
 								<span>&nbsp;Adicionar Parâmetro</span></a>
 						</div>
 						<br>
@@ -143,12 +144,9 @@
 								<?php } ?>
 							</table>
 						</div>
-
 					</div>
 				</div>
 			</div>
-
-
 		</div>
 	</section>
 </div>

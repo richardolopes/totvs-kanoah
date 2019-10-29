@@ -37,16 +37,16 @@ $app->post("/kanoah/query", function ()
 
 $app->post("/kanoah/rotina/pre", function ()
 {
-	if (isset($_COOKIE["precondicao"])) {
-		setcookie("precondicao", "", time()-3600);
+	if (isset($_SESSION["precondicao"])) {
+		unset($_SESSION["precondicao"]);
 	}
 	
-	if (isset($_COOKIE["rotina"])) {
-		setcookie("rotina", "", time()-3600);
+	if (isset($_SESSION["rotina"])) {
+		unset($_SESSION["rotina"]);
 	}
 	
-	if (isset($_COOKIE["modulo"])) {
-		setcookie("modulo", "", time()-3600);
+	if (isset($_SESSION["modulo"])) {
+		unset($_SESSION["modulo"]);
 	}
 
     if (empty($_POST["modulo"]))
@@ -86,21 +86,28 @@ $app->post("/kanoah/rotina/res", function ()
         User::setError("EMPTY_POSTROTINA");
 	}
 	
-	setcookie("modulo", $_POST["modulo"], time()+60*60*24*365);
-	setcookie("rotina", $_POST["rotina"], time()+60*60*24*365);
+	$_SESSION["modulo"] = $_POST["modulo"];
+	$_SESSION["rotina"] = $_POST["rotina"];
 
 	$rotina = new Rotina();
-	$rotina->rotina($_POST["rotina"]);
+	$rotina->rotina($_SESSION["rotina"]);
 
 	$modulo = new Modulo();
-	$modulo->modulo($_POST["modulo"]);
+	$modulo->modulo($_SESSION["modulo"]);
 
-	if (!isset($_COOKIE["precondicao"]) || empty($_COOKIE["precondicao"])) {
+	if (!isset($_SESSION["precondicao"]) || empty($_SESSION["precondicao"])) {
+
 		$texto  = "Grupo de empresa: " . $_POST["grupo"] . "\n";
 		$texto .= "Filial: " . $_POST["filial"] . "\n";
 		$texto .= "Data base: " . (empty($_POST["database"]) ? date("Y-m-d") : $_POST["database"]) . "\n";
 		$texto .= "Rotina: " . $rotina->menuRotina($modulo->getmodulo()) . "\n\n\n";
-		
+
+		unset($_POST["modulo"]);
+		unset($_POST["rotina"]);
+		unset($_POST["grupo"]);
+		unset($_POST["filial"]);
+		unset($_POST["database"]);
+			
 		$parametros = Kanoah::compararParametros($rotina->getrotina());
 		
 		if (isset($parametros) && !empty($parametros)) {
@@ -109,29 +116,20 @@ $app->post("/kanoah/rotina/res", function ()
 			foreach($parametros as $parametro => $conteudo) {
 				$texto .= str_pad($parametro, 10) . " = '$conteudo' \n";
 			}
+			$texto .= "\n\n";
 		}
-
-		// echo "<textarea cols=80 rows= 50>".$texto."</textarea>";
-		// exit;
-
-		$texto .= "\n\n";
 		
-		$tabelas = Tabela::listTabelasRotina($_POST["rotina"]);
 		
-		for ($i = 0; $i < count($tabelas); $i++) {
+		$tabelas = Tabela::listTabelasRotina($_SESSION["rotina"]);
+		
+		for ($i = 0; $i < count($tabelas["precondicao"]); $i++) {
 			foreach ($tabelas["precondicao"][$i] as $key => $value) {
 				$texto .= utf8_decode(Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]));
 			}
 		}
-
-		setcookie("precondicao", $texto, time()+60*60*24*365);
-	}
-
-    $modulo = new Modulo();
-    $modulo->modulo($_POST["modulo"]);
 	
-    $rotina = new Rotina();
-    $rotina->rotina($_POST["rotina"]);
+		$_SESSION["precondicao"] = $texto;
+	}
 	
 	$tabelas       = new Tabela();
 	$tabelasRotina = $tabelas->tabelasRotina($rotina->getrotina(), 1);
@@ -145,7 +143,7 @@ $app->post("/kanoah/rotina/res", function ()
 });
 
 $app->post("/kanoah/rotina/gerar", function () {
-	$tabelas = Tabela::listTabelasRotina($_COOKIE["rotina"]);
+	$tabelas = Tabela::listTabelasRotina($_SESSION["rotina"]);
 
 	$resultado = "";
 
@@ -155,8 +153,7 @@ $app->post("/kanoah/rotina/gerar", function () {
 		}
 	}
 
-	$precondicao = $_COOKIE["precondicao"];
-	setcookie("precondicao", "", time()-3600);
+	$precondicao = $_SESSION["precondicao"];
 
     $page = new Page();
     $page->setTpl("kanoah-gerar", array(
