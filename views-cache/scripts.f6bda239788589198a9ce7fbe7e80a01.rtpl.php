@@ -23,9 +23,6 @@
 
 <script>
 	function resultado() {
-		if ($("#resultado").val() == null) {
-			$("#resultado").html(" ");
-		}
 		if ($("#query").val() == null || $("#query").val() == "") {
 			swal("Digite a query.", "", "error");
 		} else {
@@ -40,13 +37,8 @@
 			$.post("/kanoah/query", {
 				query: $("#query").val()
 			}, function (data) {
-				if ($("#resultado").val() != null || $("#resultado").val() != "") {
-					var resultado = $("#resultado").val() + data + "\n";
-					$("#resultado").html(resultado);
-				} else {
-					var resultado = data + "\n";
-					$("#resultado").html(resultado);
-				}
+				var resultado = $("#resultado").val() + data;
+				$("#resultado").html(resultado + "\n");
 
 				setTimeout(function () {
 					swal.close()

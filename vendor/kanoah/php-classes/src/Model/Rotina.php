@@ -37,7 +37,7 @@ class Rotina extends Model
         {
             $mysql = new MySQL();
 
-            $resultado = $mysql->select("SELECT ROT.rotina FROM modulo AS MODU INNER JOIN modulo_rotina as MR on MR.idmodulo = MODU.id INNER JOIN rotina as ROT on ROT.id = MR.idrotina WHERE MODU.modulo = :MODULO", array(
+            $resultado = $mysql->select("SELECT ROT.rotina FROM modulo AS MODU INNER JOIN modulo_rotina as MR on MR.idmodulo = MODU.id INNER JOIN rotina as ROT on ROT.id = MR.idrotina WHERE MODU.modulo = :MODULO ORDER BY ROT.rotina", array(
                 ":MODULO" => $modulo,
             ));
 

@@ -98,7 +98,7 @@
 			text: "Nome da Rotina:",
 			buttons: [
 				"Cancelar",
-				"Criar"
+				"Adicionar"
 			],
 			dangerMode: true,
 			content: {

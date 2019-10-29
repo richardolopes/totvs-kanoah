@@ -23,27 +23,25 @@ $app->get("/teste", function() {
 
 	$query = "SELECT E5_NUMERO FROM SE5T10 WHERE R_E_C_N_O_ = 1968";
 
-	// $tabelas = Tabela::listTabelasRotina($rotina);
-	
-	
-	// $relacionamentos = Tabela::relacaoTabela("SE5");
-	// // echo json_encode($tabelas["precondicao"]);
-	// // echo json_encode($relacionamentos);
-	
-	// // exit;
-	// for ($i = 0; $i < count($relacionamentos); $i++) {
-	// 	for ($aux = 0; $aux < count($tabelas); $aux++) {
-	// 		foreach ($tabelas["precondicao"][$aux] as $chave > $valor) {
+	$tabelas = Tabela::listTabelasRotina($rotina);
+
+	$relacionamentos = Tabela::relacaoTabela("SE5");
+	// echo json_encode($tabelas["precondicao"]);
+	// echo json_encode($relacionamentos);
+
+	// exit;
+	for ($i = 0; $i < count($relacionamentos); $i++) {
+		for ($aux = 0; $aux < count($tabelas); $aux++) {
+			foreach ($tabelas["precondicao"][$aux] as $chave => $valor) {
+				if ($chave == $relacionamentos[$i]["tabela"]) {
+					echo "Tem relacionamento! <br>";
+					echo $chave;
+					echo "<br><br><br>";
+				}
 				
-	// 			if ($chave == $relacionamentos[$i]["tabela"]) {
-	// 				echo "Tem relacionamento! <br>";
-	// 				echo $chave;
-	// 				echo "<br><br><br>";
-	// 			}
-				
-	// 		}
-	// 	}
-	// }
+			}
+		}
+	}
 });
 
 $app->get("/testee", function() {
