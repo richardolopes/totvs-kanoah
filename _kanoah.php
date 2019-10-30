@@ -40,11 +40,11 @@ $app->post("/kanoah/rotina/pre", function ()
 	if (isset($_SESSION["precondicao"])) {
 		unset($_SESSION["precondicao"]);
 	}
-	
+
 	if (isset($_SESSION["rotina"])) {
 		unset($_SESSION["rotina"]);
 	}
-	
+
 	if (isset($_SESSION["modulo"])) {
 		unset($_SESSION["modulo"]);
 	}
@@ -85,7 +85,7 @@ $app->post("/kanoah/rotina/res", function ()
     if (empty($_POST["rotina"])) {
         User::setError("EMPTY_POSTROTINA");
 	}
-	
+
 	$_SESSION["modulo"] = $_POST["modulo"];
 	$_SESSION["rotina"] = $_POST["rotina"];
 
@@ -107,30 +107,29 @@ $app->post("/kanoah/rotina/res", function ()
 		unset($_POST["grupo"]);
 		unset($_POST["filial"]);
 		unset($_POST["database"]);
-			
+
 		$parametros = Kanoah::compararParametros($rotina->getrotina());
-		
+
 		if (isset($parametros) && !empty($parametros)) {
 			$texto .= "Parâmetros alterados: \n";
-			
+
 			foreach($parametros as $parametro => $conteudo) {
 				$texto .= str_pad($parametro, 10) . " = '$conteudo' \n";
 			}
 			$texto .= "\n\n";
 		}
-		
-		
+
 		$tabelas = Tabela::listTabelasRotina($_SESSION["rotina"]);
-		
-		for ($i = 0; $i < count($tabelas["precondicao"]); $i++) {
-			foreach ($tabelas["precondicao"][$i] as $key => $value) {
-				$texto .= utf8_decode(Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]));
-			}
+
+		while (current($tabelas["precondicao"])) {
+			$texto .= utf8_decode(Tabela::infTabelas($_POST[key($tabelas["precondicao"])."QUERY"] . " WHERE " . $_POST[key($tabelas["precondicao"])."WHERE"]));
+
+			next($tabelas["precondicao"]);
 		}
-	
+
 		$_SESSION["precondicao"] = $texto;
 	}
-	
+
 	$tabelas       = new Tabela();
 	$tabelasRotina = $tabelas->tabelasRotina($rotina->getrotina(), 1);
 
@@ -147,13 +146,14 @@ $app->post("/kanoah/rotina/gerar", function () {
 
 	$resultado = "";
 
-	for ($i = 0; $i < count($tabelas["resultado"]); $i++) {
-		foreach ($tabelas["resultado"][$i] as $key => $value) {
-			$resultado .= utf8_decode(Tabela::infTabelas($_POST[$key."QUERY"] . " WHERE " . $_POST[$key."WHERE"]));
-		}
+	while (current($tabelas["resultado"])) {
+		$resultado .= utf8_decode(Tabela::infTabelas($_POST[key($tabelas["resultado"])."QUERY"] . " WHERE " . $_POST[key($tabelas["resultado"])."WHERE"]));
+
+		next($tabelas["resultado"]);
 	}
 
 	$precondicao = $_SESSION["precondicao"];
+	unset($_SESSION["precondicao"]);
 
     $page = new Page();
     $page->setTpl("kanoah-gerar", array(

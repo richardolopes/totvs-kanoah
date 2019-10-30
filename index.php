@@ -22,17 +22,23 @@ $app->get("/teste", function() {
 	$rotina = "FINA460";
 
 	$query = "SELECT E5_NUMERO FROM SE5T10 WHERE R_E_C_N_O_ = 1968";
-
+	
 	$tabelas = Tabela::listTabelasRotina($rotina);
+	$tabr = $tabelas["resultado"];
 
-	// $relacionamentos = Tabela::relacaoTabela("SE5");
-	// unset($tabelas["precondicao"]["SED"]);
-	// echo json_encode($tabelas["precondicao"]);
-	echo json_encode($tabelas["resultado"]);
+	while (current($tabr)) {
+		$tabela = key($tabr);
+		$relacionamentos = Tabela::relacaoTabela($tabr);
+
+		for ($i = 0; $i < count($relacionamentos); $i++) {
+			unset($tabr[$relacionamentos[$i]["tabela"]]);
+		}
+
+		next($tabr);
+	}
+
 	exit;
-	// echo json_encode($relacionamentos);
 
-	// exit;
 	for ($i = 0; $i < count($relacionamentos); $i++) {
 		for ($aux = 0; $aux < count($tabelas); $aux++) {
 			foreach ($tabelas["precondicao"][$aux] as $chave => $valor) {

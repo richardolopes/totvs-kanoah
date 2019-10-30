@@ -116,15 +116,29 @@ class Tabela extends Model
             foreach ($precondicao as $value)
             {
                 $tabelas["precondicao"][$value["tabela"]] = $value["query"];
-            }
+			}
+
+			// foreach ($precondicao as $value)
+            // {
+            //     array_push($tabelas["precondicao"], array(
+			// 		$value["tabela"] => $value["query"]
+			// 	));
+            // }
 
             foreach ($resultado as $value)
             {
                 $tabelas["resultado"][$value["tabela"]] = $value["query"];
-            }
+			}
+
+			// foreach ($resultado as $value)
+            // {
+            //     array_push($tabelas["resultado"], array(
+			// 		$value["tabela"] => $value["query"]
+			// 	));
+            // }
 
             return $tabelas;
-        }
+		}
         else
         {
             throw new \Exception("EMPTY_ROTINA");
