@@ -1,5 +1,11 @@
 {if="$error != ''"}
 
+{if="$error == 'AUTOMACAO_EXIST'"}
+<script>
+	swal("A última data já foi gerada.", "", "info");
+</script>
+{/if}
+
 {if="$error == 'user_where'"}
 <script>
 	swal("Não digite WHERE.", "", "error");

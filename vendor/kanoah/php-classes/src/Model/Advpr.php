@@ -5,6 +5,7 @@ namespace Kanoah\Model;
 set_time_limit(300);
 
 use \Kanoah\Model;
+use \Kanoah\Model\User;
 
 class Advpr extends Model
 {
@@ -19,6 +20,14 @@ class Advpr extends Model
         $release = $this->getReleases()[$release]->value;
         $rpo = $this->getRpos($release)[0]->value;
         $data = $this->getDatas($release, $rpo);
+
+        if (isset($_SESSION['EXEC_DATA'])) {
+            if ($data == $_SESSION['EXEC_DATA']) {
+                User::setError('AUTOMACAO_EXIST');
+            }
+        }
+
+        $_SESSION['EXEC_DATA'] = $data;
 
         $execucao = $this->getExec($release, $data, $rpo);
 

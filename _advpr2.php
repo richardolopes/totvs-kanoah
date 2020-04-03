@@ -11,12 +11,12 @@ $app->get("/_automacao", function () {
     $texto .= '<hr>';
     $texto .= '<br><br>';
     $texto .= $advpr->execDiaria(3);
-    $subject = substr($texto, 0, 31);
-
-    $texto .= '<br><br><br><br><br>';
+    $texto .= '<br><br>';
     $texto .= '<hr>';
-    $texto .= 'Em desenvolvimento';
-
+    $texto .= '<br><br>';
+    $texto .= $advpr->execDiaria(2);
+	$subject = substr($texto, 19, 10);
+	
     $email = new Mailer($subject, '<h3>' . $texto . '</h3>');
 
     $page = new Page();

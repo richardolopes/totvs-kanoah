@@ -20,23 +20,11 @@ class Mailer extends Model
         $mail->Password = PASSWORD_EMAIL;
         $mail->setFrom('automacaobot@gmail.com', utf8_decode('Não responder'));
 
+        $mail->addAddress('richardxlopes@gmail.com       ', 'Richard Lopes                     ');
         $mail->addAddress('richard.lopes@totvs.com.br    ', 'Richard Lopes                     ');
-        $mail->addAddress('iolanda.cipriano@totvs.com.br ', 'Iolanda Cipriano                  ');
-        $mail->addAddress('alberto.jose@totvs.com.br     ', 'Alberto Jose Teixeira Filho       ');
-        $mail->addAddress('ana.nascimento@totvs.com.br   ', 'Ana Paula Nascimento Silva        ');
-        $mail->addAddress('douglas.oliveira@totvs.com.br ', 'Douglas de Oliveira Homem         ');
-        $mail->addAddress('douglas.souza@totvs.com.br    ', 'Douglas Goncalves de Souza        ');
-        $mail->addAddress('eliana.gomes@totvs.com.br     ', 'Eliana Gomes de Assis Urbaneja    ');
-        $mail->addAddress('fernando.griecco@totvs.com.br ', 'Fernando Augusto Griecco Navarro  ');
-        $mail->addAddress('francisco.carmo@totvs.com.br  ', 'Francisco Do Carmo de Oliveira    ');
-        $mail->addAddress('jose.gavetti@totvs.com.br     ', 'Jose William Mendasoli Gavetti    ');
-        $mail->addAddress('marjorie.taki@totvs.com.br    ', 'Marjorie Yuri Taki                ');
-        $mail->addAddress('renato.ito@totvs.com.br       ', 'Renato Goes Ito                   ');
-        $mail->addAddress('rodrigo.oliveira@totvs.com.br ', 'Rodrigo Alexandre de Oliveira_    ');
-        $mail->addAddress('rafael.stefano@totvs.com.br   ', 'Rafael Stefano Holland Rondon     ');
-        $mail->addAddress('luis.geraldo@totvs.com.br     ', 'Luis Geraldo                      ');
+        // $mail->addAddress('SQUAD.Fin@totvs.com.br ', 'SQUAD FIN');
 
-        $mail->Subject = utf8_decode('Automação: ' . $subject);
+        $mail->Subject = utf8_decode('Automação ' . $subject);
 
         //Read an HTML message body from an external file, convert referenced images to embedded,
         //convert HTML into a basic plain-text alternative body
