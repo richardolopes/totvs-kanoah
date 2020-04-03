@@ -20,16 +20,10 @@
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
 								<a href="/modulo/<?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
-									<h3 style="color: white"><?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <i class="fa fa-arrow-circle-right"></i>
+									<h3 style="color: white; font-family: monospace;"><?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <i class="fa fa-arrow-circle-right"></i>
 									</h3>
 								</a>
 							</div>
-
-						</div>
-						<div class="box-footer no-padding">
-							<ul class="nav nav-stacked">
-								<li><a href="/modulo/<?php echo htmlspecialchars( $value1["modulo"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["nome"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
-							</ul>
 						</div>
 					</div>
 					<!-- /.widget-user -->

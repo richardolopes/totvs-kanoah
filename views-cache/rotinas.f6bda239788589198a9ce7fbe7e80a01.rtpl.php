@@ -18,16 +18,11 @@
 						<div class="widget-user-header label-primary">
 							<div class="widget-user-image">
 								<a href="/rotina/<?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
-									<h3 style="color: white"><?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <i class="fa fa-arrow-circle-right"></i>
+									<h3 style="color: white; font-family: monospace;"><?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <i class="fa fa-arrow-circle-right"></i>
 									</h3>
 								</a>
 							</div>
 
-						</div>
-						<div class="box-footer no-padding">
-							<ul class="nav nav-stacked">
-								<li><a href="/rotina/<?php echo htmlspecialchars( $value1["rotina"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["nome"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a></li>
-							</ul>
 						</div>
 					</div>
 				</div>
@@ -54,6 +49,14 @@
 				},
 			},
 		}).then((Adicionar) => {
+			swal({
+				title: "Carregando...",
+				icon: "/res/loading.gif",
+				onOpen: () => {
+					swal.showLoading()
+				}
+			});
+
 			if (Adicionar) {
 				$.post('/rotina/add', {
 					rotina: Adicionar

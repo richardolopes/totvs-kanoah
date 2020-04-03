@@ -4,23 +4,22 @@ namespace Kanoah\BD;
 
 class SQLBase
 {
-    const DRIVER   = "SQL Server";
-    const DNS      = "SPON004928\DEVELOPER2014";
-    const DBNAME   = "BASE";
+    const DRIVER = "SQL Server Native Client 11.0";
+    const DNS = "SPON019400250";
+    const DBNAME = "BASE";
     const USERNAME = "sa";
     const PASSWORD = "1234";
 
     private $conn;
 
-	public function __construct() {
-		try {
+    public function __construct()
+    {
+        try {
             $this->conn = odbc_connect("Driver={" . SQLBase::DRIVER . "};Server=" . SQLBase::DNS . ";Database=" . SQLBase::DBNAME . ";", SQLBase::USERNAME, SQLBase::PASSWORD);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             die("Sem conexao com o banco de dados.");
         }
-	}
+    }
 
     public function __destruct()
     {

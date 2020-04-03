@@ -2,7 +2,7 @@
 
 use \Kanoah\Model\User;
 
-global $sx3;
-$GLOBALS["sx3"] = array();
-
-User::attSx3();
+if (!isset($_SESSION["sx3"])) {
+	$_SESSION["sx3"] = array();
+	User::attSx3();
+}

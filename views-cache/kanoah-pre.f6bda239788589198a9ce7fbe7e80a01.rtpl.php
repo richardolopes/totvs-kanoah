@@ -67,7 +67,7 @@
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-body">
-							<button type="submit" tabindex="<?php echo htmlspecialchars( $aux+1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-success">Enviar</button>
+							<button type="submit" onclick="aguardar()" tabindex="<?php echo htmlspecialchars( $aux+1, ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-success">Enviar</button>
 						</div>
 					</div>
 				</div>

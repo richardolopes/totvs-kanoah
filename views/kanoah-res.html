@@ -7,6 +7,8 @@
 	<section class="content">
 		<div class="row">
 			<form action="/kanoah/rotina/gerar" method="POST" enctype="multipart/form-data">
+				{$aux = 0}
+				{if="$tabelas.resultado|!empty"}
 				<div class="col-md-6">
 					<div class="box box-primary">
 						<div class="box-header with-border">
@@ -41,11 +43,11 @@
 						</div>
 					</div>
 				</div>
-
+				{/if}
 				<div class="col-md-12">
 					<div class="box box-primary">
 						<div class="box-body">
-							<button type="submit" tabindex="{$aux+1}" class="btn btn-success">Enviar</button>
+							<button type="submit" onclick="aguardar()" tabindex="{$aux+1}" class="btn btn-success">Enviar</button>
 						</div>
 					</div>
 				</div>

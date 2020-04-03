@@ -109,3 +109,15 @@
 		});
 	}
 </script>
+
+<script>
+	function aguardar() {
+		swal({
+			title: "Carregando...",
+			icon: "/res/loading.gif",
+			onOpen: () => {
+				swal.showLoading()
+			}
+		});
+	}
+</script>

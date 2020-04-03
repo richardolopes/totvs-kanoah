@@ -2,17 +2,18 @@
 
 namespace Kanoah;
 
+use \Kanoah\BD\MySQL;
 use \Rain\Tpl;
 
 class Page
 {
     private $tpl; // Para ter acesso em outros metodos.
-    private $options  = array();
+    private $options = array();
     private $defaults = array( // Variaveis 'padrao'
-        "header"  => true,
+        "header" => true,
         "scripts" => true,
-        "footer"  => true,
-        "data"    => array(), // Variaveis do template.
+        "footer" => true,
+        "data" => array(), // Variaveis do template.
     );
 
     public function __construct($opts = array(), $tpl_dir = "/views/")
@@ -25,9 +26,9 @@ class Page
 
         // Configuração do RainTpl
         $config = array(
-            "tpl_dir"   => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,
+            "tpl_dir" => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,
             "cache_dir" => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
-            "debug"     => false, // set to false to improve the speed
+            "debug" => false, // set to false to improve the speed
         );
 
         Tpl::configure($config);
@@ -37,8 +38,7 @@ class Page
         // Atribuir as variaveis do template.
         $this->setDataTemplate($this->options["data"]);
 
-        if ($this->options["header"] === true)
-        {
+        if ($this->options["header"] === true) {
             $this->tpl->draw("header");
         }
     }
@@ -46,8 +46,7 @@ class Page
     private function setDataTemplate($data = array())
     {
         // Atribuir variaveis do template.
-        foreach ($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             $this->tpl->assign($key, $value);
         }
     }
@@ -59,18 +58,22 @@ class Page
         // $returnHTML -> Retornar o HTML ou apenas executar.
         $this->setDataTemplate($data);
 
+        $sql = new MySQL();
+        $sql->query("INSERT INTO `logs`(`url`, `user`) VALUES (:URL, :USER)", array(
+            ":URL" => $name,
+            ":USER" => "richard.lopes",
+        ));
+
         return $this->tpl->draw($name, $returnHTML);
     }
 
     public function __destruct()
     {
-        if ($this->options["scripts"] === true)
-        {
+        if ($this->options["scripts"] === true) {
             $this->tpl->draw("scripts");
         }
 
-        if ($this->options["footer"] === true)
-        {
+        if ($this->options["footer"] === true) {
             $this->tpl->draw("footer");
         }
     }
