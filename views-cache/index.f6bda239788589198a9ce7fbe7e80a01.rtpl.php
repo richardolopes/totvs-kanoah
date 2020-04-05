@@ -1,4 +1,5 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?><?php require $this->checkTemplate("errors");?>
+
 <div class="content-wrapper">
 	<section class="content-header">
 		<h1>
@@ -15,13 +16,22 @@
 					</div>
 					<div class="box-body">
 
-						<div class="callout callout-danger">
-							<h4>Banco de dados.</h4>
-							<p>
-								Foi implementado no <?php echo htmlspecialchars( $nome, ENT_COMPAT, 'UTF-8', FALSE ); ?> a configuração da conexão com o banco de dados. Acesse as
+						<div class="callout callout-info">
+							<h3>AdvPR.</h3>
+							<h4>
+								E-mail para a SQUAD FIN sobre as quebras da automação. Acesse a página <a
+									href="/_automacao">Automação</a> para enviar o e-mail.
+							</h4>
+							<img src="/res/email-example.png" alt="E-mail - exemplo" height="250px">
+						</div>
+						<div class="callout callout-info">
+							<h3>Banco de dados.</h3>
+							<h4>
+								Foi implementado a configuração da conexão com o banco de dados. Acesse as
 								configurações da conexão com o banco de dados no menu ou <a href="/banco/inf">clique
 									aqui.</a>
-							</p>
+							</h4>
+							<img src="/res/bd-conf.png" alt="Configuração BD - exemplo" height="200px">
 						</div>
 
 						<!-- <div class="callout callout-danger">

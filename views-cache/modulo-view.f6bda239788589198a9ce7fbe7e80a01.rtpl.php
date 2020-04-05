@@ -27,6 +27,7 @@
 								</tr>
 
 								<?php $counter1=-1;  if( isset($rotinas) && ( is_array($rotinas) || $rotinas instanceof Traversable ) && sizeof($rotinas) ) foreach( $rotinas as $key1 => $value1 ){ $counter1++; ?>
+
 								<tr>
 									<td><?php echo htmlspecialchars( $key1+1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
@@ -42,6 +43,7 @@
 									</td>
 								</tr>
 								<?php } ?>
+
 							</table>
 						</div>
 
@@ -70,6 +72,7 @@
 								</tr>
 
 								<?php $counter1=-1;  if( isset($parametros) && ( is_array($parametros) || $parametros instanceof Traversable ) && sizeof($parametros) ) foreach( $parametros as $key1 => $value1 ){ $counter1++; ?>
+
 								<tr>
 									<td><?php echo htmlspecialchars( $key1+1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
 									<td><?php echo htmlspecialchars( $value1, ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
@@ -80,6 +83,7 @@
 									</td>
 								</tr>
 								<?php } ?>
+
 							</table>
 						</div>
 

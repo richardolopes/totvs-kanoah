@@ -5,7 +5,6 @@ namespace Kanoah\Model;
 set_time_limit(300);
 
 use \Kanoah\Model;
-use \Kanoah\Model\User;
 
 class Advpr extends Model
 {
@@ -14,28 +13,6 @@ class Advpr extends Model
     const PAIS = 'http://10.171.78.41:8006/rest/filtrosportal/pais/homolog/'; // 12.1.023/RPO_D-1
     const DATAS = 'http://10.171.78.41:8006/rest/filtrosportal/BRA/execDay/'; // 12.1.023/RPO_D-1/Todas
     const EXECUCAO = 'http://10.171.78.41:8006/rest/acompanhamentoExecucaoD1/Detail/FINANCEIRO/BRA/'; // 12.1.027/20200402/RPO_D-1/Todas
-
-    public function execDiaria($release)
-    {
-        $release = $this->getReleases()[$release]->value;
-        $rpo = $this->getRpos($release)[0]->value;
-        $data = $this->getDatas($release, $rpo);
-
-        if (isset($_SESSION['EXEC_DATA'])) {
-            if ($data == $_SESSION['EXEC_DATA']) {
-                User::setError('AUTOMACAO_EXIST');
-            }
-        }
-
-        $_SESSION['EXEC_DATA'] = $data;
-
-        $execucao = $this->getExec($release, $data, $rpo);
-
-        $texto = "Release $release  |  " . $this->stringParaData($data) . " <br>";
-        $texto .= $this->montaTexto($execucao);
-
-        return $texto;
-    }
 
     public function getExec($release, $data, $rpo)
     {
@@ -104,25 +81,61 @@ class Advpr extends Model
         return substr($string, 6, 8) . '/' . substr($string, 4, 2) . '/' . substr($string, 0, 4);
     }
 
-    public function montaTexto($erros)
+    public function getQuebras($erros)
     {
-        $rotinas = [];
-        $qtd = count($erros);
+        $exec = [];
+        !empty($erros) ? $total = count($erros) : $total = 0;
 
-        $texto = "Quantidade de quebras: $qtd <br>";
-        for ($i = 0; $i < $qtd; $i++) {
-            @$rotinas[$erros[$i]->rotina][0] .= 'CT' . explode('-', $erros[$i]->erro)[0];
-            @$rotinas[$erros[$i]->rotina][1] += 1;
+        for ($i = 0; $i < $total; $i++) {
+            $rotina = $erros[$i]->rotina;
+
+            if (!isset($exec[$rotina])) {
+                $exec[$rotina] = array(
+                    "CTS" => "",
+                    "TOTAL" => 0,
+                );
+            }
+
+            $exec[$rotina]["CTS"] .= 'CT' . explode('-', $erros[$i]->erro)[0];
+            $exec[$rotina]["TOTAL"] += 1;
         }
-        $qtdRot = count($rotinas);
 
-        $texto .= "Quantidade de fontes : $qtdRot <br><br>";
-        for ($i = 0; $i < $qtdRot; $i++) {
-            $rotina = key($rotinas);
-            $texto .= str_pad($rotina, 8) . ' = ' . str_pad($rotinas[$rotina][1], 2) . ' Quebra(s) (' . trim($rotinas[$rotina][0]) . ")<br>";
-            next($rotinas);
-        }
+        return array(
+            "QUEBRAS" => $exec,
+            "TOTAL" => $total,
+        );
+    }
 
-        return $texto;
+    public function retExecDiario($release, $rpo = false)
+    {
+        is_int($release) ? $release = $this->getReleases()[$release]->value : '';
+        $rpo ? $rpo = $this->getRpos($release)[0]->value : $rpo = 'RPO_D-1';
+
+        $data = $this->getDatas($release, $rpo);
+
+        // if (isset($_SESSION["EXEC_DATA_$release"])) {
+        //     if ($data == $_SESSION["EXEC_DATA_$release"]) {
+        //         return "A execução da release $release está na mesma data do último e-mail enviado.";
+        //     }
+        // }
+
+        $execucao = $this->getExec($release, $data, $rpo);
+        $erros = $this->getQuebras($execucao);
+
+        $return = array(
+            "RELEASE" => $release,
+            "DATA" => $this->stringParaData($data),
+            "QUEBRAS" => $erros["QUEBRAS"],
+            "TOTAL_QUEBRAS" => $erros["TOTAL"],
+            "TOTAL_FONTES" => count($erros["QUEBRAS"]),
+        );
+
+        $_SESSION["EXEC_EXECUCAO_$release"] = $execucao;
+        $_SESSION["EXEC_RELEASE_$release"] = $release;
+        $_SESSION["EXEC_RPO_$release"] = $rpo;
+        $_SESSION["EXEC_DATA_$release"] = $data;
+        $_SESSION["EXEC_RETURN_$release"] = $return;
+
+        return $return;
     }
 }

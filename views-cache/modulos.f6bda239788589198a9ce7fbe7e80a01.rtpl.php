@@ -13,6 +13,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<?php $counter1=-1;  if( isset($modulos) && ( is_array($modulos) || $modulos instanceof Traversable ) && sizeof($modulos) ) foreach( $modulos as $key1 => $value1 ){ $counter1++; ?>
+
 				<div class="col-md-2">
 					<!-- Widget: user widget style 1 -->
 					<div class="box box-widget widget-user-2">
@@ -29,6 +30,7 @@
 					<!-- /.widget-user -->
 				</div>
 				<?php } ?>
+
 				<!-- /.box-body -->
 				<!-- /.box -->
 			</div>

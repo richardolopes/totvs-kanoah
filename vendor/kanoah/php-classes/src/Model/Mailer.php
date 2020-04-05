@@ -24,16 +24,9 @@ class Mailer extends Model
         $mail->addAddress('richard.lopes@totvs.com.br    ', 'Richard Lopes                     ');
         // $mail->addAddress('SQUAD.Fin@totvs.com.br ', 'SQUAD FIN');
 
-        $mail->Subject = utf8_decode('Automação ' . $subject);
-
-        //Read an HTML message body from an external file, convert referenced images to embedded,
-        //convert HTML into a basic plain-text alternative body
+        $mail->Subject = utf8_decode($subject);
         $mail->msgHTML($html);
 
-        //Attach an image file
-        // $mail->addAttachment('images/phpmailer_mini.png');
-
-        //send the message, check for errors
         if (!$mail->send()) {
             return "Mailer Error: " . $mail->ErrorInfo;
         } else {

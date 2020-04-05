@@ -1,6 +1,6 @@
 <?php
 
-namespace Kanoah;
+namespace Kanoahndo\Model;
 
 use \Rain\Tpl;
 

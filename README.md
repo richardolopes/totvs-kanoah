@@ -1,6 +1,2 @@
 # KANOAH
-
-ROTINAS | TABELAS
---------|--------
-FINA460 | SA1
-        | SE1
+* Crie o arquivo 'mail.php' na raiz do projeto e configure a constante PASSWORD_EMAIL

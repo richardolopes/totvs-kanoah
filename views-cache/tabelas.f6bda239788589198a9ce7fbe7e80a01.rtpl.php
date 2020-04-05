@@ -12,6 +12,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<?php $counter1=-1;  if( isset($tabelas) && ( is_array($tabelas) || $tabelas instanceof Traversable ) && sizeof($tabelas) ) foreach( $tabelas as $key1 => $value1 ){ $counter1++; ?>
+
 				<div class="col-md-2">
 					<div class="box box-widget widget-user-2">
 						<div class="widget-user-header label-primary">
@@ -25,6 +26,7 @@
 					</div>
 				</div>
 				<?php } ?>
+
 			</div>
 		</div>
 	</section>

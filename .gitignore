@@ -1,2 +1,5 @@
 # SENHA DO EMAIL
 mail.php
+
+# CACHE RAIN TPL
+views-cache/*
