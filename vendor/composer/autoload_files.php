@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    '72579e7bd17821bb1321b87411366eae' => $vendorDir . '/illuminate/support/helpers.php',
     'abede361264e2ae69ec1eee813a101af' => $vendorDir . '/markbaker/complex/classes/src/functions/abs.php',
     '21a5860fbef5be28db5ddfbc3cca67c4' => $vendorDir . '/markbaker/complex/classes/src/functions/acos.php',
     '1546e3f9d127f2a9bb2d1b6c31c26ef1' => $vendorDir . '/markbaker/complex/classes/src/functions/acosh.php',
@@ -64,4 +66,5 @@ return array(
     'aa53dcba601214d17ad405b7c291b7e8' => $vendorDir . '/markbaker/matrix/classes/src/operations/multiply.php',
     '75c79eb1b25749b05a47976f32b0d8a2' => $vendorDir . '/markbaker/matrix/classes/src/operations/divideby.php',
     '6ab8ad87a734f276a6bcd5a0fe1289be' => $vendorDir . '/markbaker/matrix/classes/src/operations/divideinto.php',
+    '7d84bd4fa8d5152efdda9ea70df40c0f' => $vendorDir . '/realrashid/sweet-alert/src/RealRashid/SweetAlert/functions.php',
 );
