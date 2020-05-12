@@ -12,22 +12,26 @@ class Advpr extends Model
     const RPOS = 'http://10.171.78.41:8006/rest/filtrosportal/identi/homolog/'; // 12.1.023
     const PAIS = 'http://10.171.78.41:8006/rest/filtrosportal/pais/homolog/'; // 12.1.023/RPO_D-1
     const DATAS = 'http://10.171.78.41:8006/rest/filtrosportal/BRA/execDay/'; // 12.1.023/RPO_D-1/Todas
-    const EXECUCAO = 'http://10.171.78.41:8006/rest/acompanhamentoExecucaoD1/Detail/FINANCEIRO/BRA/'; // 12.1.027/20200402/RPO_D-1/Todas
+    const EXECUCAO = 'http://10.171.78.41:8006/rest/acompanhamentoExecucaoD1/Detail/'; // 12.1.027/20200402/RPO_D-1/Todas
 
-    public function getExec($release, $data, $rpo)
+    public function getExec($release, $data, $rpo, $squad)
     {
-        $ch = curl_init(Advpr::EXECUCAO . $release . '/' . $data . '/' . $rpo . '/Todas');
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => [
-                'user' => '',
-            ],
-        ]);
-        $response = json_decode(curl_exec($ch));
-        curl_close($ch);
+        try {
+            $ch = curl_init(Advpr::EXECUCAO . $squad . '/BRA/' . $release . '/' . $data . '/' . $rpo . '/Todas');
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => [
+                    'user' => '',
+                ],
+            ]);
+            $response = json_decode(curl_exec($ch));
+            curl_close($ch);
 
-        return $response;
+            return $response;
+        } catch (Exception $e) {
+            return [""];
+        }
     }
 
     public function getRpos($release)
@@ -43,13 +47,31 @@ class Advpr extends Model
 
     public function getDatas($release, $rpo)
     {
-        $ch = curl_init(Advpr::DATAS . $release . '/' . $rpo . '/Todas');
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = json_decode(curl_exec($ch));
-        curl_close($ch);
+        // segunda-feira da primeira ou última semana do mês.
+        if ($rpo == 'EXPEDICAO') {
+            $date = getdate();
 
-        return $this->maiorData($response);
+            // while (true) {
+            //     if ($date["wday"] == 1 and ($date["mday"] + 7 <= 31 or $date["mday"] - 7 <= 0)) {
+            //         $_SESSION["EXEC_EXPDATE"] = $date["year"] . str_pad($date["mon"], 2, "0", STR_PAD_LEFT) . str_pad($date["mday"], 2, "0", STR_PAD_LEFT);
+
+            //         return $_SESSION["EXEC_EXPDATE"];
+            //     } else {
+            //         $newdate = $date[0] - ($date["wday"] - 1) * 24 * 60 * 60;
+            //         $date = getdate($newdate);
+            //     }
+            // }
+
+            return "20200508";
+        } else {
+            $ch = curl_init(Advpr::DATAS . $release . '/' . $rpo . '/Todas');
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = json_decode(curl_exec($ch));
+            curl_close($ch);
+
+            return $this->maiorData($response);
+        }
     }
 
     public function getReleases()
@@ -106,36 +128,30 @@ class Advpr extends Model
         );
     }
 
-    public function retExecDiario($release, $rpo = false)
+    public function retExecDiario($release, $rpo, $data, $squad)
     {
-        is_int($release) ? $release = $this->getReleases()[$release]->value : '';
-        $rpo ? $rpo = $this->getRpos($release)[0]->value : $rpo = 'RPO_D-1';
+        $execucao = $this->getExec($release, $data, $rpo, $squad);
 
-        $data = $this->getDatas($release, $rpo);
+        if (count($execucao) > 0) {
+            $erros = $this->getQuebras($execucao);
 
-        // if (isset($_SESSION["EXEC_DATA_$release"])) {
-        //     if ($data == $_SESSION["EXEC_DATA_$release"]) {
-        //         return "A execução da release $release está na mesma data do último e-mail enviado.";
-        //     }
-        // }
+            $return = array(
+                "RELEASE" => $release,
+                "DATA" => $this->stringParaData($data),
+                "QUEBRAS" => $erros["QUEBRAS"],
+                "TOTAL_QUEBRAS" => $erros["TOTAL"],
+                "TOTAL_FONTES" => count($erros["QUEBRAS"]),
+            );
 
-        $execucao = $this->getExec($release, $data, $rpo);
-        $erros = $this->getQuebras($execucao);
+            $_SESSION["EXEC_EXECUCAO_$release"] = $execucao;
+            $_SESSION["EXEC_RELEASE_$release"] = $release;
+            $_SESSION["EXEC_RPO_$release"] = $rpo;
+            $_SESSION["EXEC_DATA_$release"] = $data;
+            $_SESSION["EXEC_RETURN_$release"] = $return;
 
-        $return = array(
-            "RELEASE" => $release,
-            "DATA" => $this->stringParaData($data),
-            "QUEBRAS" => $erros["QUEBRAS"],
-            "TOTAL_QUEBRAS" => $erros["TOTAL"],
-            "TOTAL_FONTES" => count($erros["QUEBRAS"]),
-        );
-
-        $_SESSION["EXEC_EXECUCAO_$release"] = $execucao;
-        $_SESSION["EXEC_RELEASE_$release"] = $release;
-        $_SESSION["EXEC_RPO_$release"] = $rpo;
-        $_SESSION["EXEC_DATA_$release"] = $data;
-        $_SESSION["EXEC_RETURN_$release"] = $return;
-
-        return $return;
+            return $return;
+        } else {
+            return $execucao;
+        }
     }
 }

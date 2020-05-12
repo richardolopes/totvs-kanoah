@@ -18,10 +18,12 @@ class Mailer extends Model
         $mail->SMTPAuth = true;
         $mail->Username = "automacaobot@gmail.com";
         $mail->Password = PASSWORD_EMAIL;
-        $mail->setFrom('automacaobot@gmail.com', utf8_decode('Não responder'));
+        $mail->setFrom('automacaobot@gmail.com', utf8_decode('Ric Automação'));
 
-        $mail->addAddress('richardxlopes@gmail.com       ', 'Richard Lopes                     ');
+        // $mail->addAddress('richardxlopes@gmail.com       ', 'Richard Lopes                     ');
         $mail->addAddress('richard.lopes@totvs.com.br    ', 'Richard Lopes                     ');
+        // $mail->addAddress('renato.ito@totvs.com.br    ', 'Renato Ito                     ');
+        // $mail->addAddress('iolanda.cipriano@totvs.com.br ', 'Richard Lopes                     ');
         // $mail->addAddress('SQUAD.Fin@totvs.com.br ', 'SQUAD FIN');
 
         $mail->Subject = utf8_decode($subject);

@@ -38,7 +38,7 @@
 				query: $("#query").val()
 			}, function (data) {
 				var resultado = $("#resultado").val() + data;
-				$("#resultado").html(resultado + "\n");
+				$("#resultado").html(resultado + "<br>");
 
 				setTimeout(function () {
 					swal.close()
@@ -79,7 +79,7 @@
 
 <script>
 	function copiar(idquery) {
-		var copyText = document.getElementById(idquery);
+		var copyText = document.getElementById(idquery).html();
 		copyText.select();
 		document.execCommand("copy");
 	}

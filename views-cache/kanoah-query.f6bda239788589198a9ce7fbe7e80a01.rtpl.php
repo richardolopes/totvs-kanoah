@@ -42,6 +42,7 @@
 					<div class="box-body">
 						<label for="resultado"></label><br>
 						<textarea class="form-control" name="resultado" id="resultado" rows="10"></textarea><br>
+						<!-- <p name="resultado" id="resultado">Resultado</p> -->
 					</div>
 				</div>
 			</div>
