@@ -50,10 +50,6 @@ if (
     require_once "routes/_congelada.php";
 
     require_once "routes/v2/index.php";
-
-    // Robô de automação
-    require_once "mail.php";
-    require_once "routes/_advpr.php";
 }
 
 $app->post("/banco", function () {
